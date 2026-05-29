@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Document AST Viewer</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <header>
+    <h1>Document AST Viewer</h1>
+    <p class="sub">Upload a PDF &rarr; Mistral OCR &rarr; nested-section AST.</p>
+  </header>
+
+  <section class="controls">
+    <input type="file" id="file" accept="application/pdf" />
+    <button id="go">Build AST</button>
+    <span id="status"></span>
+  </section>
+
+  <main>
+    <section class="pane">
+      <h2>Outline</h2>
+      <div id="tree" class="tree"></div>
+    </section>
+
+    <section class="pane">
+      <div class="tabs">
+        <button class="tab active" data-tab="graph">Tree</button>
+        <button class="tab" data-tab="json">JSON</button>
+      </div>
+
+      <div id="tab-graph" class="tab-panel active">
+        <div class="graph-toolbar">
+          <button id="zoom-in" title="Zoom in">+</button>
+          <button id="zoom-out" title="Zoom out">&minus;</button>
+          <button id="zoom-reset" title="Reset view">reset</button>
+          <span class="hint">drag to pan &middot; wheel to zoom &middot; click a node to inspect</span>
+        </div>
+        <div id="graph" class="graph"></div>
+      </div>
+
+      <div id="tab-json" class="tab-panel">
+        <pre id="json"></pre>
+      </div>
+    </section>
+  </main>
+
+  <aside id="inspector" class="inspector hidden">
+    <div class="inspector-header">
+      <strong>Node inspector</strong>
+      <button id="inspector-close" title="Close">&times;</button>
+    </div>
+    <div id="inspector-body"></div>
+  </aside>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

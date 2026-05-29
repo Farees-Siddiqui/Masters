@@ -1,0 +1,7 @@
+API_KEY.txt
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+uploads/
