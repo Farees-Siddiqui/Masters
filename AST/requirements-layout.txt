@@ -1,0 +1,8 @@
+# Layout-detection dependencies (heavier than the web app's requirements.txt).
+# PaddlePaddle CPU build — install from Paddle's index on Apple Silicon:
+#   pip install paddlepaddle==3.2.1 -i https://www.paddlepaddle.org.cn/packages/stable/cpu/
+#   pip install -r requirements-layout.txt
+paddleocr>=3.0
+pypdfium2>=4.30
+pillow>=10.0
+numpy>=1.24
