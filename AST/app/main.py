@@ -72,54 +72,63 @@ async def upload(file: UploadFile = File(...)) -> dict:
     }
 
 
-@app.post("/api/layout")
-async def analyze_layout(
-    file: UploadFile = File(...),
-    granularity: str = Form("paragraph"),
-) -> dict:
-    """Run layout detection at a SINGLE granularity and return per-page boxes."""
+# NOTE: PaddlePaddle inference must run on the main thread — calling it from a
+# worker thread (run_in_threadpool, or a sync `def` endpoint) raises
+# "Tensor holds no memory". So the handlers below run the detector synchronously,
+# briefly blocking the event loop (fine for a local single-user tool).
+
+
+@app.post("/api/layout/start")
+async def layout_start(file: UploadFile = File(...)) -> dict:
+    """Render every page to an image (fast, no OCR). Boxes are fetched per page."""
     if not file.filename or not file.filename.lower().endswith(".pdf"):
         raise HTTPException(status_code=400, detail="Only PDF files are supported.")
-    if granularity not in GRANULARITIES:
-        raise HTTPException(
-            status_code=400,
-            detail=f"granularity must be one of {GRANULARITIES}, got {granularity!r}",
-        )
 
     pdf_bytes = await file.read()
     if not pdf_bytes:
         raise HTTPException(status_code=400, detail="Empty file.")
 
-    safe_name = Path(file.filename).name
-    pdf_path = LAYOUT_UPLOAD_DIR / safe_name
+    pdf_path = LAYOUT_UPLOAD_DIR / Path(file.filename).name
     pdf_path.write_bytes(pdf_bytes)
 
-    # NOTE: PaddlePaddle inference must run on the main thread — calling it from a
-    # worker thread (run_in_threadpool) raises "Tensor holds no memory". So we run
-    # synchronously here, briefly blocking the event loop (fine for a local tool).
     try:
-        detector = _get_layout_detector()
-        result = detector.process_pdf(pdf_path, LAYOUT_OUTPUT_DIR, granularity=granularity)
+        manifest = _get_layout_detector().render_document(pdf_path, LAYOUT_OUTPUT_DIR)
+    except Exception as exc:
+        raise HTTPException(status_code=502, detail=f"Rendering failed: {exc}") from exc
+
+    stem = Path(manifest["output_dir"]).name
+    pages = [
+        {
+            "page": p["page"],
+            "width": p["width"],
+            "height": p["height"],
+            "image_url": f"/layout-data/{stem}/{p['image']}",
+        }
+        for p in manifest["pages"]
+    ]
+    return {"doc": stem, "filename": file.filename, "page_count": manifest["page_count"], "pages": pages}
+
+
+@app.get("/api/layout/page")
+async def layout_page_boxes(doc: str, page: int, granularity: str = "paragraph") -> dict:
+    """Run layout + OCR for ONE page at ONE granularity (cached on disk)."""
+    if granularity not in GRANULARITIES:
+        raise HTTPException(
+            status_code=400,
+            detail=f"granularity must be one of {GRANULARITIES}, got {granularity!r}",
+        )
+    doc_dir = LAYOUT_OUTPUT_DIR / Path(doc).name  # sanitize against path traversal
+    if not doc_dir.is_dir():
+        raise HTTPException(status_code=404, detail=f"Unknown document: {doc}")
+
+    try:
+        boxes = _get_layout_detector().process_page(doc_dir, page, granularity)
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
     except Exception as exc:
         raise HTTPException(status_code=502, detail=f"Layout analysis failed: {exc}") from exc
 
-    stem = Path(result.output_dir).name
-    pages = [
-        {
-            "page": p.page,
-            "width": p.width,
-            "height": p.height,
-            "image_url": f"/layout-data/{stem}/{p.image}",
-            "boxes": [b.to_dict() for b in p.boxes.get(granularity, [])],
-        }
-        for p in result.pages
-    ]
-    return {
-        "filename": file.filename,
-        "granularity": granularity,
-        "page_count": result.page_count,
-        "pages": pages,
-    }
+    return {"doc": doc, "page": page, "granularity": granularity, "boxes": boxes}
 
 
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")

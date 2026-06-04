@@ -37,6 +37,7 @@ from typing import Optional
 
 import numpy as np
 import pypdfium2 as pdfium
+from PIL import Image
 
 from .draw import draw_boxes
 
@@ -388,6 +389,95 @@ class LayoutDetector:
 
         annotated = draw_boxes(image, boxes, show_inline_labels=(gran == "paragraph"))
         annotated.save(page_dir / f"{gran}.png")
+
+    # ------------------------------------------------------------------ #
+    # Lazy per-page API (used by the web app to avoid OCR'ing every page
+    # upfront — render is instant; OCR runs only for the page being viewed).
+    # ------------------------------------------------------------------ #
+    def render_document(
+        self,
+        pdf_path: str | Path,
+        output_dir: str | Path,
+        dpi: int = DEFAULT_DPI,
+    ) -> dict:
+        """Render every page to ``page.png`` (no OCR). Fast — returns a manifest."""
+        pdf_path = Path(pdf_path).expanduser().resolve()
+        if not pdf_path.is_file():
+            raise FileNotFoundError(f"PDF not found: {pdf_path}")
+
+        doc_dir = Path(output_dir).expanduser() / pdf_path.stem
+        doc_dir.mkdir(parents=True, exist_ok=True)
+
+        pages_meta: list[dict] = []
+        for page_no, image in _render_pdf_pages(pdf_path, dpi):
+            page_dir = doc_dir / f"page{page_no}"
+            page_dir.mkdir(parents=True, exist_ok=True)
+            image.save(page_dir / "page.png")
+            pages_meta.append(
+                {
+                    "page": page_no,
+                    "dir": page_dir.name,
+                    "image": f"{page_dir.name}/page.png",
+                    "width": image.width,
+                    "height": image.height,
+                }
+            )
+
+        manifest = {
+            "source_pdf": pdf_path.name,
+            "output_dir": str(doc_dir),
+            "dpi": dpi,
+            "model": self.model_name,
+            "page_count": len(pages_meta),
+            "pages": pages_meta,
+        }
+        (doc_dir / "manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+        return manifest
+
+    def process_page(
+        self,
+        doc_dir: str | Path,
+        page_no: int,
+        granularity: str,
+    ) -> list[dict]:
+        """Layout + OCR for ONE already-rendered page; returns box dicts.
+
+        Results are cached on disk as ``{granularity}.json`` (and ``layout.json``
+        for the regions), so re-viewing a page or switching granularity back is
+        instant.
+        """
+        if granularity not in GRANULARITIES:
+            raise ValueError(f"granularity must be one of {GRANULARITIES}, got {granularity!r}")
+
+        page_dir = Path(doc_dir) / f"page{page_no}"
+        page_img = page_dir / "page.png"
+        if not page_img.is_file():
+            raise FileNotFoundError(f"Page image not found: {page_img}")
+
+        # Cached?
+        gran_json = page_dir / f"{granularity}.json"
+        if gran_json.is_file():
+            return json.loads(gran_json.read_text(encoding="utf-8")).get("boxes", [])
+
+        # Layout regions (cache layout.json across granularities).
+        if not (page_dir / "layout.json").is_file():
+            for res in self._model.predict(input=str(page_img), batch_size=1):
+                res.save_to_img(save_path=str(page_dir / "layout.png"))
+                res.save_to_json(save_path=str(page_dir / "layout.json"))
+        regions = _parse_regions(page_dir / "layout.json")
+
+        image = Image.open(page_img).convert("RGB")
+        page_bgr = np.asarray(image)[:, :, ::-1].copy()
+
+        if granularity == "paragraph":
+            boxes = _aggregate_paragraphs(regions, self._ocr().extract(str(page_img), page_bgr, "line"))
+        elif granularity == "line":
+            boxes = _assign_labels(self._ocr().extract(str(page_img), page_bgr, "line"), regions)
+        else:  # word
+            boxes = _assign_labels(self._ocr().extract(str(page_img), page_bgr, "word"), regions)
+
+        self._write_page_outputs(page_dir, granularity, page_no, image, boxes)
+        return [b.to_dict() for b in boxes]
 
 
 def detect_layout(

@@ -111,7 +111,7 @@ class TextExtractor:
         det_model: str = DEFAULT_DET_MODEL,
         rec_model: str = DEFAULT_REC_MODEL,
         device: str = "cpu",
-        rec_batch_size: int = 8,
+        rec_batch_size: int = 16,
     ) -> None:
         from paddleocr import TextDetection, TextRecognition  # lazy import
 
@@ -133,15 +133,27 @@ class TextExtractor:
         return boxes
 
     def _recognize(self, crops: list[np.ndarray]) -> list[tuple[Optional[str], Optional[float]]]:
-        """Recognize a batch of cropped (BGR) word/line images, order preserved."""
+        """Recognize cropped (BGR) word/line images, order preserved.
+
+        Crops are sorted by width before batching so each batch pads to a
+        similar width (PP-OCR pads a batch to its widest crop) — this noticeably
+        cuts wasted compute on CPU. Results are unsorted back to input order.
+        """
         if not crops:
             return []
-        out: list[tuple[Optional[str], Optional[float]]] = []
-        for res in self._rec.predict(input=crops, batch_size=self.rec_batch_size):
+        order = sorted(range(len(crops)), key=lambda i: crops[i].shape[1])
+        sorted_crops = [crops[i] for i in order]
+
+        rec_sorted: list[tuple[Optional[str], Optional[float]]] = []
+        for res in self._rec.predict(input=sorted_crops, batch_size=self.rec_batch_size):
             data = _res_dict(res)
             text = data.get("rec_text")
             score = data.get("rec_score")
-            out.append((text or None, float(score) if score is not None else None))
+            rec_sorted.append((text or None, float(score) if score is not None else None))
+
+        out: list[tuple[Optional[str], Optional[float]]] = [(None, None)] * len(crops)
+        for pos, i in enumerate(order):
+            out[i] = rec_sorted[pos]
         return out
 
     def _boxes_from_dets(

@@ -28,10 +28,12 @@ const PALETTE = [
 ];
 const UNKNOWN_COLOR = "#6e6e6e";
 
-let doc = null;          // server response
+let doc = null;          // { doc, filename, page_count, pages:[{page,width,height,image_url}] }
 let pageIdx = 0;         // current page index
 let selectedBox = null;  // index of selected box on current page
 const hiddenLabels = new Set();
+const boxCache = new Map();  // `${page}|${granularity}` -> boxes[]
+let reqToken = 0;        // guards against out-of-order async box fetches
 
 /* ---------- color mapping ---------- */
 function crc32(str) {
@@ -55,25 +57,24 @@ goBtn.addEventListener("click", async () => {
     statusEl.textContent = "Pick a PDF first.";
     return;
   }
-  const granularity = granSelect.value;
   goBtn.disabled = true;
-  statusEl.textContent = `Running ${granularity} layout analysis… (first run downloads models)`;
+  statusEl.textContent = "Rendering pages…";
   resetView();
 
   const form = new FormData();
   form.append("file", f);
-  form.append("granularity", granularity);
 
   try {
-    const res = await fetch("/api/layout", { method: "POST", body: form });
+    const res = await fetch("/api/layout/start", { method: "POST", body: form });
     if (!res.ok) {
       const err = await res.json().catch(() => ({ detail: res.statusText }));
       throw new Error(err.detail || `HTTP ${res.status}`);
     }
     doc = await res.json();
-    statusEl.textContent = `${doc.filename} — ${doc.page_count} page(s), granularity: ${doc.granularity}`;
+    statusEl.textContent = `${doc.filename} — ${doc.page_count} page(s)`;
     pageIdx = 0;
     hiddenLabels.clear();
+    boxCache.clear();
     renderPage();
   } catch (e) {
     statusEl.textContent = `Error: ${e.message}`;
@@ -82,9 +83,15 @@ goBtn.addEventListener("click", async () => {
   }
 });
 
+// Switching granularity re-fetches just the current page (lazy, cached).
+granSelect.addEventListener("change", () => {
+  if (doc) renderPage();
+});
+
 function resetView() {
   doc = null;
   selectedBox = null;
+  boxCache.clear();
   canvasEl.hidden = true;
   emptyEl.hidden = false;
   pager.hidden = true;
@@ -100,9 +107,10 @@ nextBtn.addEventListener("click", () => {
   if (doc && pageIdx < doc.pages.length - 1) { pageIdx++; renderPage(); }
 });
 
-function renderPage() {
+async function renderPage() {
   if (!doc) return;
   const page = doc.pages[pageIdx];
+  const granularity = granSelect.value;
   selectedBox = null;
 
   emptyEl.hidden = true;
@@ -112,19 +120,48 @@ function renderPage() {
   pageIndicator.textContent = `Page ${page.page} / ${doc.page_count}`;
   prevBtn.disabled = pageIdx === 0;
   nextBtn.disabled = pageIdx === doc.pages.length - 1;
-  const withText = page.boxes.filter((b) => b.text).length;
-  boxCountEl.textContent = `${page.boxes.length} ${doc.granularity} box(es) · ${withText} with text`;
 
+  // Show the page image right away; boxes load (or come from cache) after.
   pageImg.src = page.image_url;
   overlay.setAttribute("viewBox", `0 0 ${page.width} ${page.height}`);
-  drawOverlay(page);
-  buildLegend(page);
+  overlay.innerHTML = "";
   boxInfoEl.innerHTML = '<p class="muted">Click a bounding box to inspect it.</p>';
+
+  const key = `${page.page}|${granularity}`;
+  const token = ++reqToken;
+
+  let boxes = boxCache.get(key);
+  if (!boxes) {
+    boxCountEl.textContent = `Analyzing page ${page.page} (${granularity})…`;
+    legendEl.innerHTML = "";
+    legendHint.textContent = "";
+    try {
+      const url = `/api/layout/page?doc=${encodeURIComponent(doc.doc)}&page=${page.page}&granularity=${granularity}`;
+      const res = await fetch(url);
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ detail: res.statusText }));
+        throw new Error(err.detail || `HTTP ${res.status}`);
+      }
+      boxes = (await res.json()).boxes;
+      boxCache.set(key, boxes);
+    } catch (e) {
+      if (token === reqToken) boxCountEl.textContent = `Error: ${e.message}`;
+      return;
+    }
+  }
+
+  // A newer navigation/granularity change superseded this fetch — drop it.
+  if (token !== reqToken) return;
+
+  const withText = boxes.filter((b) => b.text).length;
+  boxCountEl.textContent = `${boxes.length} ${granularity} box(es) · ${withText} with text`;
+  drawOverlay(boxes);
+  buildLegend(boxes);
 }
 
-function drawOverlay(page) {
+function drawOverlay(boxes) {
   overlay.innerHTML = "";
-  page.boxes.forEach((b, i) => {
+  boxes.forEach((b, i) => {
     if (hiddenLabels.has(b.label || "")) return;
     const [x1, y1, x2, y2] = b.bbox;
     const rect = document.createElementNS(SVG_NS, "rect");
@@ -144,10 +181,15 @@ function drawOverlay(page) {
   highlightSelected();
 }
 
+function currentBoxes() {
+  if (!doc) return [];
+  return boxCache.get(`${doc.pages[pageIdx].page}|${granSelect.value}`) || [];
+}
+
 function selectBox(i) {
   selectedBox = i;
   highlightSelected();
-  showBoxInfo(doc.pages[pageIdx].boxes[i]);
+  showBoxInfo(currentBoxes()[i]);
 }
 
 function highlightSelected() {
@@ -191,8 +233,8 @@ function fmtScore(s) {
 }
 
 /* ---------- legend (click to toggle a label's boxes) ---------- */
-function buildLegend(page) {
-  const labels = [...new Set(page.boxes.map((b) => b.label || ""))].sort();
+function buildLegend(boxes) {
+  const labels = [...new Set(boxes.map((b) => b.label || ""))].sort();
   legendHint.textContent = "(click to toggle)";
   legendEl.innerHTML = "";
   labels.forEach((label) => {
@@ -203,7 +245,7 @@ function buildLegend(page) {
     sw.style.background = colorFor(label || null);
     const txt = document.createElement("span");
     txt.textContent = label || "(none)";
-    const n = page.boxes.filter((b) => (b.label || "") === label).length;
+    const n = boxes.filter((b) => (b.label || "") === label).length;
     const cnt = document.createElement("span");
     cnt.className = "count";
     cnt.textContent = n;
@@ -212,7 +254,7 @@ function buildLegend(page) {
       if (hiddenLabels.has(label)) hiddenLabels.delete(label);
       else hiddenLabels.add(label);
       item.classList.toggle("off");
-      drawOverlay(page);
+      drawOverlay(boxes);
     });
     legendEl.appendChild(item);
   });
