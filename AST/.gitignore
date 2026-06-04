@@ -6,3 +6,4 @@ venv/
 .env
 uploads/
 output/
+layout_output/

@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Layout Analysis</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <link rel="stylesheet" href="/static/layout.css" />
+</head>
+<body>
+  <header>
+    <div class="header-row">
+      <div>
+        <h1>Document Layout Analysis</h1>
+        <p class="sub">PDF &rarr; PP-DocLayoutV3 + PP-OCRv5 &rarr; bounding boxes with text.</p>
+      </div>
+      <nav class="nav"><a href="/">&larr; AST Viewer</a></nav>
+    </div>
+  </header>
+
+  <section class="controls">
+    <input type="file" id="file" accept="application/pdf" />
+    <label class="gran">
+      Granularity
+      <select id="granularity">
+        <option value="paragraph">paragraph (regions)</option>
+        <option value="line">line</option>
+        <option value="word">word</option>
+      </select>
+    </label>
+    <button id="go">Analyze</button>
+    <span id="status"></span>
+  </section>
+
+  <main class="layout-main">
+    <section class="viewer">
+      <div class="pager" id="pager" hidden>
+        <button id="prev" title="Previous page">&larr;</button>
+        <span id="page-indicator">Page 1 / 1</span>
+        <button id="next" title="Next page">&rarr;</button>
+        <span class="hint" id="box-count"></span>
+      </div>
+      <div class="stage" id="stage">
+        <div class="empty" id="empty">Upload a PDF and pick a granularity to begin.</div>
+        <div class="canvas" id="canvas" hidden>
+          <img id="page-img" alt="page" />
+          <svg id="overlay" preserveAspectRatio="none"></svg>
+        </div>
+      </div>
+    </section>
+
+    <aside class="sidebar">
+      <div class="panel">
+        <h2>Box inspector</h2>
+        <div id="box-info" class="box-info">
+          <p class="muted">Click a bounding box to inspect it.</p>
+        </div>
+      </div>
+      <div class="panel">
+        <h2>Legend <span class="muted" id="legend-hint"></span></h2>
+        <div id="legend" class="legend"></div>
+      </div>
+    </aside>
+  </main>
+
+  <script src="/static/layout.js"></script>
+</body>
+</html>
