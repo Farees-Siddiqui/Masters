@@ -5,6 +5,7 @@ Run with:  uvicorn app.main:app --reload
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
@@ -16,6 +17,9 @@ from .ocr import run_ocr_on_pdf
 
 # The layout package lives at the repo root (one level above app/).
 from layout import GRANULARITIES, LayoutDetector
+
+# The alignment package (Doc/AST <-> PDF boxes) also lives at the repo root.
+from alignment import align_stream
 
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -47,6 +51,11 @@ def index() -> FileResponse:
 @app.get("/layout")
 def layout_page() -> FileResponse:
     return FileResponse(STATIC_DIR / "layout.html")
+
+
+@app.get("/align")
+def align_page() -> FileResponse:
+    return FileResponse(STATIC_DIR / "align.html")
 
 
 @app.post("/api/upload")
@@ -129,6 +138,96 @@ async def layout_page_boxes(doc: str, page: int, granularity: str = "paragraph")
         raise HTTPException(status_code=502, detail=f"Layout analysis failed: {exc}") from exc
 
     return {"doc": doc, "page": page, "granularity": granularity, "boxes": boxes}
+
+
+# --------------------------------------------------------------------------- #
+# Alignment: map AST nodes -> PDF boxes (the whiteboard's
+# Alignment : Loc[Doc] -> Set[Loc[PDF]]). Two-phase like the layout tab so the
+# page paints fast: /start builds the AST + page images; /compute runs layout +
+# OCR per page (cached on disk) and the naive aligner.
+# --------------------------------------------------------------------------- #
+
+
+@app.post("/api/align/start")
+async def align_start(file: UploadFile = File(...)) -> dict:
+    """OCR + build AST + render page images. Persists ast.json in the doc dir."""
+    if not file.filename or not file.filename.lower().endswith(".pdf"):
+        raise HTTPException(status_code=400, detail="Only PDF files are supported.")
+
+    pdf_bytes = await file.read()
+    if not pdf_bytes:
+        raise HTTPException(status_code=400, detail="Empty file.")
+
+    try:
+        ocr = run_ocr_on_pdf(pdf_bytes, filename=file.filename)
+    except Exception as exc:
+        raise HTTPException(status_code=502, detail=f"OCR failed: {exc}") from exc
+    ast_dict = build_ast(ocr.markdown).to_dict()
+
+    pdf_path = LAYOUT_UPLOAD_DIR / Path(file.filename).name
+    pdf_path.write_bytes(pdf_bytes)
+    try:
+        manifest = _get_layout_detector().render_document(pdf_path, LAYOUT_OUTPUT_DIR)
+    except Exception as exc:
+        raise HTTPException(status_code=502, detail=f"Rendering failed: {exc}") from exc
+
+    doc_dir = Path(manifest["output_dir"])
+    (doc_dir / "ast.json").write_text(json.dumps(ast_dict), encoding="utf-8")
+    stem = doc_dir.name
+    pages = [
+        {
+            "page": p["page"],
+            "width": p["width"],
+            "height": p["height"],
+            "image_url": f"/layout-data/{stem}/{p['image']}",
+        }
+        for p in manifest["pages"]
+    ]
+    return {
+        "doc": stem,
+        "filename": file.filename,
+        "page_count": manifest["page_count"],
+        "ast": ast_dict,
+        "pages": pages,
+    }
+
+
+@app.get("/api/align/compute")
+async def align_compute(doc: str, granularity: str = "paragraph") -> dict:
+    """Run layout+OCR for every page (cached), then the naive node->box aligner."""
+    if granularity not in GRANULARITIES:
+        raise HTTPException(
+            status_code=400,
+            detail=f"granularity must be one of {GRANULARITIES}, got {granularity!r}",
+        )
+    doc_dir = LAYOUT_OUTPUT_DIR / Path(doc).name  # sanitize against path traversal
+    if not doc_dir.is_dir():
+        raise HTTPException(status_code=404, detail=f"Unknown document: {doc}")
+
+    ast_path = doc_dir / "ast.json"
+    if not ast_path.is_file():
+        raise HTTPException(status_code=404, detail=f"No AST for document: {doc}")
+    ast_dict = json.loads(ast_path.read_text(encoding="utf-8"))
+
+    manifest = json.loads((doc_dir / "manifest.json").read_text(encoding="utf-8"))
+    detector = _get_layout_detector()
+    pages: list[dict] = []
+    for p in manifest["pages"]:
+        try:
+            boxes = detector.process_page(doc_dir, p["page"], granularity)
+        except Exception as exc:
+            raise HTTPException(status_code=502, detail=f"Layout analysis failed: {exc}") from exc
+        pages.append({"page": p["page"], "width": p["width"], "height": p["height"], "boxes": boxes})
+
+    result = align_stream(ast_dict, pages, granularity)
+    return {
+        "doc": doc,
+        "granularity": granularity,
+        "coverage": result["coverage"],
+        "alignment": result["alignment"],
+        "reverse": result["reverse"],
+        "pages": pages,
+    }
 
 
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")

@@ -1,0 +1,72 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>AST &harr; PDF Alignment</title>
+  <link rel="stylesheet" href="/static/style.css?v=8" />
+  <link rel="stylesheet" href="/static/layout.css?v=8" />
+  <link rel="stylesheet" href="/static/align.css?v=8" />
+</head>
+<body>
+  <header>
+    <div class="header-row" style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;">
+      <div>
+        <h1>AST &harr; PDF Alignment</h1>
+        <p class="sub">Click an AST node &rarr; highlight the PDF boxes it maps to (naive text match).</p>
+      </div>
+      <nav class="nav">
+        <a href="/">AST Viewer</a> &middot;
+        <a href="/layout">Layout</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="controls">
+    <input type="file" id="file" accept="application/pdf" />
+    <label class="gran">
+      Granularity
+      <select id="granularity">
+        <option value="paragraph">paragraph (regions)</option>
+        <option value="line">line</option>
+        <option value="word">word</option>
+      </select>
+    </label>
+    <button id="go">Align</button>
+    <span id="status"></span>
+    <span id="coverage" class="hint"></span>
+  </section>
+
+  <main class="align-main">
+    <!-- Left: AST outline -->
+    <section class="align-pane">
+      <div class="tree-toolbar">
+        <strong class="pane-title">AST</strong>
+        <button id="expand-all" title="Expand all">expand</button>
+        <button id="collapse-all" title="Collapse all">collapse</button>
+        <span class="hint">click a node to highlight its PDF boxes</span>
+      </div>
+      <div id="tree" class="tree align-tree"></div>
+    </section>
+
+    <!-- Right: PDF viewer -->
+    <section class="align-pane">
+      <div class="pager" id="pager" hidden>
+        <strong class="pane-title">PDF</strong>
+        <button id="prev" title="Previous page">&larr;</button>
+        <span id="page-indicator">Page 1 / 1</span>
+        <button id="next" title="Next page">&rarr;</button>
+        <span class="hint" id="match-info"></span>
+      </div>
+      <div class="stage" id="stage">
+        <div class="empty" id="empty">Upload a PDF and click Align to begin.</div>
+        <div class="canvas" id="canvas" hidden>
+          <img id="page-img" alt="page" />
+          <svg id="overlay" preserveAspectRatio="none"></svg>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="/static/align.js?v=8"></script>
+</body>
+</html>

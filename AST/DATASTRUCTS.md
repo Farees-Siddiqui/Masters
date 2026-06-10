@@ -144,6 +144,87 @@ constants `BETA` / `DENSITY_THRESHOLD` / `OVERLAP_THRESHOLD`).
 
 ---
 
+## Alignment (`Loc[Doc] -> Set[Loc[PDF]]`) — `alignment/`
+
+The whiteboard's `Alignment : Loc[Doc] -> Set[Loc[PDF]]`. Two implementations
+share the package:
+
+- **`Aligner`** (`alignment/aligner.py`) — v1 char-stream `difflib` diff;
+  resolves a `DocLoc` (node + substring) to a `Set[PdfLoc]`. Substring-precise
+  but order-fragile.
+- **`align_naive`** (`alignment/naive_aligner.py`) — the v1 **region-level naive
+  matcher**. Order-independent: for each text-bearing node it scores every PDF
+  box by normalized **containment** (score 1.0) or **token overlap**
+  `|A∩B| / min(|A|,|B|)`, keeping boxes `>= threshold` (default `0.5`). Good for
+  paragraph regions, but over-matches at line/word (a common word is "contained"
+  in every node). A node's set is its own matches **∪ its whole subtree's**.
+- **`align_stream`** (`alignment/stream_aligner.py`) — the **positional
+  char-stream aligner** that powers the Alignment page, at **any granularity**
+  (paragraph/line/word). Flattens the AST and the reading-ordered PDF boxes into
+  two normalized char streams, aligns them with `difflib.SequenceMatcher`, then
+  maps each node's char span to the boxes its characters landed on. Because
+  matching is *by position*, the second "the" aligns to the second "the" — so a
+  node maps to exactly its run of word/line boxes, not every occurrence. Returns
+  both directions: `alignment` (node → boxes, subtree-unioned) and `reverse`
+  (`"page:box_index"` → `[node_id, ...]`, primary/most-chars owner first) for
+  box → AST highlighting.
+
+### `align_naive(ast_root, pages, threshold=0.5) -> dict`
+
+`pages` is `[{"page": int, "boxes": [box_dict, ...]}, ...]` (paragraph
+granularity; each box needs `text`). Returns:
+
+```jsonc
+{
+  "alignment": {                 // only nodes with >=1 match appear
+    "n9": [{"page": 1, "box_index": 8}, ...]   // box_index -> page's boxes[]
+  },
+  "coverage":  1.0,              // fraction of text segments with a direct match
+  "threshold": 0.5
+}
+```
+
+`_iter_segments` yields `(node_id, text)` for every node carrying alignable
+text: `section` uses `attribs["title"]`; everything else uses `.text`.
+
+---
+
+## `/api/align/start` + `/api/align/compute` responses — `app/main.py`
+
+Two-phase (mirrors the layout tab) so the page paints before the slow OCR.
+
+**`POST /api/align/start`** (multipart `file`) — Mistral OCR + `build_ast` +
+render page images; persists `ast.json` in the doc dir.
+
+```jsonc
+{
+  "doc": "resnet", "filename": "resnet.pdf", "page_count": 12,
+  "ast": { /* Node.to_dict() */ },
+  "pages": [{"page": 1, "width": 1654, "height": 2339, "image_url": "/layout-data/resnet/page1/page.png"}, ...]
+}
+```
+
+**`GET /api/align/compute?doc=<stem>&granularity=paragraph`** — `process_page`
+per page (cached on disk; reuses the layout tab's cache) + `align_stream` at the
+requested granularity (`paragraph` | `line` | `word`). The frontend caches the
+result per granularity, so switching back is instant.
+
+```jsonc
+{
+  "doc": "resnet", "granularity": "paragraph", "coverage": 1.0,
+  "alignment": { "n9": [{"page": 1, "box_index": 8}, ...] },  // node -> boxes
+  "reverse":   { "1:8": ["n9", ...] },                        // box  -> nodes
+  "pages": [{"page": 1, "width": 1654, "height": 2339, "boxes": [ /* Box.to_dict() */ ]}, ...]
+}
+```
+
+The frontend (`static/align.js`) indexes `pages[].boxes` by `box_index`.
+Clicking an AST node highlights its `alignment` boxes (forward); clicking a PDF
+box uses `reverse` to emphasize that box and scroll to its owning node
+(backward). Both work at paragraph / line / word granularity.
+
+---
+
 ## Adding a new structure
 
 1. Add the dataclass / TypedDict / schema in its module.

@@ -6,6 +6,8 @@ The Doc side (AST nodes) and the PDF side (layout boxes) both carry OCR text;
 """
 
 from .aligner import Aligner
+from .naive_aligner import align_naive
+from .stream_aligner import align_stream
 from .types import DocLoc, PdfLoc
 
-__all__ = ["Aligner", "DocLoc", "PdfLoc"]
+__all__ = ["Aligner", "DocLoc", "PdfLoc", "align_naive", "align_stream"]
