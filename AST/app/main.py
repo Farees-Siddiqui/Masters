@@ -35,7 +35,7 @@ _layout_detector: LayoutDetector | None = None
 def _get_layout_detector() -> LayoutDetector:
     global _layout_detector
     if _layout_detector is None:
-        _layout_detector = LayoutDetector(device="cpu")
+        _layout_detector = LayoutDetector()  # device="auto": GPU if available, else CPU
     return _layout_detector
 
 

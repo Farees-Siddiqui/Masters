@@ -117,8 +117,11 @@ class TextExtractor:
 
         self.device = device
         self.rec_batch_size = rec_batch_size
-        self._det = TextDetection(model_name=det_model, device=device)
-        self._rec = TextRecognition(model_name=rec_model, device=device)
+        # enable_mkldnn=False: Paddle 3.x's OneDNN backend fails under the PIR
+        # executor on CPU ("ConvertPirAttribute2RuntimeAttribute not support
+        # pir::ArrayAttribute<pir::DoubleAttribute>"); plain CPU kernels work.
+        self._det = TextDetection(model_name=det_model, device=device, enable_mkldnn=False)
+        self._rec = TextRecognition(model_name=rec_model, device=device, enable_mkldnn=False)
 
     def _detect(self, image_path: str, unclip_ratio: float) -> list[tuple[list[float], float]]:
         """Return [(bbox, det_score), ...] for one page image."""

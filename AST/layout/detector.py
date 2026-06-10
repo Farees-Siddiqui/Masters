@@ -40,10 +40,11 @@ import pypdfium2 as pdfium
 from PIL import Image
 
 from .draw import draw_boxes
+from .reading_order import compute_reading_order
 
 DEFAULT_DPI = 200
 DEFAULT_MODEL = "PP-DocLayoutV3"
-DEFAULT_DEVICE = "cpu"  # Apple Silicon has no CUDA; CPU is the only option.
+DEFAULT_DEVICE = "auto"  # "auto" -> "gpu" if a CUDA build is present, else "cpu".
 GRANULARITIES = ("paragraph", "line", "word")
 ALL_GRANULARITY = "all"
 DEFAULT_GRANULARITY = ALL_GRANULARITY
@@ -57,6 +58,7 @@ class Region:
     cls_id: Optional[int]
     score: Optional[float]
     bbox: list[float]  # [x1, y1, x2, y2]
+    order: Optional[int] = None  # 0-based reading position (XY-Cut++), per page
 
 
 @dataclass
@@ -69,6 +71,7 @@ class Box:
     score: Optional[float]  # detection confidence
     text: Optional[str]  # OCR text (Maybe[Text])
     text_score: Optional[float]  # recognition confidence
+    order: Optional[int] = None  # 0-based reading position (XY-Cut++), per page
 
     def to_dict(self) -> dict:
         return {
@@ -78,6 +81,7 @@ class Box:
             "score": self.score,
             "text": self.text,
             "text_score": self.text_score,
+            "order": self.order,
         }
 
 
@@ -170,8 +174,14 @@ def _containing_region(bbox: list[float], regions: list[Region]) -> Optional[int
 # --------------------------------------------------------------------------- #
 
 def _assign_labels(text_boxes, regions: list[Region]) -> list[Box]:
-    """Turn recognized line/word TextBoxes into labelled Boxes."""
+    """Turn recognized line/word TextBoxes into labelled Boxes.
+
+    Each box inherits its containing region's reading-order rank; boxes are then
+    numbered into a single global ``order`` by (region order, y1, x1) so the
+    whole page reads as one sequence (lines within a region read top->bottom).
+    """
     boxes: list[Box] = []
+    region_orders: list[int] = []  # parallel to boxes, for global ordering
     for tb in text_boxes:
         idx = _containing_region(tb.bbox, regions)
         region = regions[idx] if idx is not None else None
@@ -185,6 +195,16 @@ def _assign_labels(text_boxes, regions: list[Region]) -> list[Box]:
                 text_score=round(tb.text_score, 4) if tb.text_score is not None else None,
             )
         )
+        # Regions with no order (unmatched) sort last.
+        ro = region.order if (region and region.order is not None) else len(regions)
+        region_orders.append(ro)
+
+    seq = sorted(
+        range(len(boxes)),
+        key=lambda i: (region_orders[i], boxes[i].bbox[1], boxes[i].bbox[0]),
+    )
+    for rank, i in enumerate(seq):
+        boxes[i].order = rank
     return boxes
 
 
@@ -209,6 +229,7 @@ def _aggregate_paragraphs(regions: list[Region], line_boxes) -> list[Box]:
                 score=region.score,
                 text=" ".join(texts) if texts else None,
                 text_score=round(sum(scores) / len(scores), 4) if scores else None,
+                order=region.order,
             )
         )
     return boxes
@@ -255,6 +276,38 @@ def _parse_regions(layout_json_path: Path) -> list[Region]:
     return regions
 
 
+def _resolve_device(device: str) -> str:
+    """Resolve ``"auto"`` to ``"gpu"`` when a CUDA-enabled Paddle build with a
+    visible device is present, otherwise ``"cpu"``. Any explicit value passes
+    through unchanged.
+    """
+    if device != "auto":
+        return device
+    try:
+        import paddle
+
+        if paddle.is_compiled_with_cuda() and paddle.device.cuda.device_count() > 0:
+            return "gpu"
+    except Exception:
+        pass
+    return "cpu"
+
+
+def _stamp_reading_order(regions: list[Region]) -> None:
+    """Compute XY-Cut++ reading order over regions and stamp ``order`` in place."""
+    if not regions:
+        return
+    boxes = [r.bbox for r in regions]
+    labels = [r.label for r in regions]
+    # Page extent inferred from the regions themselves (page size not needed
+    # exactly — only relative geometry and a scale for CMM weights).
+    width = max((b[2] for b in boxes), default=1.0)
+    height = max((b[3] for b in boxes), default=1.0)
+    order = compute_reading_order(boxes, labels, width, height)
+    for r, o in zip(regions, order):
+        r.order = o
+
+
 def _resolve_granularities(granularity: str) -> list[str]:
     if granularity == ALL_GRANULARITY:
         return list(GRANULARITIES)
@@ -280,8 +333,14 @@ class LayoutDetector:
         from paddleocr import LayoutDetection  # lazy: avoids paddle import cost
 
         self.model_name = model_name
-        self.device = device
-        self._model = LayoutDetection(model_name=model_name, device=device)
+        self.device = _resolve_device(device)
+        # enable_mkldnn=False: on CPU, Paddle 3.x's OneDNN backend fails under the
+        # PIR executor ("ConvertPirAttribute2RuntimeAttribute not support
+        # pir::ArrayAttribute<pir::DoubleAttribute>"); plain CPU kernels work.
+        # The flag is a no-op on GPU.
+        self._model = LayoutDetection(
+            model_name=model_name, device=self.device, enable_mkldnn=False
+        )
         self._text_extractor = None  # created on demand
 
     def _ocr(self):
@@ -323,6 +382,7 @@ class LayoutDetector:
                 res.save_to_img(save_path=str(page_dir / "layout.png"))
                 res.save_to_json(save_path=str(page_dir / "layout.json"))
             regions = _parse_regions(page_dir / "layout.json")
+            _stamp_reading_order(regions)
 
             # 2) Text extraction (only what the requested granularities need).
             line_tbs: list = []
@@ -465,6 +525,7 @@ class LayoutDetector:
                 res.save_to_img(save_path=str(page_dir / "layout.png"))
                 res.save_to_json(save_path=str(page_dir / "layout.json"))
         regions = _parse_regions(page_dir / "layout.json")
+        _stamp_reading_order(regions)
 
         image = Image.open(page_img).convert("RGB")
         page_bgr = np.asarray(image)[:, :, ::-1].copy()

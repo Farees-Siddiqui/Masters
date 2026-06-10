@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <title>Layout Analysis</title>
-  <link rel="stylesheet" href="/static/style.css?v=2" />
-  <link rel="stylesheet" href="/static/layout.css?v=2" />
+  <link rel="stylesheet" href="/static/style.css?v=4" />
+  <link rel="stylesheet" href="/static/layout.css?v=4" />
 </head>
 <body>
   <header>
@@ -26,6 +26,10 @@
         <option value="line">line</option>
         <option value="word">word</option>
       </select>
+    </label>
+    <label class="gran reading-toggle">
+      <input type="checkbox" id="reading-order" />
+      Reading order
     </label>
     <button id="go">Analyze</button>
     <span id="status"></span>
@@ -62,6 +66,6 @@
     </aside>
   </main>
 
-  <script src="/static/layout.js?v=2"></script>
+  <script src="/static/layout.js?v=4"></script>
 </body>
 </html>

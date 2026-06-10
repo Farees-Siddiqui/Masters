@@ -14,8 +14,9 @@ so we align the two as character streams:
    doc-stream range, maps it through the alignment to PDF chars, and collects
    the boxes covering them into a ``Set[PdfLoc]``.
 
-This is v1 (text correspondence); reading order is intentionally simple
-(top-to-bottom, left-to-right per page) and not yet the formal ReadingOrder.
+This is v1 (text correspondence). The PDF char stream now follows the formal
+``ReadingOrder`` (XY-Cut++ ``order`` stamped on each box by ``layout.detector``),
+falling back to top-to-bottom, left-to-right for older caches without it.
 """
 
 from __future__ import annotations
@@ -79,9 +80,17 @@ class Aligner:
             if gran is None:
                 continue
             page_no = page.get("page")
+            # Build the PDF char stream in true reading order (XY-Cut++ `order`),
+            # falling back to top->bottom, left->right for caches written before
+            # reading order existed. This fixes the two-column fragility where
+            # our naive box order diverged from Mistral's reading order.
             boxes = sorted(
                 (b for b in page["boxes"][gran] if b.get("text")),
-                key=lambda b: (b["bbox"][1], b["bbox"][0]),  # top->bottom, left->right
+                key=lambda b: (
+                    b["order"] if b.get("order") is not None else float("inf"),
+                    b["bbox"][1],
+                    b["bbox"][0],
+                ),
             )
             for box in boxes:
                 loc_idx = len(self._pdf_locs)

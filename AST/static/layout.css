@@ -109,6 +109,30 @@
   stroke-width: 2.5;
 }
 
+/* ---------- reading-order overlay ---------- */
+.reading-toggle { cursor: pointer; user-select: none; }
+.reading-toggle input { accent-color: var(--accent); }
+
+.ro-flow {
+  fill: none;
+  opacity: 0.85;
+  stroke-linecap: round;
+  pointer-events: none;
+}
+
+.ro-badge { pointer-events: none; }
+.ro-badge circle {
+  fill: #0f172a;
+  fill-opacity: 0.92;
+}
+.ro-badge text {
+  fill: #fff;
+  font-weight: 700;
+  text-anchor: middle;
+  dominant-baseline: central;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+}
+
 /* ---------- sidebar ---------- */
 .sidebar {
   background: var(--panel);

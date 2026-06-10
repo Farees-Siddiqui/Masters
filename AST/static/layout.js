@@ -17,6 +17,7 @@ const overlay = document.getElementById("overlay");
 const boxInfoEl = document.getElementById("box-info");
 const legendEl = document.getElementById("legend");
 const legendHint = document.getElementById("legend-hint");
+const readingOrderToggle = document.getElementById("reading-order");
 
 const SVG_NS = "http://www.w3.org/2000/svg";
 
@@ -87,6 +88,15 @@ goBtn.addEventListener("click", async () => {
 granSelect.addEventListener("change", () => {
   if (doc) renderPage();
 });
+
+// Toggling reading order just redraws the current overlay (no refetch).
+readingOrderToggle.addEventListener("change", () => {
+  if (doc) drawOverlay(currentVisibleBoxes());
+});
+
+function currentVisibleBoxes() {
+  return currentBoxes();
+}
 
 function resetView() {
   doc = null;
@@ -178,7 +188,129 @@ function drawOverlay(boxes) {
     });
     overlay.appendChild(rect);
   });
+  if (readingOrderToggle.checked) drawReadingOrder(boxes);
   highlightSelected();
+}
+
+/* ---------- reading-order overlay (flow path + numbered pills) ---------- */
+function boxCenter(b) {
+  return [(b.bbox[0] + b.bbox[2]) / 2, (b.bbox[1] + b.bbox[3]) / 2];
+}
+
+// Hue ramp green -> amber -> red, t in [0,1], so the flow shows progress.
+function flowColor(t) {
+  const stops = [
+    [0x22, 0xc5, 0x5e],
+    [0xf5, 0x9e, 0x0b],
+    [0xef, 0x44, 0x44],
+  ];
+  t = Math.max(0, Math.min(1, t));
+  const seg = t < 0.5 ? 0 : 1;
+  const lt = t < 0.5 ? t / 0.5 : (t - 0.5) / 0.5;
+  const a = stops[seg], b = stops[seg + 1];
+  const m = a.map((v, k) => Math.round(v + (b[k] - v) * lt));
+  return `rgb(${m[0]}, ${m[1]}, ${m[2]})`;
+}
+
+function clamp(v, lo, hi) {
+  return Math.max(lo, Math.min(hi, v));
+}
+
+function drawReadingOrder(boxes) {
+  // Visible boxes that carry an order, sorted into the reading sequence.
+  const seq = boxes
+    .filter((b) => !hiddenLabels.has(b.label || "") && b.order != null)
+    .sort((a, b) => a.order - b.order);
+  if (seq.length === 0) return;
+
+  // Scale glyphs to the page so they read at any zoom (viewBox is page pixels).
+  const vb = overlay.viewBox.baseVal;
+  const scale = Math.max(vb.width, vb.height) / 1000;
+  const r = Math.max(8, 13 * scale);
+  const flowW = Math.max(1.2, 1.8 * scale);
+  const ringW = Math.max(1.4, 2 * scale);
+  const denom = Math.max(1, seq.length - 1);
+
+  ensureRoDefs();
+
+  // Flow path first (under the pills): one short segment per step, tinted by
+  // progress; arrowheads inherit each segment's color via context-stroke.
+  for (let i = 1; i < seq.length; i++) {
+    const [x1, y1] = boxCenter(seq[i - 1]);
+    const [x2, y2] = boxCenter(seq[i]);
+    const line = document.createElementNS(SVG_NS, "line");
+    line.setAttribute("x1", x1);
+    line.setAttribute("y1", y1);
+    line.setAttribute("x2", x2);
+    line.setAttribute("y2", y2);
+    line.setAttribute("class", "ro-flow");
+    line.setAttribute("stroke", flowColor((i - 1) / denom));
+    line.setAttribute("stroke-width", flowW);
+    line.setAttribute("marker-end", "url(#ro-arrowhead)");
+    overlay.appendChild(line);
+  }
+
+  // Numbered pills tucked into each box's top-left corner.
+  seq.forEach((b, idx) => {
+    const cx = clamp(b.bbox[0] + r * 1.1, r, vb.width - r);
+    const cy = clamp(b.bbox[1] + r * 1.1, r, vb.height - r);
+    const g = document.createElementNS(SVG_NS, "g");
+    g.setAttribute("class", "ro-badge");
+    g.setAttribute("filter", "url(#ro-shadow)");
+    const circle = document.createElementNS(SVG_NS, "circle");
+    circle.setAttribute("cx", cx);
+    circle.setAttribute("cy", cy);
+    circle.setAttribute("r", r);
+    circle.setAttribute("stroke", flowColor(idx / denom));
+    circle.setAttribute("stroke-width", ringW);
+    const text = document.createElementNS(SVG_NS, "text");
+    text.setAttribute("x", cx);
+    text.setAttribute("y", cy);
+    text.setAttribute("font-size", r * 1.15);
+    text.textContent = idx + 1; // 1-based for humans
+    g.appendChild(circle);
+    g.appendChild(text);
+    overlay.appendChild(g);
+  });
+}
+
+function ensureRoDefs() {
+  if (overlay.querySelector("#ro-arrowhead")) return;
+  const defs = document.createElementNS(SVG_NS, "defs");
+
+  // Sleek notched arrowhead; fill = context-stroke so it matches its segment.
+  const marker = document.createElementNS(SVG_NS, "marker");
+  marker.setAttribute("id", "ro-arrowhead");
+  marker.setAttribute("viewBox", "0 0 10 10");
+  marker.setAttribute("refX", "8.5");
+  marker.setAttribute("refY", "5");
+  marker.setAttribute("markerWidth", "6");
+  marker.setAttribute("markerHeight", "6");
+  marker.setAttribute("orient", "auto-start-reverse");
+  marker.setAttribute("markerUnits", "strokeWidth");
+  const head = document.createElementNS(SVG_NS, "path");
+  head.setAttribute("d", "M 0 0 L 10 5 L 0 10 L 3 5 z");
+  head.setAttribute("fill", "context-stroke");
+  marker.appendChild(head);
+  defs.appendChild(marker);
+
+  // Soft drop shadow shared by all pills.
+  const filter = document.createElementNS(SVG_NS, "filter");
+  filter.setAttribute("id", "ro-shadow");
+  filter.setAttribute("x", "-50%");
+  filter.setAttribute("y", "-50%");
+  filter.setAttribute("width", "200%");
+  filter.setAttribute("height", "200%");
+  const ds = document.createElementNS(SVG_NS, "feDropShadow");
+  ds.setAttribute("dx", "0");
+  ds.setAttribute("dy", "1");
+  ds.setAttribute("stdDeviation", "1.3");
+  ds.setAttribute("flood-color", "#000");
+  ds.setAttribute("flood-opacity", "0.55");
+  filter.appendChild(ds);
+  defs.appendChild(filter);
+
+  overlay.appendChild(defs);
 }
 
 function currentBoxes() {

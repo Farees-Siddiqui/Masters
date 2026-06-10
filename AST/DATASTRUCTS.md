@@ -106,6 +106,44 @@ Internal only; not exposed via the API. Documented here for completeness.
 
 ---
 
+## `Region` / `Box` — `layout/detector.py`
+
+A **`Region`** is one PP-DocLayoutV3 detection (a labelled bbox). A **`Box`** is
+an emitted layout box at a requested granularity (`paragraph` = region with text
+aggregated from its lines; `line` / `word` = PP-OCRv5 boxes inheriting their
+containing region's label). Both carry an `order` — the formal `ReadingOrder`.
+
+| Field        | Type            | Description                                                                 |
+|--------------|-----------------|-----------------------------------------------------------------------------|
+| `label`      | `str \| null`   | Semantic label (the Enum part of `BBox`), e.g. `text`, `doc_title`, `chart`.|
+| `cls_id`     | `int \| null`   | PP-DocLayoutV3 class id.                                                     |
+| `bbox`       | `[x1,y1,x2,y2]` | Axis-aligned box in page-pixel coords (rendered at the doc DPI).             |
+| `score`      | `float \| null` | Detection confidence.                                                       |
+| `text`       | `str \| null`   | OCR text (`Maybe[Text]`); `null` for non-text regions.                      |
+| `text_score` | `float \| null` | Recognition confidence (mean over member lines for `paragraph`).            |
+| `order`      | `int \| null`   | **0-based reading position within the page** (see below).                   |
+
+`order` is computed per page by `layout.reading_order.compute_reading_order`
+(XY-Cut++, arXiv:2504.10258) over the **paragraph-level regions**, then stamped
+on each `Region` and propagated to `Box`es. Invariants:
+
+- **Per page, contiguous 0…N-1.** `order` is a permutation of `0..N-1` over the
+  regions of one page; global order = page index, then within-page `order`.
+- **Paragraph boxes** take their region's `order` directly.
+- **Line / word boxes** inherit their containing region's order, then the whole
+  page is renumbered into a single sequence by `(region order, y1, x1)` — so
+  lines within a region read top→bottom and the page reads as one stream.
+- It flows unchanged into `layout.json`, `{granularity}.json`, and
+  `document.json` (cached on disk → instant on re-view), and drives both the
+  reading-order overlay (`static/layout.js`) and the alignment char stream
+  (`alignment/aligner.py`).
+
+See `layout/reading_order.py` for the stage/category config (which labels are
+pre-masked as vision/marginal, the `ENABLE_CROSS_MASK` flag, and the paper-tuned
+constants `BETA` / `DENSITY_THRESHOLD` / `OVERLAP_THRESHOLD`).
+
+---
+
 ## Adding a new structure
 
 1. Add the dataclass / TypedDict / schema in its module.
