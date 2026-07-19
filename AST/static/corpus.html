@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Corpus Explorer</title>
+  <link rel="stylesheet" href="/static/style.css?v=14" />
+  <link rel="stylesheet" href="/static/corpus.css?v=14" />
+</head>
+<body>
+  <header>
+    <div class="header-row" style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;">
+      <div>
+        <h1>Corpus Explorer</h1>
+        <p class="sub">Make sense of a whole collection &mdash; a semantic map of every passage, and concept tracing across all documents. Click anything to jump to its source.</p>
+      </div>
+      <nav class="nav" style="display:flex;gap:14px;">
+        <a href="/align">Alignment</a>
+        <a href="/diff">Diff</a>
+        <a href="/benchmark">Benchmark</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="controls corpus-tabs">
+    <button class="tab active" data-tab="map">Semantic map</button>
+    <button class="tab" data-tab="trace">Concept tracing</button>
+    <span id="status" class="hint"></span>
+  </section>
+
+  <!-- MAP -->
+  <main id="panel-map" class="corpus-panel">
+    <div class="map-wrap">
+      <svg id="map" viewBox="0 0 1000 660" preserveAspectRatio="xMidYMid meet"></svg>
+    </div>
+    <aside class="map-side">
+      <strong class="pane-title">Themes</strong>
+      <div id="legend" class="legend-list"></div>
+      <p class="hint" id="map-meta"></p>
+      <p class="hint">Each dot is a passage, positioned by meaning (t-SNE) and coloured by theme (KMeans). Hover for text; click to open it in the aligner.</p>
+    </aside>
+  </main>
+
+  <!-- TRACE -->
+  <main id="panel-trace" class="corpus-panel" hidden>
+    <section class="trace-bar">
+      <input id="trace-q" type="text" placeholder="Trace a concept across every document — e.g. “residual connections”, “batch normalization”…" />
+      <button id="trace-btn">Trace</button>
+      <span id="trace-status" class="hint"></span>
+    </section>
+    <div id="trace-results" class="trace-results"></div>
+  </main>
+
+  <script src="/static/corpus.js?v=14"></script>
+</body>
+</html>

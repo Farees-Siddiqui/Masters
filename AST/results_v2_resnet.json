@@ -1,0 +1,206 @@
+{
+ "benchmark": "v2.0-node-localization",
+ "iou_threshold": 0.5,
+ "granularity": "paragraph",
+ "human_only": false,
+ "docs": [
+  {
+   "doc": "resnet",
+   "gold": {
+    "n_gold_nodes": 201,
+    "by_tier": {
+     "human": 0,
+     "audited": 36,
+     "oracle": 165
+    },
+    "n_ungraded": 56,
+    "n_furniture": 23,
+    "furniture_human": 0
+   },
+   "results": {
+    "stream": {
+     "n_nodes": 201,
+     "localization_accuracy": 0.9751,
+     "mean_iou": 0.9755,
+     "n_exact": 195,
+     "n_missed": 2,
+     "n_absent": 0,
+     "absent_accuracy": null,
+     "n_furniture": 23,
+     "false_claim_rate": 0.3913,
+     "by_kind": {
+      "formula": {
+       "n": 2,
+       "localization_accuracy": 0.5,
+       "mean_iou": 0.5
+      },
+      "heading": {
+       "n": 22,
+       "localization_accuracy": 1.0,
+       "mean_iou": 1.0
+      },
+      "prose": {
+       "n": 176,
+       "localization_accuracy": 0.983,
+       "mean_iou": 0.9833
+      },
+      "table": {
+       "n": 1,
+       "localization_accuracy": 0.0,
+       "mean_iou": 0.0
+      }
+     },
+     "by_tier": {
+      "audited": {
+       "n": 36,
+       "localization_accuracy": 0.9444,
+       "mean_iou": 0.9444
+      },
+      "oracle": {
+       "n": 165,
+       "localization_accuracy": 0.9818,
+       "mean_iou": 0.9822
+      }
+     }
+    },
+    "similarity": {
+     "n_nodes": 201,
+     "localization_accuracy": 0.9751,
+     "mean_iou": 0.9724,
+     "n_exact": 194,
+     "n_missed": 3,
+     "n_absent": 0,
+     "absent_accuracy": null,
+     "n_furniture": 23,
+     "false_claim_rate": 0.7391,
+     "by_kind": {
+      "formula": {
+       "n": 2,
+       "localization_accuracy": 1.0,
+       "mean_iou": 1.0
+      },
+      "heading": {
+       "n": 22,
+       "localization_accuracy": 0.9091,
+       "mean_iou": 0.8636
+      },
+      "prose": {
+       "n": 176,
+       "localization_accuracy": 0.983,
+       "mean_iou": 0.9856
+      },
+      "table": {
+       "n": 1,
+       "localization_accuracy": 1.0,
+       "mean_iou": 1.0
+      }
+     },
+     "by_tier": {
+      "audited": {
+       "n": 36,
+       "localization_accuracy": 1.0,
+       "mean_iou": 1.0
+      },
+      "oracle": {
+       "n": 165,
+       "localization_accuracy": 0.9697,
+       "mean_iou": 0.9664
+      }
+     }
+    }
+   }
+  }
+ ],
+ "aggregate": {
+  "stream": {
+   "n_nodes": 201,
+   "localization_accuracy": 0.9751,
+   "mean_iou": 0.9755,
+   "n_exact": 195,
+   "n_missed": 2,
+   "n_absent": 0,
+   "absent_accuracy": null,
+   "n_furniture": 23,
+   "false_claim_rate": 0.3913,
+   "by_kind": {
+    "formula": {
+     "n": 2,
+     "localization_accuracy": 0.5,
+     "mean_iou": 0.5
+    },
+    "heading": {
+     "n": 22,
+     "localization_accuracy": 1.0,
+     "mean_iou": 1.0
+    },
+    "prose": {
+     "n": 176,
+     "localization_accuracy": 0.983,
+     "mean_iou": 0.9833
+    },
+    "table": {
+     "n": 1,
+     "localization_accuracy": 0.0,
+     "mean_iou": 0.0
+    }
+   },
+   "by_tier": {
+    "audited": {
+     "n": 36,
+     "localization_accuracy": 0.9444,
+     "mean_iou": 0.9444
+    },
+    "oracle": {
+     "n": 165,
+     "localization_accuracy": 0.9818,
+     "mean_iou": 0.9822
+    }
+   }
+  },
+  "similarity": {
+   "n_nodes": 201,
+   "localization_accuracy": 0.9751,
+   "mean_iou": 0.9724,
+   "n_exact": 194,
+   "n_missed": 3,
+   "n_absent": 0,
+   "absent_accuracy": null,
+   "n_furniture": 23,
+   "false_claim_rate": 0.7391,
+   "by_kind": {
+    "formula": {
+     "n": 2,
+     "localization_accuracy": 1.0,
+     "mean_iou": 1.0
+    },
+    "heading": {
+     "n": 22,
+     "localization_accuracy": 0.9091,
+     "mean_iou": 0.8636
+    },
+    "prose": {
+     "n": 176,
+     "localization_accuracy": 0.983,
+     "mean_iou": 0.9856
+    },
+    "table": {
+     "n": 1,
+     "localization_accuracy": 1.0,
+     "mean_iou": 1.0
+    }
+   },
+   "by_tier": {
+    "audited": {
+     "n": 36,
+     "localization_accuracy": 1.0,
+     "mean_iou": 1.0
+    },
+    "oracle": {
+     "n": 165,
+     "localization_accuracy": 0.9697,
+     "mean_iou": 0.9664
+    }
+   }
+  }
+ }
+}

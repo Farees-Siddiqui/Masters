@@ -40,16 +40,28 @@ def align_stream(ast_root: dict, pages: list[dict], granularity: str = "paragrap
     ``box_index`` indexes into that page's ``boxes`` list as supplied here.
     """
     # --- Doc stream: normalized chars + per-node spans --------------------- #
+    # Built word-by-word so each display word keeps its own char span in the
+    # stream; that lets us map an individual Doc word to its PDF box(es) for the
+    # word/sentence selection UI, while the node still spans all its words.
     doc_chars: list[str] = []
     node_span: dict[str, tuple[int, int]] = {}  # node_id -> (start, length)
+    # node_id -> [(display_word, (start, length) | None)]; None = no alignable chars.
+    node_token_spans: dict[str, list[tuple[str, tuple[int, int] | None]]] = {}
     for node_id, text in _iter_segments(ast_root):
-        norm = _normalize(text)
-        if not norm:
-            continue
-        start = len(doc_chars)
-        doc_chars.extend(norm)
-        node_span[node_id] = (start, len(norm))
-        doc_chars.append(" ")  # separator so adjacent nodes don't fuse
+        spans: list[tuple[str, tuple[int, int] | None]] = []
+        node_start = len(doc_chars)
+        for word in text.split():
+            norm = _normalize(word)
+            if norm:
+                start = len(doc_chars)
+                doc_chars.extend(norm)
+                spans.append((word, (start, len(norm))))
+                doc_chars.append(" ")  # separator so adjacent words don't fuse
+            else:
+                spans.append((word, None))  # pure punctuation: shown, not alignable
+        node_token_spans[node_id] = spans
+        if len(doc_chars) > node_start:
+            node_span[node_id] = (node_start, len(doc_chars) - node_start)
 
     # --- PDF stream: normalized chars + per-char (page, box_index) --------- #
     pdf_chars: list[str] = []
@@ -108,6 +120,25 @@ def align_stream(ast_root: dict, pages: list[dict], granularity: str = "paragrap
         for (page, idx), owners in box_owners.items()
     }
 
+    # --- Per-word token boxes (for word/sentence selection) --------------- #
+    # For each display word, walk its char span through the doc->pdf map and
+    # collect the boxes its characters landed in (first-seen order preserved).
+    tokens: dict[str, list[dict]] = {}
+    for node_id, spans in node_token_spans.items():
+        entries: list[dict] = []
+        for i, (display, span) in enumerate(spans):
+            boxes: list[dict] = []
+            if span is not None:
+                seen: set[tuple[int, int]] = set()
+                start, length = span
+                for di in range(start, start + length):
+                    pj = doc_to_pdf.get(di)
+                    if pj is not None and pdf_box[pj] is not None and pdf_box[pj] not in seen:
+                        seen.add(pdf_box[pj])
+                        boxes.append({"page": pdf_box[pj][0], "box_index": pdf_box[pj][1]})
+            entries.append({"i": i, "text": display, "boxes": boxes})
+        tokens[node_id] = entries
+
     # --- Subtree union ---------------------------------------------------- #
     union: dict[str, set[tuple[int, int]]] = {}
 
@@ -131,4 +162,5 @@ def align_stream(ast_root: dict, pages: list[dict], granularity: str = "paragrap
         "reverse": reverse,
         "coverage": coverage,
         "granularity": granularity,
+        "tokens": tokens,
     }

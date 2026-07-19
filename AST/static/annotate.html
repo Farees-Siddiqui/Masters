@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Alignment Annotator</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <link rel="stylesheet" href="/static/annotate.css" />
+</head>
+<body>
+  <header>
+    <div class="header-row" style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;">
+      <div>
+        <h1>Alignment Annotator</h1>
+        <p class="sub">Human gold for the benchmark: place excluded nodes, adjudicate NULLs, audit the oracle.</p>
+      </div>
+      <nav class="nav" style="display:flex;gap:14px;">
+        <a href="/" style="color:var(--accent);text-decoration:none;font-weight:600;font-size:13px;">&larr; AST Viewer</a>
+        <a href="/align" style="color:var(--accent);text-decoration:none;font-weight:600;font-size:13px;">Alignment</a>
+        <a href="/benchmark" style="color:var(--accent);text-decoration:none;font-weight:600;font-size:13px;">Benchmark</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="controls">
+    <label for="doc">Document</label>
+    <select id="doc"><option value="">— pick —</option></select>
+    <div class="tabs" id="tabs">
+      <button data-queue="excluded" class="tab">Excluded <span class="count" id="count-excluded">–</span></button>
+      <button data-queue="nulls" class="tab">NULL boxes <span class="count" id="count-nulls">–</span></button>
+      <button data-queue="audit" class="tab">Oracle audit <span class="count" id="count-audit">–</span></button>
+    </div>
+    <span id="status" class="muted"></span>
+    <span id="progress" class="muted" style="margin-left:auto;"></span>
+  </section>
+
+  <main class="annot-main">
+    <aside id="item-list" class="pane item-list"></aside>
+
+    <section class="pane page-pane">
+      <div class="page-bar">
+        <button id="prev-page">&larr;</button>
+        <span id="page-label">page –</span>
+        <button id="next-page">&rarr;</button>
+        <span class="muted" id="page-hint"></span>
+      </div>
+      <div id="page-wrap" class="page-wrap">
+        <img id="page-img" alt="" />
+        <div id="overlay"></div>
+      </div>
+    </section>
+
+    <aside class="pane detail-pane">
+      <div id="detail" class="detail">
+        <p class="muted">Pick a document, then an item.</p>
+      </div>
+      <div class="shortcut-help muted">
+        <b>keys</b> — j/k: next/prev item &middot; a: accept/furniture &middot;
+        r: reject &middot; x: absent &middot; s: skip &middot; u: undo verdict &middot;
+        &larr;/&rarr;: page
+      </div>
+    </aside>
+  </main>
+
+  <script src="/static/annotate.js"></script>
+</body>
+</html>

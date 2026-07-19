@@ -3,3 +3,9 @@ uvicorn[standard]>=0.27
 python-multipart>=0.0.9
 mistralai>=1.2.0,<2.0
 pydantic>=2.6
+# Semantic-similarity aligner (alignment/similarity_aligner.py). Pulls torch;
+# a CPU build is fine for the MiniLM model at these document sizes.
+sentence-transformers>=2.2
+# CP-SAT constraint solver (alignment/cpsat_aligner.py) — alignment as a
+# constraint satisfaction problem rather than independent per-box argmax.
+ortools>=9.10

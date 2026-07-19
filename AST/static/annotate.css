@@ -1,0 +1,111 @@
+/* Annotation tool. Inherits palette from style.css. */
+
+.controls label { color: var(--muted); font-size: 13px; }
+.controls select {
+  background: var(--panel); color: var(--fg);
+  border: 1px solid var(--border); border-radius: 6px; padding: 6px 8px;
+}
+
+.tabs { display: flex; gap: 6px; }
+.tab {
+  background: var(--panel); color: var(--muted);
+  border: 1px solid var(--border); border-radius: 6px;
+  padding: 6px 10px; cursor: pointer; font-size: 13px;
+}
+.tab.active { color: var(--fg); border-color: var(--accent); }
+.tab .count { color: var(--accent); font-weight: 600; }
+
+.muted { color: var(--muted); font-size: 12px; }
+
+.annot-main {
+  display: grid;
+  grid-template-columns: 290px 1fr 340px;
+  gap: 12px; padding: 12px 24px; height: calc(100vh - 150px);
+}
+.pane {
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: 8px; overflow: auto;
+}
+
+/* --- item list --- */
+.item-list { padding: 6px; }
+.item-row {
+  padding: 7px 9px; border-radius: 6px; cursor: pointer;
+  font-size: 12px; line-height: 1.35; border: 1px solid transparent;
+  display: flex; gap: 8px; align-items: baseline;
+}
+.item-row:hover { background: rgba(122,162,255,0.08); }
+.item-row.active { border-color: var(--accent); background: rgba(122,162,255,0.12); }
+.item-row .snippet {
+  flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  color: var(--fg);
+}
+.item-row.done .snippet { color: var(--muted); text-decoration: line-through; }
+.item-row .badge {
+  font-size: 10px; padding: 1px 6px; border-radius: 8px;
+  background: var(--border); color: var(--muted); flex-shrink: 0;
+}
+.item-row .verdict { font-size: 11px; flex-shrink: 0; }
+.verdict.ok { color: var(--para); }
+.verdict.bad { color: var(--heading); }
+.verdict.neutral { color: var(--muted); }
+
+/* --- page pane --- */
+.page-pane { display: flex; flex-direction: column; overflow: hidden; }
+.page-bar {
+  display: flex; gap: 10px; align-items: center;
+  padding: 8px 10px; border-bottom: 1px solid var(--border); flex-shrink: 0;
+}
+.page-bar button {
+  background: var(--panel); color: var(--fg); border: 1px solid var(--border);
+  border-radius: 6px; padding: 3px 10px; cursor: pointer;
+}
+.page-wrap { position: relative; overflow: auto; flex: 1; }
+.page-wrap img { display: block; width: 100%; height: auto; }
+#overlay { position: absolute; inset: 0; }
+
+.obox {
+  position: absolute; border: 1.5px solid rgba(138,147,163,0.45);
+  border-radius: 2px; cursor: pointer;
+}
+.obox:hover { border-color: var(--accent); background: rgba(122,162,255,0.10); }
+.obox.suggested { border-color: var(--section); box-shadow: 0 0 0 1px var(--section); }
+.obox.selected { border-color: var(--selected); background: rgba(255,209,102,0.18); }
+.obox.focus { border-color: var(--accent); background: rgba(122,162,255,0.16); }
+.otok { position: absolute; background: rgba(107,224,217,0.30); border-radius: 1px; pointer-events: none; }
+
+/* --- detail pane --- */
+.detail { padding: 12px; font-size: 13px; }
+.detail h3 { margin: 0 0 4px; font-size: 13px; color: var(--accent); }
+.detail .node-text {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
+  padding: 8px; font-family: ui-monospace, Consolas, monospace; font-size: 12px;
+  white-space: pre-wrap; word-break: break-word; max-height: 220px; overflow: auto;
+  margin: 8px 0;
+}
+.detail .meta { color: var(--muted); font-size: 12px; margin: 6px 0; }
+.detail .actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.detail button {
+  border: 1px solid var(--border); border-radius: 6px; padding: 7px 12px;
+  cursor: pointer; font-size: 13px; background: var(--panel); color: var(--fg);
+}
+.detail button.primary { border-color: var(--para); color: var(--para); }
+.detail button.danger { border-color: var(--heading); color: var(--heading); }
+.detail button:disabled { opacity: 0.4; cursor: default; }
+.detail .chip {
+  display: inline-block; background: var(--bg); border: 1px solid var(--selected);
+  color: var(--selected); border-radius: 10px; padding: 2px 9px; font-size: 12px;
+  margin: 2px 4px 2px 0; cursor: pointer;
+}
+.detail select, .detail input {
+  background: var(--bg); color: var(--fg); border: 1px solid var(--border);
+  border-radius: 6px; padding: 6px 8px; font-size: 12px; width: 100%;
+}
+.saved-note { color: var(--para); font-size: 12px; margin-top: 8px; }
+
+.shortcut-help {
+  padding: 10px 12px; border-top: 1px solid var(--border);
+  line-height: 1.6;
+}
+.detail-pane { display: flex; flex-direction: column; }
+.detail { flex: 1; overflow: auto; }

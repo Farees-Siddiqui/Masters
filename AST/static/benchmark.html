@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Alignment Benchmark</title>
+  <link rel="stylesheet" href="/static/style.css?v=11" />
+  <link rel="stylesheet" href="/static/benchmark.css?v=13" />
+</head>
+<body>
+  <header>
+    <div class="header-row" style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;">
+      <div>
+        <h1>Alignment Benchmark</h1>
+        <p class="sub" id="page-sub">Real documents vs. PDF text-layer gold &mdash; <em>prose is solved; page furniture is not.</em></p>
+      </div>
+      <nav class="nav" style="display:flex;gap:14px;">
+        <a href="/">AST Viewer</a>
+        <a href="/layout">Layout</a>
+        <a href="/align">Alignment</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="controls bench-controls">
+    <div class="seg" id="mode-seg">
+      <span class="seg-label">Benchmark</span>
+      <button class="seg-btn active" data-mode="real">real document</button>
+      <button class="seg-btn" data-mode="synthetic">synthetic sweep</button>
+    </div>
+    <div class="seg" id="regime-seg" hidden>
+      <span class="seg-label">Reading order</span>
+      <button class="seg-btn active" data-regime="intact">intact</button>
+      <button class="seg-btn" data-regime="shuffled">shuffled</button>
+    </div>
+    <div class="seg" id="metric-seg" hidden>
+      <span class="seg-label">Metric</span>
+      <button class="seg-btn active" data-metric="f1">F1</button>
+      <button class="seg-btn" data-metric="precision">precision</button>
+      <button class="seg-btn" data-metric="recall">recall</button>
+      <button class="seg-btn" data-metric="owner_acc">owner acc.</button>
+    </div>
+    <span id="status" class="hint"></span>
+  </section>
+
+  <!-- Synthetic sweep -->
+  <main class="bench-main" id="synthetic-view" hidden>
+    <section class="bench-chart-pane">
+      <div class="chart-head">
+        <strong id="chart-title">F1 vs. OCR noise</strong>
+        <div class="legend" id="legend"></div>
+      </div>
+      <svg id="chart" viewBox="0 0 760 400" preserveAspectRatio="xMidYMid meet"></svg>
+      <p class="takeaway" id="takeaway"></p>
+    </section>
+
+    <section class="bench-side">
+      <strong class="pane-title">Results</strong>
+      <div id="table-wrap" class="table-wrap"></div>
+      <p class="hint method-note">
+        Synthetic sweep on a fixed AST: paragraphs are split into OCR
+        &ldquo;lines,&rdquo; characters corrupted at each noise rate, scored
+        against the known box&rarr;node owner. Gold is built <em>from the AST's
+        own text</em>, so this measures robustness to character noise &mdash; not
+        the cross-engine task. Re-generate with
+        <code>python -m benchmark synthetic</code>.
+      </p>
+    </section>
+  </main>
+
+  <!-- Real document -->
+  <main class="real-main" id="real-view">
+    <section class="real-headline">
+      <div class="real-meta" id="real-meta"></div>
+      <div class="kpi-row" id="kpi-row"></div>
+      <p class="takeaway" id="real-takeaway"></p>
+    </section>
+
+    <section class="real-tables">
+      <div class="table-block wide">
+        <strong class="pane-title">Overall &mdash; token-level</strong>
+        <p class="hint">
+          <strong>F1(&micro;)</strong> pools every token across documents (long
+          docs pull harder); <strong>F1(M)</strong> is the per-document mean
+          (every doc weighted equally). A gap between them means per-document
+          variance the single number is hiding.
+        </p>
+        <div id="real-overall" class="table-wrap"></div>
+      </div>
+
+      <div class="table-block wide">
+        <strong class="pane-title">Per-document</strong>
+        <p class="hint">
+          One corpus number can be carried by a single easy document. This is
+          the spread it averages over.
+        </p>
+        <div id="real-perdoc" class="table-wrap"></div>
+      </div>
+
+      <div class="table-block">
+        <strong class="pane-title">Prose strata &mdash; F1</strong>
+        <p class="hint">Regions an AST node genuinely owns. Higher is better.</p>
+        <div id="real-prose" class="table-wrap"></div>
+      </div>
+
+      <div class="table-block">
+        <strong class="pane-title">Furniture strata &mdash; abstention accuracy</strong>
+        <p class="hint">
+          Page numbers, figure interiors: <em>no node owns these</em>. 1.000 =
+          correctly ignored; 0.000 = a source was invented for every token.
+        </p>
+        <div id="real-furniture" class="table-wrap"></div>
+      </div>
+
+      <div class="table-block">
+        <strong class="pane-title">Oracle report</strong>
+        <p class="hint">
+          Gold is derived, so it is reported rather than assumed. Nodes the text
+          layer cannot place (LaTeX formulas, image refs) are excluded from gold,
+          not guessed &mdash; which makes this benchmark <em>easier</em> than
+          reality by the amount shown.
+        </p>
+        <div id="real-oracle" class="table-wrap"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="/static/benchmark.js?v=15"></script>
+</body>
+</html>

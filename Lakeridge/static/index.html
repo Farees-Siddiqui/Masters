@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Incident Scene Analyzer — SAM 3</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="dot"></span>
+      <div>
+        <h1>Incident Scene Analyzer</h1>
+        <p>Multimodal semantic segmentation &amp; labeling · powered by <strong>SAM&nbsp;3</strong></p>
+      </div>
+    </div>
+    <div class="status" id="status">
+      <span class="chip" id="deviceChip">device: —</span>
+    </div>
+  </header>
+
+  <main class="layout">
+    <!-- Controls -->
+    <section class="panel controls">
+      <h2>1 · Input image</h2>
+      <label class="dropzone" id="dropzone">
+        <input type="file" id="fileInput" accept="image/*" hidden />
+        <div class="dz-inner" id="dzInner">
+          <div class="dz-icon">⤴</div>
+          <p><strong>Drop an incident photo</strong><br />or click to browse</p>
+        </div>
+      </label>
+
+      <h2>2 · Concepts to segment</h2>
+      <p class="hint">Comma-separated open-vocabulary phrases. SAM 3 finds every instance of each.</p>
+      <textarea id="concepts" rows="3" spellcheck="false"></textarea>
+      <div class="chips" id="chipHints"></div>
+
+      <div class="row">
+        <label class="slider">
+          Confidence ≥ <span id="thrVal">0.50</span>
+          <input type="range" id="threshold" min="0.1" max="0.9" step="0.05" value="0.5" />
+        </label>
+      </div>
+
+      <label class="toggle">
+        <input type="checkbox" id="narrative" checked />
+        <span>Generate incident report <em>(Qwen2.5-VL, on-device)</em></span>
+      </label>
+
+      <button id="analyzeBtn" class="primary" disabled>Analyze scene</button>
+      <p class="tiny" id="hintLine">Load an image to begin.</p>
+    </section>
+
+    <!-- Result -->
+    <section class="panel result">
+      <div id="verdict" class="verdict hidden"></div>
+      <div class="canvas-wrap">
+        <div id="placeholder" class="placeholder">
+          <div class="ph-icon">🖼️</div>
+          <p>The annotated segmentation will appear here.</p>
+        </div>
+        <img id="overlay" class="hidden" alt="segmentation overlay" />
+        <div id="spinner" class="spinner hidden"><div class="ring"></div><p id="spinText">Loading SAM 3…</p></div>
+      </div>
+      <div id="report" class="report hidden"></div>
+    </section>
+
+    <!-- Detections -->
+    <aside class="panel detections">
+      <h2>Detected objects</h2>
+      <div id="summary" class="summary"></div>
+      <div id="detList" class="det-list"></div>
+      <div id="meta" class="meta"></div>
+    </aside>
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

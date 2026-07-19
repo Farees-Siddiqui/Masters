@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Alignment Benchmarks — v1.0 &amp; v2.0</title>
+<style>
+  :root {
+    --bg: #f6f7fa;
+    --panel: #ffffff;
+    --panel2: #eef0f5;
+    --border: #d8dce6;
+    --fg: #1a2130;
+    --muted: #5b6474;
+    --accent: #274bcc;
+    --teal: #0e7d76;
+    --v1: #a4560a;      /* amber family — benchmark v1 */
+    --v1-soft: #f8e8d4;
+    --v2: #1e7a34;      /* green family — benchmark v2 */
+    --v2-soft: #ddf0e0;
+    --bad: #b3213d;
+    --good: #1e7a34;
+    --code-bg: #eef0f5;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f1115; --panel: #161a22; --panel2: #1c2130;
+      --border: #262c38; --fg: #e6e8eb; --muted: #8a93a3;
+      --accent: #7aa2ff; --teal: #6be0d9;
+      --v1: #ffb86b; --v1-soft: #2b2318;
+      --v2: #9be7a3; --v2-soft: #172a1b;
+      --bad: #ff8fb1; --good: #9be7a3; --code-bg: #10141c;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0f1115; --panel: #161a22; --panel2: #1c2130;
+    --border: #262c38; --fg: #e6e8eb; --muted: #8a93a3;
+    --accent: #7aa2ff; --teal: #6be0d9;
+    --v1: #ffb86b; --v1-soft: #2b2318;
+    --v2: #9be7a3; --v2-soft: #172a1b;
+    --bad: #ff8fb1; --good: #9be7a3; --code-bg: #10141c;
+  }
+  :root[data-theme="light"] {
+    --bg: #f6f7fa; --panel: #ffffff; --panel2: #eef0f5;
+    --border: #d8dce6; --fg: #1a2130; --muted: #5b6474;
+    --accent: #274bcc; --teal: #0e7d76;
+    --v1: #a4560a; --v1-soft: #f8e8d4;
+    --v2: #1e7a34; --v2-soft: #ddf0e0;
+    --bad: #b3213d; --good: #1e7a34; --code-bg: #eef0f5;
+  }
+
+  body {
+    background: var(--bg); color: var(--fg);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    line-height: 1.6; margin: 0; font-size: 15.5px;
+  }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 48px 24px 96px; }
+  code, .mono {
+    font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+    font-size: 0.92em; color: var(--teal);
+  }
+  pre {
+    background: var(--code-bg); border: 1px solid var(--border);
+    border-radius: 8px; padding: 14px 16px; overflow-x: auto;
+    font-size: 13px; line-height: 1.55; color: var(--fg);
+  }
+  pre code { color: inherit; font-size: inherit; }
+  pre .k { color: var(--teal); }
+  pre .c { color: var(--muted); }
+  pre .hl { color: var(--v1); font-weight: 600; }
+  pre .hl2 { color: var(--v2); font-weight: 600; }
+
+  header.doc { margin-bottom: 40px; }
+  .eyebrow {
+    text-transform: uppercase; letter-spacing: 0.14em; font-size: 11px;
+    font-weight: 700; color: var(--muted);
+  }
+  h1 {
+    font-size: 34px; line-height: 1.15; letter-spacing: -0.02em;
+    margin: 8px 0 10px; text-wrap: balance; font-weight: 800;
+  }
+  .lede { color: var(--muted); font-size: 17px; max-width: 60ch; margin: 0; }
+
+  h2 {
+    font-size: 22px; letter-spacing: -0.01em; margin: 56px 0 6px;
+    padding-top: 24px; border-top: 1px solid var(--border); text-wrap: balance;
+  }
+  h3 { font-size: 16px; margin: 30px 0 6px; }
+  p { max-width: 72ch; margin: 10px 0; }
+  .muted { color: var(--muted); }
+  .small { font-size: 13px; }
+
+  .tag {
+    display: inline-block; font-size: 11px; font-weight: 700;
+    letter-spacing: 0.1em; padding: 2px 9px; border-radius: 999px;
+    vertical-align: 2px; margin-right: 8px;
+  }
+  .tag.v1 { background: var(--v1-soft); color: var(--v1); }
+  .tag.v2 { background: var(--v2-soft); color: var(--v2); }
+
+  .tablebox { overflow-x: auto; border: 1px solid var(--border); border-radius: 8px; margin: 16px 0; }
+  table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+  th, td { padding: 8px 12px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--border); }
+  tr:last-child td { border-bottom: none; }
+  th {
+    background: var(--panel2); font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--muted);
+  }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; }
+  .good { color: var(--good); font-weight: 600; }
+  .bad { color: var(--bad); font-weight: 600; }
+
+  .defs { margin: 14px 0; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .defs dl { margin: 0; display: grid; grid-template-columns: minmax(150px, max-content) 1fr; }
+  .defs dt {
+    font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; color: var(--teal);
+    padding: 8px 14px; border-bottom: 1px solid var(--border); background: var(--panel2);
+    white-space: nowrap;
+  }
+  .defs dd { margin: 0; padding: 8px 14px; border-bottom: 1px solid var(--border); font-size: 13.5px; }
+  .defs dt:last-of-type, .defs dd:last-of-type { border-bottom: none; }
+
+  .callout {
+    border: 1px solid var(--border); border-left: 3px solid var(--accent);
+    background: var(--panel); border-radius: 6px; padding: 12px 16px; margin: 18px 0;
+    font-size: 14px; max-width: none;
+  }
+  .callout.v1 { border-left-color: var(--v1); }
+  .callout.v2 { border-left-color: var(--v2); }
+  .callout .t { font-weight: 700; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; }
+  .callout.v1 .t { color: var(--v1); }
+  .callout.v2 .t { color: var(--v2); }
+  .callout p:last-child { margin-bottom: 2px; }
+
+  .flow {
+    display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+    font-size: 13px; margin: 14px 0;
+  }
+  .flow .step {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
+    padding: 8px 12px;
+  }
+  .flow .step b { display: block; font-size: 12px; }
+  .flow .step span { color: var(--muted); font-size: 11.5px; }
+  .flow .arr { color: var(--muted); }
+
+  a { color: var(--accent); }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+</style>
+
+<div class="wrap">
+<header class="doc">
+  <div class="eyebrow">AST ⇄ PDF Alignment · evaluation</div>
+  <h1>Two benchmarks, one question:<br/>did the aligner point at the right place?</h1>
+  <p class="lede">
+    The aligner claims things like <span class="mono">"AST node n42 lives in box 7 on page 3."</span>
+    Grading that claim needs an answer key. v1 and v2 differ in <em>what unit they grade</em>
+    and <em>where the answer key comes from</em>. All numbers below are real output from this repo's
+    <span class="mono">corpus/</span> (10 arXiv papers), mostly <span class="mono">resnet.pdf</span>.
+  </p>
+</header>
+
+<div class="tablebox">
+<table>
+  <tr><th style="width:130px"></th>
+      <th><span class="tag v1">V1.0</span>token attribution</th>
+      <th><span class="tag v2">V2.0</span>node localization</th></tr>
+  <tr><td class="muted">Package</td>
+      <td class="mono">benchmark/</td><td class="mono">benchmark_v2_0/</td></tr>
+  <tr><td class="muted">Unit graded</td>
+      <td>One printed <b>word</b> (81,142 across the corpus)</td>
+      <td>One <b>AST node</b> — the thing a user clicks (~240 per doc)</td></tr>
+  <tr><td class="muted">Question per unit</td>
+      <td>"Which node owns this word?"</td>
+      <td>"Does the predicted region match this node's true region?"</td></tr>
+  <tr><td class="muted">Answer key</td>
+      <td><b>Derived</b> automatically from the PDF's embedded text layer (the "oracle")</td>
+      <td><b>Asserted</b> by a human in the <span class="mono">/annotate</span> tool; oracle demoted to proposal generator</td></tr>
+  <tr><td class="muted">Headline metrics</td>
+      <td>Precision / Recall / F1, false-attribution rate</td>
+      <td>Localization accuracy @ IoU ≥ 0.5, false-claim rate</td></tr>
+  <tr><td class="muted">Strength</td>
+      <td>Huge sample; partial credit falls out naturally; granularity-independent</td>
+      <td>Legible; verifiable by eye; covers formulas/tables/images the oracle can't</td></tr>
+  <tr><td class="muted">Weakness</td>
+      <td>Answer key is an inference with measured failure modes; blind on hard regions</td>
+      <td>Fewer labels (~2,400 when fully annotated); needs human effort</td></tr>
+  <tr><td class="muted">Role today</td>
+      <td>Fine-grained diagnostic tier</td>
+      <td>Headline benchmark</td></tr>
+</table>
+</div>
+
+<!-- ============================== V1 =============================== -->
+<h2><span class="tag v1">V1.0</span>Token attribution against text-layer gold</h2>
+
+<p>
+A born-digital PDF secretly contains a perfect record: every character and its exact
+position on the page. Neither OCR engine (Mistral on the AST side, Paddle on the box side)
+can influence it, so it acts as a neutral referee. v1 turns that record into an answer key,
+one word at a time.</p>
+
+<div class="flow">
+  <div class="step"><b>1 · Tokenize</b><span>text layer → words with positions</span></div>
+  <div class="arr">→</div>
+  <div class="step"><b>2 · Place nodes</b><span>find each node's text in the stream</span></div>
+  <div class="arr">→</div>
+  <div class="step"><b>3 · Predict</b><span>aligner box claims → per-word owners</span></div>
+  <div class="arr">→</div>
+  <div class="step"><b>4 · Compare</b><span>two dicts, entry by entry</span></div>
+</div>
+
+<h3>Step 1 — a "word" is ink at a location, not a string</h3>
+<p>
+<span class="mono">oracle.extract_tokens</span> reads every page into <span class="mono">Token</span>
+records. Real one from resnet:</p>
+
+<pre><code>Token(page=1, index=201, text=<span class="k">'where'</span>,
+      bbox=(492.0, 1351.4, 557.3, 1370.8),   <span class="c"># pixel rectangle on page 1</span>
+      stream_start=1330, stream_end=1335)    <span class="c"># slice of the document stream</span>
+key = <span class="k">'1:201'</span>                              <span class="c"># "page 1, word #201" — its identity</span></code></pre>
+
+<div class="defs"><dl>
+  <dt>page, index</dt><dd>Which page, and the word's position in that page's text layer. Together they form the <b>key</b> — every table below is keyed by it, which is why the 492 copies of "the" in resnet never collide: each is a separate physical object.</dd>
+  <dt>bbox</dt><dd>Pixel rectangle <span class="mono">(x0, y0, x1, y1)</span> at 200 dpi, top-left origin — the union of the word's per-character boxes reported by pdfium.</dd>
+  <dt>stream_start / stream_end</dt><dd>The word's slice of the <b>stream</b>: all words joined into one normalized (lowercased, ligature-folded) string, 59,147 chars for resnet. The stream exists so node text can be searched; the slice is the bridge back from text position to page position.</dd>
+</dl></div>
+
+<h3>Step 2 — build the answer key by placing whole nodes</h3>
+<p>
+Each AST node's full text is searched for in the stream — never word by word. A 200-character
+paragraph occurs exactly once, so its common words ride along inside a rare context:</p>
+
+<pre><code>placements = {
+  <span class="k">'n2'</span>: (0, 44),      <span class="c"># stream[0:44] = 'deep residual learning for image recognition'</span>
+  <span class="k">'n3'</span>: (45, 91),     <span class="c"># 'kaiming he xiangyu zhang shaoqing ren jian sun'</span>
+  <span class="k">'n1'</span>: (4219, 4257), <span class="c"># 'arxiv:1512.03385v1 …' — the vertical sidebar, found</span>
+}                       <span class="c">#   late in the PDF's internal order, as it should be</span></code></pre>
+
+<p>Every token overlapping a placed span inherits that node. Tokens nobody claims get
+<span class="mono">None</span> — the <b>NULL class</b> (page numbers, text inside figures):</p>
+
+<pre><code>token_gold = {
+  <span class="k">'1:0'</span>:   <span class="k">'n2'</span>,    <span class="c"># 'Deep'  → title node</span>
+  <span class="k">'1:328'</span>: None,    <span class="c"># '0' — a tick label inside a figure; belongs to nobody</span>
+}
+<span class="c"># 'the' appears 492×, owned by 115 different nodes — resolved by position:</span>
+<span class="c">#   '1:37'  (page 1, x=666)  → 'n7'      '7:212' (page 7, x=545) → 'n107'</span></code></pre>
+
+<h3>Steps 3–4 — predict and compare</h3>
+<p>
+The aligner outputs <span class="mono">reverse</span>: for each layout box, its ranked owning
+nodes. Geometry (<span class="mono">boxes_to_tokens</span>: a token belongs to the box containing
+its center) turns that into a prediction with the same shape as the answer key, and scoring is
+literally two dicts compared entry by entry. Four outcomes per word:</p>
+
+<div class="tablebox">
+<table>
+  <tr><th>Answer key says</th><th>Aligner says</th><th>Verdict</th><th>Counter</th></tr>
+  <tr><td>n42</td><td>n42</td><td class="good">correct</td><td class="mono">tp</td></tr>
+  <tr><td>n42</td><td>n17, or nothing</td><td class="bad">miss</td><td class="mono">fn (+fp if wrong node)</td></tr>
+  <tr><td>nobody</td><td>nothing</td><td class="good">correctly ignored</td><td class="mono">tn</td></tr>
+  <tr><td>nobody</td><td>n42</td><td class="bad">false attribution</td><td class="mono">false_attrib + fp</td></tr>
+</table>
+</div>
+
+<div class="defs"><dl>
+  <dt>precision</dt><dd><span class="mono">tp / (tp + fp)</span> — of the words the aligner assigned to a node, the fraction assigned correctly.</dd>
+  <dt>recall</dt><dd><span class="mono">tp / (tp + fn)</span> — of the words that truly belong to some node, the fraction the aligner found.</dd>
+  <dt>F1</dt><dd>Harmonic mean of the two; the headline. Reported micro (tokens pooled) and macro (per-document mean) — a gap between them means one document is carrying the result.</dd>
+  <dt>null_accuracy</dt><dd>Of words truly owned by nobody, the fraction the aligner correctly left alone.</dd>
+  <dt>false_attribution_rate</dt><dd>Of words truly owned by nobody, the fraction given an invented owner — the provenance-critical error.</dd>
+  <dt>accuracy_up_to_ambiguity</dt><dd>Accuracy that forgives picking the <em>identical twin</em> of the right node (two headings both reading "MS COCO") — no method can tell identical texts apart, so the gap to plain accuracy is an ambiguity tax, not a defect.</dd>
+  <dt>n_excluded</dt><dd>Words deliberately not scored: regions whose AST counterpart is non-literal (tables → markdown, formulas → LaTeX), where gold-NULL means "oracle can't see", not "no owner".</dd>
+</dl></div>
+
+<h3>The measured flaw: answer-key contamination</h3>
+<p>
+The oracle fails to place ~24% of nodes (LaTeX formulas, image refs, bare "1"s). Those nodes'
+words become gold-NULL — so when an aligner <em>correctly</em> matches them, it gets punished.
+Caught live on resnet:</p>
+
+<pre><code>token <span class="k">'3:360'</span> = <span class="k">'Here'</span>
+  gold: None                <span class="c"># oracle couldn't place n43 — it contains LaTeX</span>
+  pred: <span class="hl">'n43'</span>  <span class="c">'here $\mathbf{x}$ and $\mathbf{y}$ are the input…'</span>
+                            <span class="c"># the aligner is RIGHT, and gets charged a false attribution</span>
+
+<span class="hl">458 of 477</span> scored "false attributions" on resnet predicted a node
+the oracle itself failed to place — 96% contamination.</code></pre>
+
+<p>
+The fix (July 2026): a gold-NULL word whose predicted node is <em>unplaced</em> is now excluded
+(<span class="mono">n_excluded_unverifiable</span>) instead of scored. Corpus impact, 10 docs:</p>
+
+<div class="tablebox">
+<table>
+  <tr><th>metric</th><th class="num">stream, before</th><th class="num">stream, after</th><th class="num">similarity, before</th><th class="num">similarity, after</th></tr>
+  <tr><td>F1 (micro)</td><td class="num">0.946</td><td class="num good">0.965</td><td class="num">0.898</td><td class="num good">0.912</td></tr>
+  <tr><td>null_accuracy</td><td class="num">0.366</td><td class="num good">0.700</td><td class="num">0.346</td><td class="num good">0.560</td></tr>
+  <tr><td>false_attribution_rate</td><td class="num bad">0.634</td><td class="num">0.300</td><td class="num bad">0.655</td><td class="num">0.440</td></tr>
+  <tr><td>false_attrib (count)</td><td class="num">3,730</td><td class="num">922</td><td class="num">3,849</td><td class="num">1,596</td></tr>
+</table>
+</div>
+
+<p class="small muted">
+75% of stream's headline "dishonesty" was the referee's own blind spot. A real ~0.30 survives —
+the aligners genuinely do invent owners for furniture — but half to three-quarters of the old
+signal was artifact. This episode is why v2 exists.</p>
+
+<!-- ============================== V2 =============================== -->
+<h2><span class="tag v2">V2.0</span>Node localization against human gold</h2>
+
+<p>
+v2 flips the hierarchy: the unit is the AST node — the thing a user actually clicks — and the
+gold is a plain asserted relation, not an inference:</p>
+
+<pre><code>gold(node) = {box keys}   <span class="c"># e.g. gold('n43') = {'3:10'} — asserted, checkable in 2s by eye</span>
+           | ABSENT       <span class="c"># the node appears on no page</span></code></pre>
+
+<h3>Where gold comes from — three tiers, strongest wins</h3>
+<div class="defs"><dl>
+  <dt>human</dt><dd>Verdicts from the <span class="mono">/annotate</span> tool, stored in <span class="mono">layout_output/&lt;doc&gt;/annotations.json</span>. The <b>excluded queue</b> asserts boxes for nodes the oracle never placed — formulas, tables, images: exactly v1's blind spot. The <b>NULL queue</b> confirms furniture or assigns missed owners.</dd>
+  <dt>audited</dt><dd>Oracle placements a human accepted in the <b>audit queue</b> (fuzzy placements served first). Rejects drop the node from gold entirely.</dd>
+  <dt>oracle</dt><dd>Unreviewed oracle proposals, converted to boxes by <b>majority ownership</b>: a box joins a node's gold only when that node owns &gt;50% of the box's owned tokens. Included so the benchmark runs before annotation finishes — but every report prints the tier composition, so a result resting on tier 3 says so.</dd>
+</dl></div>
+
+<h3>Scoring — area, not identity</h3>
+<p>
+Prediction: the aligner's primary owner per box, inverted to
+<span class="mono">pred(node) = {boxes}</span>. A node is <b>localized</b> when the pixel area
+of its predicted boxes overlaps its gold boxes at <b>IoU ≥ 0.5</b>
+(intersection-over-union of the two regions' areas). Area is the comparison so granularity
+can't game it: if gold says one box and the aligner claims the same region as two half-boxes,
+the areas agree and the node counts as found.</p>
+
+<div class="defs"><dl>
+  <dt>localization_accuracy</dt><dd>Fraction of gold nodes localized (IoU ≥ 0.5). The thesis sentence: <em>"the stream aligner correctly localizes 97.5% of nodes."</em></dd>
+  <dt>mean_iou</dt><dd>Average IoU over gold nodes — how tight the matches are, not just whether they cleared the bar.</dd>
+  <dt>n_exact</dt><dd>Nodes whose predicted box <em>set</em> equals gold exactly (IoU = 1 by definition).</dd>
+  <dt>n_missed</dt><dd>Nodes with gold boxes for which the aligner predicted nothing at all.</dd>
+  <dt>absent_accuracy</dt><dd>Of nodes a human marked ABSENT, the fraction the aligner correctly left unmatched.</dd>
+  <dt>false_claim_rate</dt><dd>Of <b>furniture</b> boxes (owned by nobody — human-confirmed, or oracle-inferred outside its blind labels), the fraction some node wrongly claimed. v2's version of false attribution, at box grain.</dd>
+  <dt>by_kind</dt><dd>Everything broken down by content class recognized from the node text: <span class="mono">prose · heading · formula · table · image · marker</span>. This is the row that says what to work on next.</dd>
+</dl></div>
+
+<h3>Real first run — resnet, 36 audit verdicts in</h3>
+<pre><code>gold provenance: 0 human, <span class="hl2">36 audited</span>, 165 unverified-oracle of 201 nodes (18% verified)
+
+method        loc.acc  meanIoU  exact  missed  false.claim
+stream          0.975    0.975    195       2       <span class="hl2">0.391</span>
+similarity      0.975    0.972    194       3       <span class="hl2">0.739</span>
+
+by node kind:  formula 0.500/1.000 (n=2)   heading 1.000/0.909 (n=22)
+               prose   0.983       (n=176) table   0.000/1.000 (n=1)</code></pre>
+
+<p>
+Two things this output demonstrates. First, legibility: <em>both aligners localize 97.5% of
+nodes, but stream plants half as many false flags on furniture</em> — a finding v1's pooled F1
+never surfaced. Second, honesty: "18% verified" and "formula n=2" say plainly that most gold is
+still unreviewed and the hard cases are thin — because the formulas sit in the excluded queue,
+waiting for clicks. Annotation directly grows the benchmark.</p>
+
+<div class="callout v2">
+  <div class="t">The relationship between v1 and v2</div>
+  <p>They share one pipeline. v1's oracle machinery now plays two roles: <b>diagnostic tier</b>
+  (when v2 says "formulas fail", v1 shows which words leaked where) and <b>proposal generator</b>
+  (its placements, with per-placement <span class="mono">ratio</span>/<span class="mono">exact</span>
+  provenance, are what humans confirm in the audit queue). The annotation you do for v2
+  simultaneously measures v1's oracle error rate.</p>
+</div>
+
+<h2>Running them</h2>
+<pre><code><span class="c"># v1 — token attribution vs text-layer oracle (10-doc corpus, cached layouts)</span>
+python -m benchmark real --all --methods stream,similarity
+
+<span class="c"># v2 — node localization vs tiered gold</span>
+python -m benchmark_v2_0 --docs resnet --methods stream,similarity
+python -m benchmark_v2_0 --all --out results_v2.json
+python -m benchmark_v2_0 --all --human-only   <span class="c"># strictest: human-tier gold only</span>
+
+<span class="c"># grow the gold: annotate at</span>
+http://127.0.0.1:8000/annotate</code></pre>
+
+<p class="small muted" style="margin-top:40px">
+Data: 10 born-digital arXiv papers, 136 pages, 81,142 text-layer tokens, ~1,928 AST nodes.
+All example values in this document are actual session output from
+<span class="mono">resnet.pdf</span> and <span class="mono">results_real*.json</span>, July 2026.</p>
+</div>
+<style>
+  /* Print: pin the light palette regardless of OS theme, keep the soft tag
+     colours, and stop blocks from splitting across page breaks. */
+  @media print {
+    :root, :root[data-theme="dark"] {
+      --bg: #ffffff; --panel: #ffffff; --panel2: #eef0f5;
+      --border: #c9ceda; --fg: #1a2130; --muted: #5b6474;
+      --accent: #274bcc; --teal: #0e7d76;
+      --v1: #a4560a; --v1-soft: #f8e8d4;
+      --v2: #1e7a34; --v2-soft: #ddf0e0;
+      --bad: #b3213d; --good: #1e7a34; --code-bg: #f2f3f7;
+    }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    body { font-size: 12.5px; }
+    .wrap { max-width: none; padding: 0; }
+    h1 { font-size: 26px; }
+    h2 { break-after: avoid; page-break-after: avoid; }
+    pre, .tablebox, .defs, .callout, .flow { break-inside: avoid; page-break-inside: avoid; }
+    a { color: var(--fg); text-decoration: none; }
+  }
+</style>
+</html>

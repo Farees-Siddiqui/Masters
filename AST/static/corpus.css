@@ -1,0 +1,109 @@
+/* Corpus explorer — builds on style.css. */
+
+.corpus-tabs { display: flex; align-items: center; gap: 8px; }
+.corpus-tabs .tab {
+  padding: 6px 14px;
+  background: var(--panel);
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.corpus-tabs .tab.active { background: var(--accent); color: #0f1115; border-color: var(--accent); font-weight: 700; }
+.corpus-tabs .hint { margin-left: 8px; }
+
+.corpus-panel { padding: 16px 24px; }
+
+/* ---------- semantic map ---------- */
+#panel-map {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 18px;
+  align-items: start;
+}
+.map-wrap {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 8px;
+}
+#map { width: 100%; height: auto; display: block; }
+#map .dot { cursor: pointer; stroke: rgba(15, 17, 21, 0.6); stroke-width: 0.8; transition: opacity 0.15s; }
+#map .dot:hover { r: 7; stroke: var(--fg); }
+#map .dot.muted { opacity: 0.08; }
+
+.map-side {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+.pane-title { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); display: block; margin-bottom: 10px; }
+.legend-list { display: flex; flex-direction: column; gap: 4px; }
+.legend-item {
+  display: grid;
+  grid-template-columns: 14px 1fr auto;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12.5px;
+}
+.legend-item:hover { background: var(--border); }
+.legend-item.on { background: rgba(122, 162, 255, 0.14); outline: 1px solid var(--accent); }
+.legend-item .swatch { width: 12px; height: 12px; border-radius: 3px; }
+.legend-item .lbl { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.legend-item .cnt { color: var(--muted); font-variant-numeric: tabular-nums; font-size: 11px; }
+.map-side .hint { margin-top: 10px; line-height: 1.5; }
+
+/* ---------- concept tracing ---------- */
+.trace-bar { display: flex; gap: 8px; align-items: center; margin-bottom: 14px; }
+.trace-bar input {
+  flex: 1;
+  padding: 8px 12px;
+  background: var(--bg);
+  color: var(--fg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 14px;
+}
+.trace-bar input:focus { outline: none; border-color: var(--accent); }
+.trace-bar button {
+  padding: 8px 18px;
+  background: var(--accent);
+  color: #0f1115;
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.trace-bar button:disabled { opacity: 0.5; cursor: default; }
+
+.trace-results { display: flex; flex-direction: column; gap: 14px; max-width: 1000px; }
+.trace-doc { border: 1px solid var(--border); border-radius: 10px; background: var(--panel); overflow: hidden; }
+.trace-doc-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(122, 162, 255, 0.06);
+}
+.trace-doc-head .doc-title { font-weight: 700; font-size: 14px; }
+.trace-doc-head .hit-count { font-size: 12px; color: var(--muted); }
+.trace-hit {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 10px;
+  align-items: baseline;
+  padding: 7px 14px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border);
+}
+.trace-hit:last-child { border-bottom: none; }
+.trace-hit:hover { background: var(--border); }
+.trace-hit .score { color: var(--accent); font-weight: 700; font-size: 12px; font-variant-numeric: tabular-nums; }
+.trace-hit .snip { font-size: 13px; line-height: 1.5; overflow-wrap: anywhere; }

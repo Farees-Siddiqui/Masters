@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Document Structural Diff</title>
+  <link rel="stylesheet" href="/static/style.css?v=14" />
+  <link rel="stylesheet" href="/static/diff.css?v=14" />
+</head>
+<body>
+  <header>
+    <div class="header-row" style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;">
+      <div>
+        <h1>Document Structural Diff</h1>
+        <p class="sub">Compare two scanned/PDF documents by aligning their structure &mdash; no source files needed. Click a change to see it on the page.</p>
+      </div>
+      <nav class="nav" style="display:flex;gap:14px;">
+        <a href="/">AST Viewer</a>
+        <a href="/layout">Layout</a>
+        <a href="/align">Alignment</a>
+        <a href="/corpus">Corpus</a>
+        <a href="/benchmark">Benchmark</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="controls diff-controls">
+    <label class="pick">A (old)
+      <select id="doc-a"></select>
+    </label>
+    <span class="arrow">&rarr;</span>
+    <label class="pick">B (new)
+      <select id="doc-b"></select>
+    </label>
+    <button id="compare">Compare</button>
+    <label class="show-unchanged"><input type="checkbox" id="show-unchanged" /> show unchanged</label>
+    <span id="status" class="hint"></span>
+  </section>
+
+  <section id="summary" class="summary" hidden></section>
+
+  <main class="diff-main">
+    <div id="diff-list" class="diff-list">
+      <div class="empty" id="empty">Pick two documents and click Compare.</div>
+    </div>
+  </main>
+
+  <script src="/static/diff.js?v=14"></script>
+</body>
+</html>

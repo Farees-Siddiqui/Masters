@@ -3,20 +3,23 @@
 <head>
   <meta charset="utf-8" />
   <title>AST &harr; PDF Alignment</title>
-  <link rel="stylesheet" href="/static/style.css?v=8" />
-  <link rel="stylesheet" href="/static/layout.css?v=8" />
-  <link rel="stylesheet" href="/static/align.css?v=8" />
+  <link rel="stylesheet" href="/static/style.css?v=14" />
+  <link rel="stylesheet" href="/static/layout.css?v=14" />
+  <link rel="stylesheet" href="/static/align.css?v=14" />
 </head>
 <body>
   <header>
     <div class="header-row" style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;">
       <div>
         <h1>AST &harr; PDF Alignment</h1>
-        <p class="sub">Click an AST node &rarr; highlight the PDF boxes it maps to (naive text match).</p>
+        <p class="sub">Click an AST node &rarr; highlight the PDF boxes it maps to (semantic similarity or exact-text matching).</p>
       </div>
       <nav class="nav">
         <a href="/">AST Viewer</a> &middot;
-        <a href="/layout">Layout</a>
+        <a href="/layout">Layout</a> &middot;
+        <a href="/diff">Diff</a> &middot;
+        <a href="/corpus">Corpus</a> &middot;
+        <a href="/benchmark">Benchmark</a>
       </nav>
     </div>
   </header>
@@ -24,17 +27,49 @@
   <section class="controls">
     <input type="file" id="file" accept="application/pdf" />
     <label class="gran">
-      Granularity
+      Select
+      <select id="docgran" title="What you click on the AST side">
+        <option value="paragraph">paragraph</option>
+        <option value="sentence">sentence</option>
+        <option value="word">word</option>
+      </select>
+    </label>
+    <label class="gran">
+      PDF boxes
       <select id="granularity">
         <option value="paragraph">paragraph (regions)</option>
         <option value="line">line</option>
         <option value="word">word</option>
       </select>
     </label>
+    <label class="gran">
+      Method
+      <select id="method">
+        <option value="similarity">similarity (semantic)</option>
+        <option value="stream">stream (exact text)</option>
+      </select>
+    </label>
+    <label class="gran conf" id="conf-control" hidden>
+      Confidence &ge; <span id="conf-value">0.50</span>
+      <input type="range" id="confidence" min="0.20" max="0.90" step="0.01" value="0.50" />
+    </label>
     <button id="go">Align</button>
     <span id="status"></span>
     <span id="coverage" class="hint"></span>
   </section>
+
+  <section class="query-bar">
+    <select id="scope" title="Search this document or the whole corpus">
+      <option value="doc">This document</option>
+      <option value="corpus">All documents</option>
+    </select>
+    <input id="query" type="text" placeholder="Search the document, or ask a question — answers cite the source region in the scan…" />
+    <button id="search-btn" title="Semantic search (Enter)">Search</button>
+    <button id="ask-btn" title="Grounded Q&amp;A (Ctrl+Enter)">Ask</button>
+    <span id="qa-status" class="hint"></span>
+    <span id="corpus-info" class="hint"></span>
+  </section>
+  <section id="qa-panel" class="qa-panel" hidden></section>
 
   <main class="align-main">
     <!-- Left: AST outline -->
@@ -67,6 +102,6 @@
     </section>
   </main>
 
-  <script src="/static/align.js?v=8"></script>
+  <script src="/static/align.js?v=14"></script>
 </body>
 </html>
