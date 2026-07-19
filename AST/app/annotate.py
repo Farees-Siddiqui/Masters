@@ -239,9 +239,13 @@ def _derive(doc: str) -> dict:
     data = {
         "doc": doc_dir.name,
         "pages": pages,
-        # compact token map for client-side highlighting: key -> [page, bbox]
+        # compact token map for client-side highlighting:
+        # key -> [page, [bbox, bbox, ...]] — one rect per line fragment, so a
+        # word hyphenated across a line break draws as two word-sized rects
+        # instead of one giant two-line union.
         "tokens": {
-            t.key: [t.page, [round(v, 1) for v in t.bbox]] for t in tokens
+            t.key: [t.page, [[round(v, 1) for v in fr] for fr in t.fragments]]
+            for t in tokens
         },
         "nodes": nodes_brief,
         "queues": {"excluded": q_excluded, "nulls": q_nulls, "audit": q_audit},

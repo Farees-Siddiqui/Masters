@@ -220,20 +220,23 @@ function renderOverlay() {
     overlay.appendChild(div);
   });
 
-  // Token highlights for the current item (audit + nulls queues).
+  // Token highlights for the current item (audit + nulls queues). Each token
+  // carries [page, [rect, ...]] — one rect per line fragment, so a word
+  // hyphenated across a line break draws as two word-sized highlights.
   for (const k of it?.token_keys || []) {
     const tok = state.doc.tokens[k];
     if (!tok || tok[0] !== page.page) continue;
-    const [, [x0, y0, x1, y1]] = tok;
-    const div = document.createElement("div");
-    div.className = "otok";
-    Object.assign(div.style, {
-      left: `${x0 * scale}px`,
-      top: `${y0 * scale}px`,
-      width: `${(x1 - x0) * scale}px`,
-      height: `${(y1 - y0) * scale}px`,
-    });
-    overlay.appendChild(div);
+    for (const [x0, y0, x1, y1] of tok[1]) {
+      const div = document.createElement("div");
+      div.className = "otok";
+      Object.assign(div.style, {
+        left: `${x0 * scale}px`,
+        top: `${y0 * scale}px`,
+        width: `${(x1 - x0) * scale}px`,
+        height: `${(y1 - y0) * scale}px`,
+      });
+      overlay.appendChild(div);
+    }
   }
 }
 

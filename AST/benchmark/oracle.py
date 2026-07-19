@@ -63,6 +63,14 @@ class Token:
     ``bbox`` is in **rendered-pixel space** (top-left origin, y down) to match
     the layout engine's boxes — see :func:`_charbox_to_px` for the transform off
     the PDF's native bottom-left/points coordinate system.
+
+    ``fragments`` holds one rect per *line* the word occupies: an ordinary word
+    has a single fragment equal to ``bbox``, while a word hyphenated across a
+    line break (pdfium's U+FFFE marker) carries one rect per half. ``bbox``
+    stays the union of all fragments, so single-rect consumers keep working —
+    but for a hyphenated word that union spans two lines and most of the
+    column, so anything geometric (containment, drawing) should prefer
+    ``fragments``.
     """
 
     page: int
@@ -71,6 +79,12 @@ class Token:
     bbox: tuple[float, float, float, float]  # (x0, y0, x1, y1) pixels
     stream_start: int  # offset into the normalized document stream
     stream_end: int
+    # Per-line sub-rects; defaults to [bbox] for ordinary single-line words.
+    fragments: list[tuple[float, float, float, float]] = field(default_factory=list)
+
+    def __post_init__(self) -> None:
+        if not self.fragments:
+            object.__setattr__(self, "fragments", [self.bbox])
 
     @property
     def key(self) -> str:
@@ -186,14 +200,34 @@ def _charbox_to_px(
     )
 
 
+# Characters that mark a layout-induced break *inside* a word: pdfium's
+# U+FFFE line-break hyphen and the Unicode soft hyphen. Both are stripped from
+# the text stream by _norm; geometrically they split a token into fragments.
+_FRAG_BREAKS = {"￾", "­"}
+
+
+def _union_rects(
+    rects: list[tuple[float, float, float, float]],
+) -> tuple[float, float, float, float]:
+    return (
+        min(r[0] for r in rects),
+        min(r[1] for r in rects),
+        max(r[2] for r in rects),
+        max(r[3] for r in rects),
+    )
+
+
 def extract_tokens(pdf_path: str | Path, dpi: int = 200) -> list[Token]:
     """Read every page's text layer into pixel-space tokens.
 
-    Tokens are whitespace-delimited. A token ending in a hyphen whose successor
-    sits on a lower line is treated as **hyphenated**: the hyphen is dropped
-    from the stream so 'represen-' + 'tation' reads as 'representation' and
-    matches the AST's unbroken word. Both source tokens keep their own boxes, so
-    one node span can legitimately own tokens on two lines.
+    Tokens are whitespace-delimited, so a word hyphenated across a line break
+    is **one token**: pdfium marks the break with U+FFFE *inside* the word
+    ('compet\\ufffeitive'), which is not whitespace. The marker is later
+    stripped by :func:`_norm`, healing the stream text to 'competitive'.
+    Geometrically the marker splits the token into per-line ``fragments`` —
+    one rect per half — while ``bbox`` remains the union of all fragments
+    (which for a hyphenated word spans two lines and most of the column, so
+    prefer ``fragments`` for anything geometric).
     """
     import pypdfium2 as pdfium
 
@@ -224,27 +258,50 @@ def extract_tokens(pdf_path: str | Path, dpi: int = 200) -> list[Token]:
         page_tokens: list[Token] = []
         for idx, char_idx in enumerate(groups):
             text = "".join(raw[i] for i in char_idx)
-            xs0, ys0, xs1, ys1 = [], [], [], []
+            boxes_px: dict[int, tuple[float, float, float, float]] = {}
             for i in char_idx:
                 try:
                     box = textpage.get_charbox(i)
                 except Exception:
                     continue
-                px = _charbox_to_px(box, h_pt, scale)
-                xs0.append(px[0])
-                ys0.append(px[1])
-                xs1.append(px[2])
-                ys1.append(px[3])
-            if not xs0:
+                boxes_px[i] = _charbox_to_px(box, h_pt, scale)
+            if not boxes_px:
                 continue
+
+            # Split at the line-break/soft-hyphen markers: each side of the
+            # break becomes its own fragment, so a hyphenated word carries one
+            # rect per line instead of a giant two-line union.
+            runs: list[list[int]] = []
+            run: list[int] = []
+            for i in char_idx:
+                if raw[i] in _FRAG_BREAKS:
+                    if run:
+                        runs.append(run)
+                        run = []
+                else:
+                    run.append(i)
+            if run:
+                runs.append(run)
+
+            fragments: list[tuple[float, float, float, float]] = []
+            for run in runs:
+                pxs = [boxes_px[i] for i in run if i in boxes_px]
+                if pxs:
+                    fragments.append(_union_rects(pxs))
+            if not fragments:
+                # Only break chars carried boxes — fall back to their union so
+                # the token survives exactly as it did before fragments.
+                fragments = [_union_rects(list(boxes_px.values()))]
+
             page_tokens.append(
                 Token(
                     page=page_index + 1,
                     index=idx,
                     text=text,
-                    bbox=(min(xs0), min(ys0), max(xs1), max(ys1)),
+                    bbox=_union_rects(fragments),
                     stream_start=-1,  # assigned in _build_stream
                     stream_end=-1,
+                    fragments=fragments,
                 )
             )
         tokens.extend(page_tokens)
@@ -281,6 +338,7 @@ def build_stream(tokens: list[Token]) -> tuple[str, list[Token]]:
                 bbox=tok.bbox,
                 stream_start=start,
                 stream_end=end,
+                fragments=tok.fragments,
             )
         )
 
@@ -436,9 +494,13 @@ def boxes_to_tokens(
 ) -> dict[str, list[str]]:
     """Map ``box_key -> [token_key]`` by centre containment.
 
-    Purely geometric: a token belongs to a box when its centre lies inside the
-    box's bbox. When boxes nest (a cell inside a table region) the **smallest**
-    containing box wins, so the most specific region owns the token.
+    Purely geometric: a token belongs to the box containing the most of its
+    fragment centres (for an ordinary word that is its single bbox centre; a
+    hyphenated word votes with one centre per line half, so it lands in the box
+    holding its halves rather than wherever the centre of its two-line union
+    bbox happens to fall). Ties — including the nested-boxes case, where a cell
+    inside a table region contains the same centres — go to the **smallest**
+    box by area, so the most specific region owns the token.
     """
     by_page: dict[int, list[Token]] = {}
     for t in tokens:
@@ -451,14 +513,20 @@ def boxes_to_tokens(
         boxes = page.get("boxes", [])
 
         for tok in page_tokens:
-            cx, cy = tok.center
-            best_i, best_area = None, None
-            for i, b in enumerate(boxes):
-                x0, y0, x1, y1 = b["bbox"]
-                if x0 <= cx <= x1 and y0 <= cy <= y1:
-                    area = max(x1 - x0, 0) * max(y1 - y0, 0)
-                    if best_area is None or area < best_area:
-                        best_i, best_area = i, area
+            votes: dict[int, int] = {}
+            for fx0, fy0, fx1, fy1 in tok.fragments:
+                cx, cy = (fx0 + fx1) / 2, (fy0 + fy1) / 2
+                for i, b in enumerate(boxes):
+                    x0, y0, x1, y1 = b["bbox"]
+                    if x0 <= cx <= x1 and y0 <= cy <= y1:
+                        votes[i] = votes.get(i, 0) + 1
+            best_i, best_key = None, None
+            for i, count in votes.items():
+                x0, y0, x1, y1 = boxes[i]["bbox"]
+                area = max(x1 - x0, 0) * max(y1 - y0, 0)
+                key = (-count, area)  # most centres, then smallest box
+                if best_key is None or key < best_key:
+                    best_i, best_key = i, key
             if best_i is not None:
                 out.setdefault(f"{page_no}:{best_i}", []).append(tok.key)
 
