@@ -12,7 +12,7 @@ Parameter choices (prompts, gundam/base mode, repetition guards) follow
 | `00_make_sample.py` | Renders a synthetic document image + ground-truth text into `images/`, so every example runs without hunting for test data |
 | `01_unlimited_single_image.py` | Single image through Unlimited-OCR in **gundam** mode |
 | `02_unlimited_pdf.py` | PDF → 300 DPI pages (PyMuPDF) → `infer_multi` in **base** mode, with page chunking to stay under `max_length` |
-| `ocr_engines.py` | Common adapter interface: `unlimited`, `paddle`, `tesseract`, `easyocr` — each takes an image path, returns text |
+| `ocr_engines.py` | Common adapter interface: `unlimited`, `deepseek`, `paddle`, `tesseract`, `easyocr` — each takes an image path, returns text (`deepseek` lives in `../../DeepSeek_OCR/Examples`) |
 | `03_compare_models.py` | Runs the same image through selected engines; reports timing, optional CER/WER against ground truth, and pairwise output similarity |
 
 ## Quick start

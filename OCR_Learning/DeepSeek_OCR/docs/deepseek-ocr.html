@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The DeepSeek-OCR Survival Guide</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1f2430;
+    --muted: #5c6470;
+    --accent: #0f62fe;
+    --code-bg: #f6f8fa;
+    --code-border: #e2e5ea;
+    --inline-code-bg: #eef0f3;
+    --table-border: #d9dde3;
+    --table-head: #f4f5f7;
+    --callout-bg: #fff8e6;
+    --callout-border: #e6b800;
+    --rule: #e2e5ea;
+    --tok-k: #cf222e;   /* keywords */
+    --tok-s: #0a3069;   /* strings */
+    --tok-n: #0550ae;   /* numbers */
+    --tok-c: #6e7781;   /* comments */
+    --tok-f: #8250df;   /* functions */
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14161b;
+      --fg: #e6e8ec;
+      --muted: #9aa2ad;
+      --accent: #6ea8ff;
+      --code-bg: #1d2027;
+      --code-border: #2b2f38;
+      --inline-code-bg: #262a33;
+      --table-border: #2b2f38;
+      --table-head: #1d2027;
+      --callout-bg: #2a2413;
+      --callout-border: #b39000;
+      --rule: #2b2f38;
+      --tok-k: #ff7b72;
+      --tok-s: #a5d6ff;
+      --tok-n: #79c0ff;
+      --tok-c: #8b949e;
+      --tok-f: #d2a8ff;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.65;
+    font-size: 17px;
+  }
+  main { max-width: 720px; margin: 0 auto; padding: 3rem 1.25rem 5rem; }
+  h1 { font-size: 2rem; line-height: 1.2; margin: 0 0 0.5rem; letter-spacing: -0.02em; }
+  h2 { font-size: 1.4rem; margin: 2.5rem 0 0.75rem; letter-spacing: -0.01em; }
+  p { margin: 0 0 1rem; }
+  a { color: var(--accent); }
+  .subtitle { color: var(--muted); font-style: italic; margin-bottom: 2rem; }
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--code-border);
+    border-radius: 10px;
+    padding: 0.9rem 1.1rem;
+    overflow-x: auto;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    margin: 0 0 1.1rem;
+  }
+  code { font-family: ui-monospace, SFMono-Regular, "Cascadia Code", Consolas, Menlo, monospace; }
+  p code, li code, td code {
+    background: var(--inline-code-bg);
+    border-radius: 4px;
+    padding: 0.1em 0.35em;
+    font-size: 0.86em;
+  }
+  .k { color: var(--tok-k); }
+  .s { color: var(--tok-s); }
+  .n { color: var(--tok-n); }
+  .c { color: var(--tok-c); font-style: italic; }
+  .f { color: var(--tok-f); }
+  .table-wrap { overflow-x: auto; margin: 0 0 1.1rem; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
+  th, td { border: 1px solid var(--table-border); padding: 0.5rem 0.75rem; text-align: left; vertical-align: top; }
+  th { background: var(--table-head); }
+  ul, ol { margin: 0 0 1rem; padding-left: 1.4rem; }
+  li { margin-bottom: 0.35rem; }
+  .callout {
+    background: var(--callout-bg);
+    border-left: 4px solid var(--callout-border);
+    border-radius: 0 8px 8px 0;
+    padding: 0.75rem 1rem;
+    margin: 0 0 1.1rem;
+  }
+  .callout p:last-child { margin-bottom: 0; }
+  footer {
+    margin-top: 3rem; padding-top: 1.25rem; border-top: 1px solid var(--rule);
+    color: var(--muted); font-size: 0.9rem; font-style: italic;
+  }
+</style>
+</head>
+<body>
+<main>
+
+<h1>The DeepSeek-OCR survival guide</h1>
+<p class="subtitle">Getting pages, boxes, and markdown out of DeepSeek's OCR model — the one Unlimited-OCR grew out of — without fighting the pins.</p>
+
+<p>DeepSeek-OCR (October 2025) is a ~3B vision-language OCR model and the direct predecessor of Baidu's Unlimited-OCR. Its real thesis is <em>contexts optical compression</em>: a DeepEncoder (SAM-base + CLIP-large with a 16× convolutional squeeze, ~380M params) turns a full page into as few as 64–400 vision tokens, and a DeepSeek-3B-MoE decoder (~570M active params) decodes the document back out of them. A page of text that would cost thousands of text tokens goes in as a few hundred vision tokens — around 97% decoding precision below 10× compression, degrading to roughly 60% at 20×. For you, that thesis has a practical payoff: it reads dense pages fast, and it tells you <em>where</em> everything was.</p>
+
+<h2>1 · Setup and your first parse</h2>
+
+<p>The model card pins an older stack than Unlimited-OCR's, and the pins matter — the <code>trust_remote_code</code> inference code was written against them:</p>
+
+<pre><code>pip install torch==<span class="n">2.6.0</span> transformers==<span class="n">4.46.3</span> tokenizers==<span class="n">0.20.3</span> \
+    einops addict easydict pymupdf
+<span class="c"># flash-attn==2.7.3 is the documented backend — Linux-only in practice.</span></code></pre>
+
+<div class="callout">
+<p>Don't try to reuse an Unlimited-OCR env: the remote code imports <code>LlamaFlashAttention2</code>, which transformers removed after 4.46 — on 4.57.1 the model fails at load (verified). Make a separate venv with the pins; don't downgrade the shared one. On Windows, skip flash-attn and load with <code>_attn_implementation='eager'</code>.</p>
+</div>
+
+<pre><code><span class="k">import</span> torch
+<span class="k">from</span> transformers <span class="k">import</span> AutoModel, AutoTokenizer
+
+tokenizer = AutoTokenizer.<span class="f">from_pretrained</span>(<span class="s">'deepseek-ai/DeepSeek-OCR'</span>, trust_remote_code=<span class="k">True</span>)
+model = AutoModel.<span class="f">from_pretrained</span>(<span class="s">'deepseek-ai/DeepSeek-OCR'</span>, trust_remote_code=<span class="k">True</span>,
+                                  use_safetensors=<span class="k">True</span>,
+                                  _attn_implementation=<span class="s">'flash_attention_2'</span>)  <span class="c"># or 'eager'</span>
+model = model.eval().cuda().to(torch.bfloat16)
+
+model.<span class="f">infer</span>(
+    tokenizer,
+    prompt=<span class="s">'&lt;image&gt;\n&lt;|grounding|&gt;Convert the document to markdown. '</span>,
+    image_file=<span class="s">'your_image.jpg'</span>,
+    output_path=<span class="s">'out/'</span>,
+    base_size=<span class="n">1024</span>, image_size=<span class="n">640</span>, crop_mode=<span class="k">True</span>,  <span class="c"># gundam mode</span>
+    save_results=<span class="k">True</span>,
+)</code></pre>
+
+<p>Same rule as Unlimited: the prompts are fixed strings the model was trained on. Copy them exactly — <em>including the trailing space</em>, and note the <code>\n</code> after <code>&lt;image&gt;</code>, which Unlimited's prompt doesn't have.</p>
+
+<h2>2 · The prompts</h2>
+
+<div class="table-wrap"><table>
+<tr><th>Prompt</th><th>What you get</th></tr>
+<tr><td><code>&lt;image&gt;\n&lt;|grounding|&gt;Convert the document to markdown. </code></td><td>Layout-aware markdown with bounding boxes for every block</td></tr>
+<tr><td><code>&lt;image&gt;\nFree OCR. </code></td><td>Plain text, no layout markup, no boxes</td></tr>
+<tr><td><code>&lt;image&gt;\nParse the figure. </code></td><td>Structured parse of a chart/figure crop</td></tr>
+<tr><td><code>&lt;image&gt;\nLocate &lt;|ref|&gt;xxxx&lt;|/ref|&gt; in the image. </code></td><td>Bounding box for a specific string</td></tr>
+</table></div>
+
+<p>The <code>&lt;|grounding|&gt;</code> token is the interesting one. With it, the raw stream wraps every block in reference/detection spans:</p>
+
+<pre><code>&lt;|ref|&gt;text&lt;|/ref|&gt;&lt;|det|&gt;[[x1, y1, x2, y2]]&lt;|/det|&gt;</code></pre>
+
+<p>Coordinates are normalized to a 0–1000 grid on each axis — multiply by <code>width/1000</code> and <code>height/1000</code> to get pixels. <code>save_results=True</code> does the bookkeeping for you: it writes <code>result.mmd</code> (markdown with the grounding spans stripped), <code>result_with_boxes.jpg</code> (the page with boxes drawn on), and crops of detected figures into <code>images/</code>.</p>
+
+<h2>3 · The five resolution modes</h2>
+
+<p>Resolution is the compression knob, and it's explicit — each mode has a fixed vision-token budget:</p>
+
+<div class="table-wrap"><table>
+<tr><th>Mode</th><th>Parameters</th><th>Vision tokens</th><th>Use for</th></tr>
+<tr><td>tiny</td><td><code>base_size=512, image_size=512, crop_mode=False</code></td><td>64</td><td>Slides, sparse pages</td></tr>
+<tr><td>small</td><td><code>base_size=640, image_size=640, crop_mode=False</code></td><td>100</td><td>Books, clean reports</td></tr>
+<tr><td>base</td><td><code>base_size=1024, image_size=1024, crop_mode=False</code></td><td>256</td><td>General documents</td></tr>
+<tr><td>large</td><td><code>base_size=1280, image_size=1280, crop_mode=False</code></td><td>400</td><td>Dense single pages</td></tr>
+<tr><td>gundam</td><td><code>base_size=1024, image_size=640, crop_mode=True</code></td><td>dynamic (n×100 + 256)</td><td>Newspapers, very dense layouts</td></tr>
+</table></div>
+
+<p>Gundam mode tiles the page into local 640-px crops on top of a 1024-px global view, so the token count scales with how much is on the page. Start with <code>base</code> or <code>small</code> for ordinary documents; reach for gundam when text is small and dense. The ~10× compression sweet spot means most pages decode near-perfectly from a few hundred tokens — that's the whole trick.</p>
+
+<h2>4 · PDFs: loop, don't batch</h2>
+
+<p>There is no <code>infer_multi</code> here — that's Unlimited-OCR's addition. Each call is one image, so a PDF is rasterize-then-loop, and anything that spans a page break (a table continued overleaf) will come out split. Rasterize at 300 DPI with PyMuPDF exactly as for Unlimited, then:</p>
+
+<pre><code>pages = <span class="f">pdf_to_images</span>(<span class="s">'document.pdf'</span>)   <span class="c"># same recipe as the Unlimited guide</span>
+<span class="k">for</span> i, page <span class="k">in</span> <span class="f">enumerate</span>(pages, <span class="n">1</span>):
+    model.<span class="f">infer</span>(tokenizer,
+                prompt=<span class="s">'&lt;image&gt;\n&lt;|grounding|&gt;Convert the document to markdown. '</span>,
+                image_file=page, output_path=<span class="k">f</span><span class="s">'out/page_{i:04d}'</span>,
+                base_size=<span class="n">1024</span>, image_size=<span class="n">640</span>, crop_mode=<span class="k">True</span>,
+                save_results=<span class="k">True</span>)</code></pre>
+
+<p>Note what's missing versus Unlimited: no <code>max_length=32768</code> ceiling to chunk around (each page is its own context) and no documented <code>no_repeat_ngram_size</code> guard. Decoding loops are rarer per-page than in a 30-page context, but they still happen on pathological tables; if a page loops, re-run just that page in a lower mode.</p>
+
+<h2>5 · Serving it for real</h2>
+
+<p>The repo's production path is vLLM — the released code ships <code>run_dpsk_ocr_pdf.py</code> and friends, and the model card quotes ~2,500 output tokens/s on an A100-40G for concurrent PDF processing. vLLM has since merged native support, so recent versions load <code>deepseek-ai/DeepSeek-OCR</code> directly. That's the route for throughput; the Transformers path above is for experiments.</p>
+
+<h2>6 · What it's actually good at</h2>
+
+<p>On OmniDocBench, DeepSeek-OCR beats GOT-OCR2.0 (which spends 256 tokens per page) while using only 100, and beats MinerU2.0 (~6,000+ tokens per page) while staying under 800. The honest summary:</p>
+
+<ul>
+  <li><strong>Great fit:</strong> bulk document ingestion, LLM training-data pipelines, anything where tokens-per-page is the cost that matters — and, unlike Unlimited, anything needing <em>spatial grounding</em>, since every block comes with a box.</li>
+  <li><strong>Poor fit:</strong> maximum-fidelity parsing of a single precious document — a mode chosen too low silently drops precision; Unlimited's multi-page context also stitches cross-page structures this model can't.</li>
+  <li><strong>Bonus:</strong> ~100 languages, and the figure-parse prompt reads charts into structure.</li>
+</ul>
+
+<h2>Cheat sheet</h2>
+
+<ul>
+  <li>Prompts are fixed strings — exact copy, trailing space and <code>\n</code> included.</li>
+  <li><code>&lt;|grounding|&gt;</code> = markdown + boxes; <code>Free OCR.</code> = plain text. Boxes are 0–1000 normalized.</li>
+  <li>Five modes; token budget is the knob. Base/small for clean pages, gundam for dense ones.</li>
+  <li>PDFs: 300 DPI, loop pages — no <code>infer_multi</code>, cross-page tables split.</li>
+  <li>Pins are old (transformers 4.46.3 / torch 2.6.0) — separate venv if the remote code balks; eager attention on Windows.</li>
+  <li>Serving: vLLM, natively supported in recent versions.</li>
+</ul>
+
+<footer>Sources: github.com/deepseek-ai/DeepSeek-OCR, huggingface.co/deepseek-ai/DeepSeek-OCR, the DeepSeek-OCR paper (arXiv:2510.18234). Verify against the repo before depending on details — this model line moves fast.</footer>
+
+</main>
+</body>
+</html>

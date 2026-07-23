@@ -77,6 +77,24 @@ def run_unlimited(image_path: Path, out_dir: Path) -> str:
     raise RuntimeError(f"Unlimited-OCR produced no readable output in {out_dir}")
 
 
+# --- DeepSeek-OCR (deepseek-ai/DeepSeek-OCR, 3B VLM, GPU required) ---
+# Full examples and mode/prompt reference: ../../DeepSeek_OCR/Examples
+
+def _deepseek_examples_dir() -> Path:
+    return Path(__file__).resolve().parents[2] / "DeepSeek_OCR" / "Examples"
+
+
+def run_deepseek(image_path: Path, out_dir: Path) -> str:
+    import sys
+
+    examples = str(_deepseek_examples_dir())
+    if examples not in sys.path:
+        sys.path.insert(0, examples)
+    from deepseek_engine import parse_image
+
+    return parse_image(image_path, out_dir)
+
+
 # --- PaddleOCR ---
 
 def _load_paddle():
@@ -126,6 +144,7 @@ def run_easyocr(image_path: Path, out_dir: Path) -> str:
 
 ENGINES = {
     "unlimited": run_unlimited,
+    "deepseek": run_deepseek,
     "paddle": run_paddle,
     "tesseract": run_tesseract,
     "easyocr": run_easyocr,

@@ -1,0 +1,17 @@
+# --- DeepSeek-OCR (3B, ~7 GB VRAM in bf16; versions from the model card) ---
+# NOTE: the model card pins transformers==4.46.3 / torch==2.6.0, and the pins
+# are load-bearing: the trust_remote_code model imports LlamaFlashAttention2,
+# which newer transformers (e.g. the Unlimited-OCR venv's 4.57.1) removed.
+# Use a dedicated venv (../.venv) with exactly these versions.
+# torch: install from the cu126 index -> pip install torch==2.6.0 torchvision
+#        --index-url https://download.pytorch.org/whl/cu126
+torch==2.6.0
+transformers==4.46.3
+tokenizers==0.20.3
+einops
+addict
+easydict
+pymupdf
+
+# flash-attn==2.7.3   # documented backend, but realistically Linux-only;
+#                     # on Windows the loader falls back to eager attention
