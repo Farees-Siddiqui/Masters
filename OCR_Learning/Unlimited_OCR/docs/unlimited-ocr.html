@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Unlimited-OCR Survival Guide</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1f2430;
+    --muted: #5c6470;
+    --accent: #0f62fe;
+    --code-bg: #f6f8fa;
+    --code-border: #e2e5ea;
+    --inline-code-bg: #eef0f3;
+    --table-border: #d9dde3;
+    --table-head: #f4f5f7;
+    --callout-bg: #fff8e6;
+    --callout-border: #e6b800;
+    --rule: #e2e5ea;
+    --tok-k: #cf222e;   /* keywords */
+    --tok-s: #0a3069;   /* strings */
+    --tok-n: #0550ae;   /* numbers */
+    --tok-c: #6e7781;   /* comments */
+    --tok-f: #8250df;   /* functions */
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14161b;
+      --fg: #e6e8ec;
+      --muted: #9aa2ad;
+      --accent: #6ea8ff;
+      --code-bg: #1d2027;
+      --code-border: #2b2f38;
+      --inline-code-bg: #262a33;
+      --table-border: #2b2f38;
+      --table-head: #1d2027;
+      --callout-bg: #2a2413;
+      --callout-border: #b39000;
+      --rule: #2b2f38;
+      --tok-k: #ff7b72;
+      --tok-s: #a5d6ff;
+      --tok-n: #79c0ff;
+      --tok-c: #8b949e;
+      --tok-f: #d2a8ff;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.65;
+    font-size: 17px;
+  }
+  main { max-width: 720px; margin: 0 auto; padding: 3rem 1.25rem 5rem; }
+  h1 { font-size: 2rem; line-height: 1.2; margin: 0 0 0.5rem; letter-spacing: -0.02em; }
+  h2 { font-size: 1.4rem; margin: 2.5rem 0 0.75rem; letter-spacing: -0.01em; }
+  p { margin: 0 0 1rem; }
+  a { color: var(--accent); }
+  .subtitle { color: var(--muted); font-style: italic; margin-bottom: 2rem; }
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--code-border);
+    border-radius: 10px;
+    padding: 0.9rem 1.1rem;
+    overflow-x: auto;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    margin: 0 0 1.1rem;
+  }
+  code { font-family: ui-monospace, SFMono-Regular, "Cascadia Code", Consolas, Menlo, monospace; }
+  p code, li code, td code {
+    background: var(--inline-code-bg);
+    border-radius: 4px;
+    padding: 0.1em 0.35em;
+    font-size: 0.86em;
+  }
+  .k { color: var(--tok-k); }
+  .s { color: var(--tok-s); }
+  .n { color: var(--tok-n); }
+  .c { color: var(--tok-c); font-style: italic; }
+  .f { color: var(--tok-f); }
+  .table-wrap { overflow-x: auto; margin: 0 0 1.1rem; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
+  th, td { border: 1px solid var(--table-border); padding: 0.5rem 0.75rem; text-align: left; vertical-align: top; }
+  th { background: var(--table-head); }
+  ul, ol { margin: 0 0 1rem; padding-left: 1.4rem; }
+  li { margin-bottom: 0.35rem; }
+  .callout {
+    background: var(--callout-bg);
+    border-left: 4px solid var(--callout-border);
+    border-radius: 0 8px 8px 0;
+    padding: 0.75rem 1rem;
+    margin: 0 0 1.1rem;
+  }
+  .callout p:last-child { margin-bottom: 0; }
+  footer {
+    margin-top: 3rem; padding-top: 1.25rem; border-top: 1px solid var(--rule);
+    color: var(--muted); font-size: 0.9rem; font-style: italic;
+  }
+</style>
+</head>
+<body>
+<main>
+
+<h1>The Unlimited-OCR survival guide</h1>
+<p class="subtitle">Getting real documents out of Baidu's Unlimited-OCR without your GPU, your patience, or your output toppling over.</p>
+
+<p><a href="https://github.com/baidu/Unlimited-OCR">Unlimited-OCR</a> is Baidu's 3B vision-language OCR model, a successor to DeepSeek-OCR. Instead of the classic detect&nbsp;→ recognize&nbsp;→ layout pipeline, it takes an image — or a whole stack of pages — and emits the parsed document in one pass, up to 32,768 tokens of it. This guide goes from one image to a batch API.</p>
+
+<h2>1 · Setup and your first parse</h2>
+
+<p>Tested stack: Python 3.12, CUDA 12.9. It's a 3B model in bf16 (~6&nbsp;GB of weights), so plan on a 12&nbsp;GB+ GPU — CPU is not an option you'd enjoy.</p>
+
+<pre><code>pip install torch==2.10.0 torchvision==0.25.0 transformers==4.57.1 \
+    Pillow einops addict easydict pymupdf psutil matplotlib</code></pre>
+
+<p>The model ships its own inference code (hence <code>trust_remote_code=True</code>); the weights download from the Hub on first load:</p>
+
+<pre><code><span class="k">import</span> torch
+<span class="k">from</span> transformers <span class="k">import</span> AutoModel, AutoTokenizer
+
+tokenizer = AutoTokenizer.<span class="f">from_pretrained</span>(<span class="s">'baidu/Unlimited-OCR'</span>, trust_remote_code=<span class="k">True</span>)
+model = AutoModel.<span class="f">from_pretrained</span>(<span class="s">'baidu/Unlimited-OCR'</span>, trust_remote_code=<span class="k">True</span>,
+                                  use_safetensors=<span class="k">True</span>, torch_dtype=torch.bfloat16)
+model = model.<span class="f">eval</span>().<span class="f">cuda</span>()
+
+model.<span class="f">infer</span>(
+    tokenizer,
+    prompt=<span class="s">'&lt;image&gt;document parsing.'</span>,
+    image_file=<span class="s">'your_image.jpg'</span>,
+    output_path=<span class="s">'out/'</span>,
+    base_size=<span class="n">1024</span>, image_size=<span class="n">640</span>, crop_mode=<span class="k">True</span>,  <span class="c"># "gundam" mode</span>
+    max_length=<span class="n">32768</span>,
+    no_repeat_ngram_size=<span class="n">35</span>, ngram_window=<span class="n">128</span>,
+    save_results=<span class="k">True</span>,
+)</code></pre>
+
+<p>Two things to know: the prompt <code>'&lt;image&gt;document parsing.'</code> is a fixed string the model was trained on — copy it exactly. And <code>save_results=True</code> writes the parsed output to <code>output_path</code> for you.</p>
+
+<h2>2 · The two modes</h2>
+
+<div class="table-wrap">
+<table>
+  <thead>
+    <tr><th>Mode</th><th>Parameters</th><th>Use for</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>gundam</strong></td><td><code>base_size=1024, image_size=640, crop_mode=True</code></td><td>Single images, dense pages</td></tr>
+    <tr><td><strong>base</strong></td><td><code>base_size=1024, image_size=1024, crop_mode=False</code></td><td>Multi-page / PDFs</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>Gundam mode adds cropped local views on top of the global one — that's what reads small, dense text. Base mode is one straight pass per page, cheaper when you're feeding it thirty of them. Rule of thumb: <strong>gundam for a single image, base for a document.</strong></p>
+
+<h2>3 · Multi-page documents and PDFs</h2>
+
+<p>Don't loop <code>infer()</code> over pages — <code>infer_multi</code> puts all pages in one context, so tables and paragraphs that span page breaks come out whole:</p>
+
+<pre><code>model.<span class="f">infer_multi</span>(
+    tokenizer,
+    prompt=<span class="s">'&lt;image&gt;Multi page parsing.'</span>,  <span class="c"># exact wording, again</span>
+    image_files=[<span class="s">'page1.png'</span>, <span class="s">'page2.png'</span>, <span class="s">'page3.png'</span>],
+    output_path=<span class="s">'out/'</span>,
+    image_size=<span class="n">1024</span>,  <span class="c"># base mode</span>
+    max_length=<span class="n">32768</span>,
+    no_repeat_ngram_size=<span class="n">35</span>, ngram_window=<span class="n">1024</span>,
+    save_results=<span class="k">True</span>,
+)</code></pre>
+
+<p><code>max_length=32768</code> caps the <em>entire</em> output — if a dense document cuts off mid-parse, you hit it. Split into chunks of pages and call again.</p>
+
+<p>PDFs need rasterizing first; the repo's recipe uses PyMuPDF at 300&nbsp;DPI:</p>
+
+<pre><code><span class="k">import</span> os, tempfile
+<span class="k">import</span> fitz  <span class="c"># PyMuPDF</span>
+
+<span class="k">def</span> <span class="f">pdf_to_images</span>(pdf_path, dpi=<span class="n">300</span>):
+    doc = fitz.<span class="f">open</span>(pdf_path)
+    tmp_dir = tempfile.<span class="f">mkdtemp</span>(prefix=<span class="s">'pdf_ocr_'</span>)
+    mat = fitz.<span class="f">Matrix</span>(dpi / <span class="n">72</span>, dpi / <span class="n">72</span>)
+    paths = []
+    <span class="k">for</span> i, page <span class="k">in</span> <span class="f">enumerate</span>(doc):
+        out = os.path.<span class="f">join</span>(tmp_dir, <span class="s">f'page_</span>{i+<span class="n">1</span>:04d}<span class="s">.png'</span>)
+        page.<span class="f">get_pixmap</span>(matrix=mat).<span class="f">save</span>(out)
+        paths.<span class="f">append</span>(out)
+    doc.<span class="f">close</span>()
+    <span class="k">return</span> paths</code></pre>
+
+<h2>4 · The repetition knobs</h2>
+
+<p>OCR models are pathologically prone to decoding loops — documents are full of legitimately repetitive content (table rows, repeated headers), and 30,000 tokens in, the model is one bad step from emitting the same row forever. <code>no_repeat_ngram_size=35, ngram_window=…</code> blocks any 35-gram that already appeared in the recent window. It's 35 (not the chat-model's usual 4) so that legitimate short repetition in tables survives.</p>
+
+<div class="callout">
+<p><strong>These aren't quality knobs, they're crash guards.</strong> Keep the documented values. Symptoms only: stuck in a loop → widen <code>ngram_window</code>; repetitive tables getting corrupted → raise <code>no_repeat_ngram_size</code>.</p>
+</div>
+
+<h2>5 · Serving it for real</h2>
+
+<p>For throughput beyond experiments, run an inference server. Easiest is the prebuilt vLLM image — an OpenAI-compatible endpoint out of the box:</p>
+
+<pre><code>docker pull vllm/vllm-openai:unlimited-ocr        <span class="c"># default (CUDA 13.0)</span>
+docker pull vllm/vllm-openai:unlimited-ocr-cu129  <span class="c"># Hopper GPUs</span></code></pre>
+
+<p>SGLang takes more setup (a custom wheel from the repo) but adds streaming and server-side logit control:</p>
+
+<pre><code>python -m sglang.launch_server \
+    --model baidu/Unlimited-OCR \
+    --attention-backend fa3 \
+    --context-length <span class="n">32768</span> \
+    --mem-fraction-static <span class="n">0.8</span> \
+    --enable-custom-logit-processor \  <span class="c"># REQUIRED: enforces the no-repeat guard</span>
+    --disable-overlap-schedule</code></pre>
+
+<p>Then the repo's batch client fans out a directory or PDF against the server:</p>
+
+<pre><code>python infer.py --pdf ./document.pdf --output_dir ./outputs \
+    --concurrency <span class="n">8</span> --image_mode gundam</code></pre>
+
+<p>Pick by need: <strong>Transformers</strong> for experiments, <strong>vLLM</strong> for an easy endpoint, <strong>SGLang</strong> for streaming and decoding control.</p>
+
+<h2>6 · What it's actually good at</h2>
+
+<p>On llamaindex/ParseBench: mean <strong>46.17</strong>, text content <strong>86.81</strong>, text formatting <strong>0.97</strong>. That spread is the honest summary:</p>
+
+<ul>
+  <li><strong>Great fit:</strong> full-text extraction, search indexing, RAG ingestion — anywhere the words matter and the markup doesn't.</li>
+  <li><strong>Poor fit:</strong> faithful formatting reconstruction, precise table structure.</li>
+  <li><strong>Not provided:</strong> bounding boxes / word coordinates. If you need spatial grounding, pair it with a separate layout detector.</li>
+</ul>
+
+<h2>Cheat sheet</h2>
+
+<ul>
+  <li>Prompts are fixed strings — copy them exactly.</li>
+  <li>Gundam for single images, base for documents.</li>
+  <li>PDFs: rasterize at 300 DPI with PyMuPDF first.</li>
+  <li>Output truncated? You hit <code>max_length=32768</code> — chunk the pages.</li>
+  <li>Looping output? Widen <code>ngram_window</code>. Corrupted tables? Raise <code>no_repeat_ngram_size</code>.</li>
+  <li>Serving: vLLM docker for easy, SGLang for control (don't forget <code>--enable-custom-logit-processor</code>).</li>
+</ul>
+
+<footer>
+Sources: <a href="https://github.com/baidu/Unlimited-OCR">github.com/baidu/Unlimited-OCR</a>, <a href="https://huggingface.co/baidu/Unlimited-OCR">huggingface.co/baidu/Unlimited-OCR</a>. Verify against the repo before depending on details — this model line moves fast.
+</footer>
+
+</main>
+</body>
+</html>

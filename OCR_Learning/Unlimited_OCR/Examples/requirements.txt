@@ -1,0 +1,16 @@
+# --- Unlimited-OCR (needs a 12 GB+ GPU; versions from the survival guide) ---
+torch==2.10.0
+torchvision==0.25.0
+transformers==4.57.1
+Pillow
+einops
+addict
+easydict
+pymupdf
+psutil
+matplotlib
+
+# --- Optional comparison engines: install only the ones you want to compare ---
+# paddleocr           # + paddlepaddle-gpu (cu126 wheel) or paddlepaddle (CPU)
+# pytesseract         # also needs the Tesseract binary on PATH
+# easyocr

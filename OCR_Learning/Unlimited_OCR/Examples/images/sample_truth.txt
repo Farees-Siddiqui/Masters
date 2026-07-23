@@ -1,0 +1,12 @@
+Quarterly Energy Report
+Solar generation rose 14% year over year, driven by new capacity
+in the southwest region. Wind output was flat, while natural gas
+declined 6% as older plants were retired ahead of schedule.
+
+Region      Solar    Wind     Gas
+North        120      340     510
+South        480      210     390
+West         610      180     220
+
+Full methodology is described in Appendix B. Figures are given in
+gigawatt hours and rounded to the nearest whole number.
