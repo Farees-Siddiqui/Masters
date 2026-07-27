@@ -1,0 +1,83 @@
+\documentclass[border=3pt]{standalone}
+\input{figstyle}
+\begin{document}
+\begin{tikzpicture}
+
+% ============================ title badge ==================================
+\node[rounded corners=3pt, draw=inkSoft!30, fill=white, inner xsep=8pt,
+      inner ysep=4pt, font=\small] at (6.95,8.00)
+     {$\mathsf{Alignment}:\ \mathsf{Loc}[\mathsf{Doc}] \rightarrow
+       \mathsf{Set}[\mathsf{Loc}[\mathsf{PDF}]]$};
+
+\node[grouplbl] at (3.15,7.30) {Logical structure (AST)};
+\node[grouplbl] at (11.20,7.30) {Physical layout (page regions)};
+
+% ============================ the two cards ================================
+\fill[softcard, fill=astFill!55] (0.00,-0.10) rectangle (6.30,6.95);
+\node[page, fit={(8.50,-0.10) (13.90,6.95)}, inner sep=0pt,
+      blur shadow={shadow blur steps=8, shadow xshift=0.5pt,
+                   shadow yshift=-0.9pt, shadow opacity=25}] {};
+
+% ======================= LEFT: logical structure (AST) =====================
+\node[astroot] (doc)  at (0.80,3.30) {\texttt{doc}};
+\node[astsec]  (sec1) at (3.00,6.35) {\texttt{section} ``3 Method''};
+\node[astnode] (p1)   at (5.20,5.80) {\texttt{paragraph}};
+\node[astnode] (p2)   at (5.20,4.40) {\texttt{paragraph}};
+\node[astnode] (fg)   at (5.20,2.60) {\texttt{figure}};
+\node[astnode] (p3)   at (5.20,0.85) {\texttt{paragraph}};
+
+\draw[asttree] (doc.east) -- ++(0.18,0) |- (sec1.west);
+\foreach \c in {p1,p2,fg,p3}{ \draw[asttree] (sec1.south) |- (\c.west); }
+
+% ============================= THE MAPPING =================================
+% (drawn before the regions, so the links pass behind them)
+\draw[maplink] (sec1.east) to[out=0,in=180]   (8.79,6.06);
+\draw[maplink] (p1.east)   to[out=-8,in=180]  (8.79,5.05);
+\draw[maplink] (fg.east)   to[out=18,in=188]  (11.49,4.10);
+\draw[maplink] (p3.east)   to[out=12,in=194]  (11.49,2.05);
+
+% one node, two regions, split across the column break
+\draw[maphot]  (p2.east) to[out=-22,in=178] (8.79,2.60);
+\draw[maphot]  (p2.east) to[out=20,in=180]  (11.49,5.71);
+
+% ======================= page regions (opaque, on top) =====================
+\node[furniture, fit={(8.85,6.44) (13.55,6.70)}, inner sep=0pt] {};
+\node[font=\tiny, text=mutedLine, anchor=west] at (9.02,6.57) {running header};
+\node[furniture, fit={(10.90,0.40) (11.50,0.66)}, inner sep=0pt] {};
+\node[font=\tiny, text=mutedLine] at (11.20,0.53) {7};
+
+% --- left column ---
+\node[lbox, fit={(8.85,5.90) (10.85,6.22)}, inner sep=0pt] {};
+\node[font=\tiny, text=pdfLine, anchor=west] at (9.00,6.06) {\textbf{3 Method}};
+
+\node[lbox, fit={(8.85,4.40) (10.85,5.70)}, inner sep=0pt] {};
+\fakepara{9.00}{5.58}{1.70}{9}
+
+\node[lboxhi, fit={(8.85,1.05) (10.85,4.15)}, inner sep=0pt] {};
+\fakelines[hotLine!35]{9.00}{4.03}{1.70}{24}
+
+% --- right column ---
+\node[lboxhi, fit={(11.55,5.20) (13.55,6.22)}, inner sep=0pt] {};
+\fakepara[hotLine!35]{11.70}{6.10}{1.70}{6}
+
+\node[lbox, fit={(11.55,3.30) (13.55,4.95)}, inner sep=0pt] {};
+\draw[pdfLine!45, line width=0.5pt, line join=round]
+      (11.80,3.95) -- (12.30,4.55) -- (12.75,4.10) -- (13.30,4.68);
+\fakelines{11.70}{3.72}{1.70}{2}
+
+\node[lbox, fit={(11.55,1.05) (13.55,3.05)}, inner sep=0pt] {};
+\fakepara{11.70}{2.93}{1.70}{14}
+
+% ================================ legend ===================================
+\node[lboxhi, minimum width=5.5mm, minimum height=3.4mm, inner sep=0pt]
+      at (0.28,-0.72) {};
+\node[caption, anchor=west] at (0.62,-0.72)
+     {one node, two regions: a paragraph continuing across the column break};
+
+\node[furniture, minimum width=5.5mm, minimum height=3.4mm, inner sep=0pt]
+      at (0.28,-1.25) {};
+\node[caption, anchor=west] at (0.62,-1.25)
+     {page furniture: matched by no node};
+
+\end{tikzpicture}
+\end{document}

@@ -101,6 +101,9 @@ def benchmark_data() -> dict:
 
     ``real`` — the real-document run against PDF text-layer gold (``python -m
     benchmark real``), or ``None`` if it hasn't been generated yet.
+
+    ``v2`` — node-level localization against tiered gold (``python -m
+    benchmark_v2_0 --all``), or ``None`` if it hasn't been generated yet.
     """
     regimes = []
     for key, label, fname in [
@@ -114,7 +117,10 @@ def benchmark_data() -> dict:
     real_path = REPO_ROOT / "results_real.json"
     real = json.loads(real_path.read_text(encoding="utf-8")) if real_path.is_file() else None
 
-    return {"regimes": regimes, "real": real}
+    v2_path = REPO_ROOT / "results_v2_all.json"
+    v2 = json.loads(v2_path.read_text(encoding="utf-8")) if v2_path.is_file() else None
+
+    return {"regimes": regimes, "real": real, "v2": v2}
 
 
 @app.post("/api/upload")

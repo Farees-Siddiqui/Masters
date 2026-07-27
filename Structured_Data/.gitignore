@@ -1,0 +1,11 @@
+# Secrets — never commit API keys
+*API_KEY.txt
+*.key
+.env
+
+# Cached OCR output (regenerable, and to avoid re-paying for OCR)
+*.mistral.md
+
+# Python
+__pycache__/
+*.pyc

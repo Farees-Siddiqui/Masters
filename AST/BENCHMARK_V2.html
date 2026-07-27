@@ -1,0 +1,729 @@
+<title>Benchmark v2 — node-level localisation</title>
+
+<style>
+  /* ── tokens ─────────────────────────────────────────────────────────────
+     Palette inherited from the paper's figure system (figures/figstyle.tex):
+     teal = the logical view, ochre = the physical page, rose = judgement.  */
+  :root {
+    --paper:      #F4F7F9;
+    --surface:    #FFFFFF;
+    --surface-2:  #EAF1F4;
+    --ink:        #1A2A34;
+    --ink-2:      #51687A;
+    --ink-3:      #869DAD;
+    --rule:       #D6E2E8;
+    --rule-soft:  #E6EDF1;
+    --logical:    #2C7A9B;
+    --logical-bg: #E5F1F6;
+    --physical:   #A96D26;
+    --physical-bg:#FAF0E0;
+    --verdict:    #AC3550;
+    --verdict-bg: #FAE6EA;
+    --muted:      #90A7B8;
+    --muted-bg:   #EDF2F5;
+    --shadow:     0 1px 2px rgba(26,42,52,.06), 0 8px 24px -16px rgba(26,42,52,.28);
+
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua",
+             Georgia, "Times New Roman", serif;
+    --mono:  ui-monospace, "SF Mono", SFMono-Regular, "Cascadia Mono",
+             "Roboto Mono", Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper:      #101920;
+      --surface:    #17222A;
+      --surface-2:  #1E2C35;
+      --ink:        #E5EDF2;
+      --ink-2:      #A3B7C3;
+      --ink-3:      #74899A;
+      --rule:       #2A3B46;
+      --rule-soft:  #223039;
+      --logical:    #6DB6D3;
+      --logical-bg: #13303C;
+      --physical:   #D9A45E;
+      --physical-bg:#33280F;
+      --verdict:    #E2879B;
+      --verdict-bg: #371B23;
+      --muted:      #7B90A2;
+      --muted-bg:   #1B2830;
+      --shadow:     0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.8);
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper:#101920; --surface:#17222A; --surface-2:#1E2C35;
+    --ink:#E5EDF2; --ink-2:#A3B7C3; --ink-3:#74899A;
+    --rule:#2A3B46; --rule-soft:#223039;
+    --logical:#6DB6D3; --logical-bg:#13303C;
+    --physical:#D9A45E; --physical-bg:#33280F;
+    --verdict:#E2879B; --verdict-bg:#371B23;
+    --muted:#7B90A2; --muted-bg:#1B2830;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.8);
+  }
+  :root[data-theme="light"] {
+    --paper:#F4F7F9; --surface:#FFFFFF; --surface-2:#EAF1F4;
+    --ink:#1A2A34; --ink-2:#51687A; --ink-3:#869DAD;
+    --rule:#D6E2E8; --rule-soft:#E6EDF1;
+    --logical:#2C7A9B; --logical-bg:#E5F1F6;
+    --physical:#A96D26; --physical-bg:#FAF0E0;
+    --verdict:#AC3550; --verdict-bg:#FAE6EA;
+    --muted:#90A7B8; --muted-bg:#EDF2F5;
+    --shadow:0 1px 2px rgba(26,42,52,.06), 0 8px 24px -16px rgba(26,42,52,.28);
+  }
+
+  /* ── page ─────────────────────────────────────────────────────────────── */
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 17px;
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1220px; margin: 0 auto; padding: 0 28px 96px; }
+  .col  { max-width: 68ch; }
+
+  h1, h2, h3 { text-wrap: balance; margin: 0; font-weight: 600; }
+  h1 { font-size: clamp(2rem, 4.6vw, 3rem); line-height: 1.1; letter-spacing: -.018em; }
+  h2 { font-size: 1.5rem; line-height: 1.24; letter-spacing: -.012em; }
+  h3 { font-size: 1.09rem; line-height: 1.3; }
+  p  { margin: 0; }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: .69rem;
+    letter-spacing: .17em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  code, .m { font-family: var(--mono); font-size: .88em; }
+  code {
+    background: var(--surface-2);
+    border: 1px solid var(--rule-soft);
+    border-radius: 4px;
+    padding: .08em .34em;
+    white-space: nowrap;
+  }
+  strong { font-weight: 600; }
+  em { font-style: italic; color: var(--ink-2); }
+
+  /* ── masthead ─────────────────────────────────────────────────────────── */
+  header.top {
+    padding: 72px 0 40px;
+    border-bottom: 1px solid var(--rule);
+    display: flex; flex-direction: column; gap: 20px;
+  }
+  .lede { font-size: 1.2rem; line-height: 1.5; color: var(--ink-2); max-width: 60ch; }
+  .facts { display: flex; flex-wrap: wrap; gap: 10px 28px; padding-top: 4px; }
+  .fact { display: flex; flex-direction: column; gap: 2px; }
+  .fact .k { font-family: var(--mono); font-size: .66rem; letter-spacing: .15em;
+             text-transform: uppercase; color: var(--ink-3); }
+  .fact .v { font-family: var(--mono); font-size: .84rem; color: var(--ink); }
+
+  /* ── sections ─────────────────────────────────────────────────────────── */
+  section { padding-top: 56px; display: flex; flex-direction: column; gap: 18px; }
+  .stage-head { display: flex; align-items: baseline; gap: 14px; }
+  .stage-num {
+    font-family: var(--mono); font-size: .8rem; color: var(--verdict);
+    border: 1px solid currentColor; border-radius: 3px;
+    padding: 1px 7px; flex: none; transform: translateY(-2px);
+  }
+
+  /* ── the contrast pair ────────────────────────────────────────────────── */
+  .pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+          gap: 14px; }
+  .q {
+    background: var(--surface); border: 1px solid var(--rule);
+    border-radius: 10px; padding: 20px 22px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .q.now { border-color: var(--verdict); background: var(--verdict-bg); }
+  .q .tag { font-family: var(--mono); font-size: .7rem; letter-spacing: .12em;
+            text-transform: uppercase; color: var(--ink-3); }
+  .q.now .tag { color: var(--verdict); }
+  .q .ask { font-size: 1.06rem; line-height: 1.42; }
+
+  /* ── diagrams ─────────────────────────────────────────────────────────── */
+  figure { margin: 0; display: flex; flex-direction: column; gap: 12px; }
+  .scroller { overflow-x: auto; border-radius: 12px; }
+  .board {
+    background: var(--surface); border: 1px solid var(--rule);
+    border-radius: 12px; box-shadow: var(--shadow); padding: 8px;
+  }
+  .board svg { display: block; min-width: 940px; width: 100%; height: auto; }
+  .inset { background: var(--surface); border: 1px solid var(--rule);
+           border-radius: 10px; padding: 14px 16px; }
+  .inset svg { display: block; width: 100%; height: auto; }
+  figcaption { font-size: .93rem; color: var(--ink-2); max-width: 74ch; }
+
+  /* SVG element classes, driven by the same tokens */
+  .s-frame { fill: none; stroke: var(--rule); stroke-width: 1;
+             stroke-dasharray: 5 4; }
+  .s-tick  { stroke: var(--ink-3); stroke-width: 1.2; }
+  .s-card  { fill: var(--surface-2); stroke: var(--rule); stroke-width: 1; }
+  .s-log   { fill: var(--surface); stroke: var(--logical); stroke-width: 1.2; }
+  .s-log-k { fill: var(--logical-bg); stroke: var(--logical); stroke-width: 2; }
+  .s-phy   { fill: var(--surface); stroke: var(--physical); stroke-width: 1.2; }
+  .s-gold  { fill: var(--verdict-bg); stroke: var(--verdict); stroke-width: 2; }
+  .s-dead  { fill: var(--muted-bg); stroke: var(--muted); stroke-width: 1;
+             stroke-dasharray: 4 3; }
+  .s-pred  { fill: var(--surface); stroke: var(--ink-3); stroke-width: 1.2; }
+  .s-pred-k{ fill: var(--surface-2); stroke: var(--ink-2); stroke-width: 2; }
+  .t       { font-family: var(--serif); font-size: 13.5px; fill: var(--ink); }
+  .t-m     { font-family: var(--mono);  font-size: 12px;   fill: var(--ink); }
+  .t-s     { font-family: var(--serif); font-size: 12px;   fill: var(--ink-2); }
+  .t-lab   { font-family: var(--mono);  font-size: 10.5px; letter-spacing: .13em;
+             text-transform: uppercase; }
+  .t-log   { fill: var(--logical); }
+  .t-phy   { fill: var(--physical); }
+  .t-ver   { fill: var(--verdict); }
+  .t-mut   { fill: var(--muted); }
+  .t-b     { font-weight: 600; }
+  .ln      { stroke: var(--ink-3); stroke-width: 1.3; fill: none; }
+  .ln-log  { stroke: var(--logical); }
+  .ln-phy  { stroke: var(--physical); }
+  .ln-ver  { stroke: var(--verdict); }
+  .ln-mut  { stroke: var(--muted); }
+  .ln-d    { stroke-dasharray: 4 3; }
+
+  /* ── prose bits ───────────────────────────────────────────────────────── */
+  .note {
+    border-left: 3px solid var(--verdict); background: var(--verdict-bg);
+    border-radius: 0 8px 8px 0; padding: 16px 20px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .note .h { font-weight: 600; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+           gap: 12px; }
+  .card { background: var(--surface); border: 1px solid var(--rule);
+          border-radius: 10px; padding: 16px 18px;
+          display: flex; flex-direction: column; gap: 6px; }
+  .card .t3 { font-family: var(--mono); font-size: .82rem; color: var(--ink); }
+  .card .d  { font-size: .93rem; color: var(--ink-2); line-height: 1.5; }
+  .card.log { border-top: 3px solid var(--logical); }
+  .card.phy { border-top: 3px solid var(--physical); }
+  .card.mut { border-top: 3px solid var(--muted); }
+
+  table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+  caption { text-align: left; color: var(--ink-3); font-family: var(--mono);
+            font-size: .7rem; letter-spacing: .14em; text-transform: uppercase;
+            padding-bottom: 10px; }
+  th, td { text-align: left; padding: 11px 14px; border-bottom: 1px solid var(--rule-soft);
+           vertical-align: top; }
+  th { font-family: var(--mono); font-size: .76rem; letter-spacing: .1em;
+       text-transform: uppercase; color: var(--ink-3); font-weight: 400;
+       border-bottom-color: var(--rule); }
+  td:first-child { font-family: var(--mono); font-size: .84rem; white-space: nowrap; }
+  tbody tr:last-child td { border-bottom: none; }
+
+  ul.tight { margin: 0; padding-left: 1.15em; display: flex; flex-direction: column; gap: 7px; }
+  ul.tight li::marker { color: var(--ink-3); }
+
+  pre {
+    margin: 0; background: var(--surface); border: 1px solid var(--rule);
+    border-radius: 10px; padding: 16px 18px; overflow-x: auto;
+    font-family: var(--mono); font-size: .82rem; line-height: 1.7; color: var(--ink);
+  }
+  pre .c { color: var(--ink-3); }
+
+  footer { padding-top: 56px; margin-top: 56px; border-top: 1px solid var(--rule);
+           color: var(--ink-3); font-size: .88rem; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    a { transition: color .15s ease; }
+  }
+  :focus-visible { outline: 2px solid var(--logical); outline-offset: 3px; border-radius: 3px; }
+</style>
+
+<div class="wrap">
+
+<header class="top">
+  <span class="eyebrow">Benchmark v2.0 · node-level localisation</span>
+  <h1>Did the aligner find the right place on the page?</h1>
+  <p class="lede">
+    For every node of the document tree, the benchmark asks which regions of
+    which pages that node occupies — and whether the aligner found them. Where
+    it has no trustworthy answer of its own, it declines to grade rather than
+    guess.
+  </p>
+  <div class="facts">
+    <span class="fact"><span class="k">module</span><span class="v">benchmark_v2_0/</span></span>
+    <span class="fact"><span class="k">gold</span><span class="v">node → {regions} | ABSENT</span></span>
+    <span class="fact"><span class="k">metric</span><span class="v">area IoU ≥ 0.5</span></span>
+    <span class="fact"><span class="k">inputs</span><span class="v">on-disk cache, no inference</span></span>
+  </div>
+</header>
+
+<section>
+  <div class="col" style="display:flex;flex-direction:column;gap:18px">
+    <div class="stage-head"><h2>Three decisions that define it</h2></div>
+    <p>
+      Everything else follows from these. Each one is a deliberate trade, and
+      each one is why a particular kind of wrong answer cannot slip through
+      unnoticed.
+    </p>
+  </div>
+  <div class="pair">
+    <div class="q">
+      <span class="tag">the unit</span>
+      <p class="ask">A whole <em>node</em>, not a word.</p>
+      <p class="d" style="color:var(--ink-2);font-size:.95rem">
+        Grading runs at the granularity a reader cares about: select a paragraph
+        in the tree, light up the right part of the page. A node is judged once,
+        on where it landed.
+      </p>
+    </div>
+    <div class="q">
+      <span class="tag">the answer</span>
+      <p class="ask">A <em>set of regions</em>, or none at all.</p>
+      <p class="d" style="color:var(--ink-2);font-size:.95rem">
+        Nodes routinely span several regions, across columns or pages, so the
+        answer is a set. <code>ABSENT</code> — the node is on no page — is a real
+        answer that a method can get right or wrong.
+      </p>
+    </div>
+    <div class="q now">
+      <span class="tag">the refusal</span>
+      <p class="ask">Ungradeable nodes are <em>dropped</em>, not failed.</p>
+      <p class="d" style="color:var(--ink-2);font-size:.95rem">
+        Where the benchmark has no dependable answer of its own, it removes the
+        node from scoring entirely. Every judgement it does keep carries the
+        provenance of where it came from.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="col"><div class="stage-head"><h2>The whole pipeline</h2></div></div>
+  <figure>
+    <div class="scroller"><div class="board">
+      <svg viewBox="0 0 1160 792" role="img"
+           aria-label="Flow diagram: four cached inputs feed a gold-construction stage with an automatic lane and a human lane, which merge into the gold; a separate stage runs an aligner to produce predictions; both meet in a scoring stage.">
+        <defs>
+          <marker id="ah" viewBox="0 0 10 10" refX="8.5" refY="5"
+                  markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 1 L 9 5 L 0 9 z" fill="context-stroke"/>
+          </marker>
+        </defs>
+
+        <!-- ══ 1 · inputs ══ -->
+        <text class="t-lab t-mut" x="16" y="16">1 · inputs, all cached on disk</text>
+        <g>
+          <rect class="s-card" x="16"  y="30" width="266" height="54" rx="7"/>
+          <text class="t-m t-b" x="32" y="52">corpus/&lt;doc&gt;.pdf</text>
+          <text class="t-s"     x="32" y="70">its text layer: every word with a box</text>
+
+          <rect class="s-card" x="298" y="30" width="266" height="54" rx="7"/>
+          <text class="t-m t-b" x="314" y="52">ast.json</text>
+          <text class="t-s"     x="314" y="70">the AST the OCR model produced</text>
+
+          <rect class="s-card" x="580" y="30" width="266" height="54" rx="7"/>
+          <text class="t-m t-b" x="596" y="52">paragraph.json</text>
+          <text class="t-s"     x="596" y="70">the detected regions, per page</text>
+
+          <rect class="s-card" x="862" y="30" width="266" height="54" rx="7"/>
+          <text class="t-m t-b" x="878" y="52">annotations.json</text>
+          <text class="t-s"     x="878" y="70">your verdicts from /annotate</text>
+        </g>
+
+        <!-- ══ 2 · gold zone ══ -->
+        <rect class="s-frame" x="16" y="112" width="700" height="560" rx="12"/>
+        <path class="s-tick" d="M16 132 L16 112 L36 112 M696 112 L716 112 L716 132
+                                M16 652 L16 672 L36 672 M696 672 L716 672 L716 652"/>
+        <text class="t-lab t-mut" x="34" y="138">2 · build the gold</text>
+
+        <text class="t-lab t-log" x="34" y="170">automatic proposal</text>
+        <rect class="s-log" x="34" y="182" width="316" height="52" rx="7"/>
+        <text class="t" x="50" y="205"><tspan class="t-b t-log">1 </tspan>Locate each node’s text inside</text>
+        <text class="t" x="50" y="223">the stream of PDF words</text>
+
+        <rect class="s-log" x="34" y="252" width="316" height="52" rx="7"/>
+        <text class="t" x="50" y="275"><tspan class="t-b t-log">2 </tspan>Every word it covers takes</text>
+        <text class="t" x="50" y="293">that node as its owner</text>
+
+        <rect class="s-log" x="34" y="322" width="316" height="52" rx="7"/>
+        <text class="t" x="50" y="345"><tspan class="t-b t-log">3 </tspan>Every region collects the</text>
+        <text class="t" x="50" y="363">words whose centres fall in it</text>
+
+        <rect class="s-log-k" x="34" y="392" width="316" height="70" rx="7"/>
+        <text class="t" x="50" y="415"><tspan class="t-b t-log">4 </tspan>A region joins node <tspan font-style="italic">n</tspan> only</text>
+        <text class="t" x="50" y="433">if <tspan font-style="italic">n</tspan> owns <tspan class="t-b">more than half</tspan></text>
+        <text class="t" x="50" y="451">of that region’s owned words</text>
+
+        <path class="ln ln-log" marker-end="url(#ah)" d="M192 234 L192 250"/>
+        <path class="ln ln-log" marker-end="url(#ah)" d="M192 304 L192 320"/>
+        <path class="ln ln-log" marker-end="url(#ah)" d="M192 374 L192 390"/>
+
+        <text class="t-lab t-phy" x="384" y="170">human verdicts</text>
+        <rect class="s-phy" x="384" y="182" width="314" height="52" rx="7"/>
+        <text class="t-m t-b t-phy" x="400" y="203">excluded:&lt;node&gt;</text>
+        <text class="t-s" x="400" y="222">name its regions, or declare it ABSENT</text>
+
+        <rect class="s-phy" x="384" y="252" width="314" height="52" rx="7"/>
+        <text class="t-m t-b t-phy" x="400" y="273">audit:&lt;node&gt;</text>
+        <text class="t-s" x="400" y="292">accept the proposal, or reject it</text>
+
+        <rect class="s-phy" x="384" y="322" width="314" height="52" rx="7"/>
+        <text class="t-m t-b t-phy" x="400" y="343">null:&lt;region&gt;</text>
+        <text class="t-s" x="400" y="362">it is furniture, or it belongs to node <tspan font-style="italic">n</tspan></text>
+
+        <path class="ln ln-phy" marker-end="url(#ah)" d="M541 234 L541 250"/>
+        <path class="ln ln-phy" marker-end="url(#ah)" d="M541 304 L541 320"/>
+        <text class="t t-phy t-b" x="541" y="414" text-anchor="middle">a human verdict always wins</text>
+
+        <!-- gold -->
+        <rect class="s-gold" x="34" y="490" width="664" height="82" rx="9"/>
+        <text class="t-m t-b t-ver" x="52" y="514">GOLD</text>
+        <text class="t" x="110" y="514">for every gradeable node</text>
+        <text class="t-m" x="52" y="537">node → {the regions it occupies}</text>
+        <text class="t" x="300" y="537">or</text>
+        <text class="t-m" x="326" y="537">ABSENT</text>
+        <text class="t" x="396" y="537">— it is on no page</text>
+        <text class="t-s" x="52" y="558">each tagged with a <tspan class="t-b">tier</tspan> (human &gt; audited &gt; oracle) and a <tspan class="t-b">kind</tspan>, plus the set of <tspan class="t-b">furniture</tspan> regions owned by nobody</text>
+
+        <path class="ln ln-log" marker-end="url(#ah)" d="M192 462 L192 488"/>
+        <path class="ln ln-phy" marker-end="url(#ah)" d="M541 424 L541 488"/>
+
+        <!-- dead end -->
+        <rect class="s-dead" x="34" y="596" width="486" height="58" rx="9"/>
+        <text class="t t-b" x="52" y="620" fill="var(--muted)">Never scored — silence is not evidence</text>
+        <text class="t-s" x="52" y="640">could not be placed · you rejected it · dominates no region · unclaimed table or formula</text>
+        <path class="ln ln-mut" marker-end="url(#ah)" d="M240 574 L240 594"/>
+
+        <!-- ══ 3 · prediction zone ══ -->
+        <rect class="s-frame" x="744" y="112" width="400" height="560" rx="12"/>
+        <path class="s-tick" d="M744 132 L744 112 L764 112 M1124 112 L1144 112 L1144 132
+                                M744 652 L744 672 L764 672 M1124 672 L1144 672 L1144 652"/>
+        <text class="t-lab t-mut" x="762" y="138">3 · what a method predicts</text>
+
+        <rect class="s-pred" x="762" y="182" width="364" height="52" rx="7"/>
+        <text class="t" x="778" y="205">Run one aligner — <tspan font-style="italic">positional</tspan> or</text>
+        <text class="t" x="778" y="223"><tspan font-style="italic">order-free</tspan> — on those same inputs</text>
+
+        <rect class="s-pred" x="762" y="252" width="364" height="52" rx="7"/>
+        <text class="t" x="778" y="275">It returns a reverse map</text>
+        <text class="t-m" x="778" y="294">region → [owners, best first]</text>
+
+        <rect class="s-pred-k" x="762" y="322" width="364" height="70" rx="7"/>
+        <text class="t" x="778" y="345">Keep only each region’s <tspan class="t-b">primary</tspan></text>
+        <text class="t" x="778" y="363">owner, as the viewer colours it,</text>
+        <text class="t" x="778" y="381">then invert it per node</text>
+
+        <path class="ln" marker-end="url(#ah)" d="M944 234 L944 250"/>
+        <path class="ln" marker-end="url(#ah)" d="M944 304 L944 320"/>
+
+        <rect class="s-pred" x="762" y="490" width="364" height="82" rx="9"/>
+        <text class="t-m t-b" x="778" y="514">PREDICTION</text>
+        <text class="t-m" x="778" y="539">node → {predicted regions}</text>
+        <text class="t-s" x="778" y="560">every region has exactly one claimant</text>
+        <path class="ln" marker-end="url(#ah)" d="M944 392 L944 488"/>
+
+        <!-- ══ 4 · scoring ══ -->
+        <rect class="s-frame" x="16" y="700" width="1128" height="76" rx="12"/>
+        <text class="t-lab t-mut" x="34" y="726">4 · score, per document then pooled over the corpus</text>
+        <text class="t" x="34" y="752">Compare the two region sets by <tspan class="t-b">area</tspan>:</text>
+        <text class="t-m t-b t-ver" x="258" y="752">IoU = |P ∩ G| / |P ∪ G| ≥ 0.5</text>
+        <text class="t" x="500" y="752">→ the node is <tspan class="t-b">localised</tspan>. Furniture a node claims anyway is a <tspan class="t-b">false claim</tspan>.</text>
+
+        <path class="ln ln-ver" marker-end="url(#ah)" d="M600 574 L600 698"/>
+        <path class="ln" marker-end="url(#ah)" d="M944 572 L944 698"/>
+
+        <!-- input wiring -->
+        <path class="ln" marker-end="url(#ah)" d="M100 84 L100 180"/>
+        <path class="ln" marker-end="url(#ah)" d="M300 84 L300 152 L282 152 L282 180"/>
+        <path class="ln" marker-end="url(#ah)" d="M628 84 L628 100 L366 100 L366 348 L352 348"/>
+        <path class="ln ln-phy" marker-end="url(#ah)" d="M980 84 L980 158 L722 158 L722 208 L700 208"/>
+        <path class="ln ln-d" marker-end="url(#ah)" d="M772 84 L772 104 L944 104 L944 180"/>
+      </svg>
+    </div></div>
+    <figcaption>
+      Two independent lanes build the gold and merge, with human verdicts
+      overriding the automatic proposal. A separate lane produces one method’s
+      predictions from the same inputs. Only in stage&nbsp;4 do the two meet.
+      Nodes that fall out of the bottom of stage&nbsp;2 are never scored at all.
+    </figcaption>
+  </figure>
+</section>
+
+<section>
+  <div class="col" style="display:flex;flex-direction:column;gap:18px">
+    <div class="stage-head"><h2>Where everything comes from</h2></div>
+    <p>
+      The benchmark itself runs no models. It reads four artefacts off disk, each
+      produced earlier by a different component, and knowing which is which is
+      what tells you how far a result can be trusted.
+    </p>
+  </div>
+
+  <table>
+    <caption>the four inputs and what produced them</caption>
+    <thead><tr><th>Artefact</th><th>Produced by</th><th>What it contributes</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>ast.json</td>
+        <td><strong>Mistral OCR</strong>, model <code>mistral-ocr-latest</code>, called through the Files API. Its per-page Markdown is parsed into the typed tree by <code>app/ast_builder.py</code>.</td>
+        <td>The inventory of nodes and their text. Everything the benchmark grades is a node from here.</td>
+      </tr>
+      <tr>
+        <td>paragraph.json</td>
+        <td><strong>PP-DocLayoutV3</strong> region detection, run through PaddleOCR on pages rendered at 200&nbsp;dpi by pypdfium2. Region text is aggregated from <strong>PP-OCRv5</strong> detection and recognition lines.</td>
+        <td>The regions themselves — the vocabulary of places a node can be said to occupy, on both sides of the comparison.</td>
+      </tr>
+      <tr>
+        <td>the word stream</td>
+        <td><strong>No model.</strong> pypdfium2 reads the PDF’s own embedded text layer at 200&nbsp;dpi, giving each word its box directly from the file.</td>
+        <td>The evidence linking node text to page coordinates. The only part of the gold that no model can bias.</td>
+      </tr>
+      <tr>
+        <td>annotations.json</td>
+        <td><strong>You</strong>, working the three queues in <code>/annotate</code>. Verdicts are written per item as you go.</td>
+        <td>The human and audited tiers — the only judgements that override the automatic proposal.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="col" style="display:flex;flex-direction:column;gap:18px">
+    <h3>And the methods being graded</h3>
+  </div>
+  <div class="cards">
+    <div class="card log">
+      <span class="t3">positional aligner</span>
+      <span class="d">Flattens both sides to normalised character streams and diffs them with Python’s <code>difflib.SequenceMatcher</code>. <strong>No model, no training</strong> — but it depends on the recovered reading order being right.</span>
+    </div>
+    <div class="card log">
+      <span class="t3">order-free aligner</span>
+      <span class="d">Embeds node text and region text with the sentence-transformer <code>all-MiniLM-L6-v2</code> and scores every pair by cosine similarity, keeping matches at or above <code>0.5</code>. Order is ignored entirely.</span>
+    </div>
+    <div class="card mut">
+      <span class="t3">reading order</span>
+      <span class="d">A reimplementation of XY-Cut++ in <code>layout/reading_order.py</code>: pure geometry over region boxes and their labels, so <strong>no model</strong> and no text. Feeds the positional aligner only — the gold never uses it.</span>
+    </div>
+  </div>
+
+  <div class="note">
+    <span class="h">What a result is therefore conditional on</span>
+    <p>
+      The gold is independent of both aligners, which is what makes the comparison
+      fair. It is <em>not</em> independent of the two upstream models: the node
+      inventory comes from Mistral OCR, and the regions come from PP-DocLayoutV3.
+      A node the OCR model never emitted cannot be missed, and a region the
+      detector never found cannot be occupied. Only the word coordinates, taken
+      from the PDF’s own text layer, are free of model influence.
+    </p>
+    <p>
+      Two practical notes for reproducing a number. <code>mistral-ocr-latest</code>
+      is a moving alias, so a rerun months apart may not parse to the same tree;
+      pin a dated model if a figure needs to survive. And the corpus is ten
+      born-digital arXiv papers — <span class="m">resnet, attention, bert, vgg,
+      faster-rcnn, adam, vit, unet, densenet, batchnorm</span> — all of them
+      clean, single-source PDFs with real text layers, which is the friendliest
+      possible setting for the word-stream evidence above.
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="col" style="display:flex;flex-direction:column;gap:18px">
+    <div class="stage-head"><span class="stage-num">2</span><h2>Building the gold</h2></div>
+    <p>
+      The gold answers one question per node: <em>which regions of which pages
+      does this node occupy?</em> The answer is a set of region keys, or the
+      sentinel <code>ABSENT</code> meaning the node appears nowhere on any page —
+      which is a real and useful answer, not a missing one.
+    </p>
+    <h3>The automatic proposal, and its one strict rule</h3>
+    <p>
+      Steps 1–3 are bookkeeping: find each node’s text among the words the PDF
+      already carries, mark those words as owned, and collect the words that fall
+      inside each detected region. Step&nbsp;4 is where the design decision sits.
+    </p>
+  </div>
+
+  <figure>
+    <div class="inset">
+      <svg viewBox="0 0 800 168" role="img"
+           aria-label="Two regions of words. In the first, five of eight owned words belong to node A, so A takes the region. In the second, the split is four to four, so no node takes it.">
+        <g>
+          <rect class="s-phy" x="14" y="26" width="330" height="86" rx="7"/>
+          <g>
+            <rect x="30"  y="44" width="46" height="16" rx="3" fill="var(--logical)"/>
+            <rect x="84"  y="44" width="62" height="16" rx="3" fill="var(--logical)"/>
+            <rect x="154" y="44" width="38" height="16" rx="3" fill="var(--logical)"/>
+            <rect x="200" y="44" width="58" height="16" rx="3" fill="var(--physical)"/>
+            <rect x="266" y="44" width="42" height="16" rx="3" fill="var(--logical)"/>
+            <rect x="30"  y="70" width="54" height="16" rx="3" fill="var(--physical)"/>
+            <rect x="92"  y="70" width="40" height="16" rx="3" fill="var(--logical)"/>
+            <rect x="140" y="70" width="56" height="16" rx="3" fill="var(--physical)"/>
+            <rect x="204" y="70" width="48" height="16" rx="3" fill="var(--muted)" opacity=".5"/>
+          </g>
+          <text class="t-s" x="30" y="104">5 of 8 owned words → node A</text>
+          <text class="t t-b t-log" x="360" y="62">A takes the region</text>
+          <text class="t-s" x="360" y="82">5 × 2 &gt; 8, a strict majority</text>
+        </g>
+        <g transform="translate(0,0)">
+          <rect class="s-phy" x="14" y="124" width="330" height="34" rx="7"/>
+          <rect x="30"  y="133" width="52" height="16" rx="3" fill="var(--logical)"/>
+          <rect x="90"  y="133" width="44" height="16" rx="3" fill="var(--logical)"/>
+          <rect x="142" y="133" width="58" height="16" rx="3" fill="var(--physical)"/>
+          <rect x="208" y="133" width="46" height="16" rx="3" fill="var(--physical)"/>
+          <text class="t t-b" x="360" y="140" fill="var(--muted)">nobody takes it</text>
+          <text class="t-s" x="360" y="156">4 × 2 = 8, a tie is not a majority</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption>
+      Majority, not plurality. A region straddling two nodes joins <em>neither</em>
+      rather than going to whichever side has one word more. It costs coverage
+      and buys precision — the right trade for the thing everything else is
+      measured against.
+    </figcaption>
+  </figure>
+
+  <div class="col" style="display:flex;flex-direction:column;gap:18px">
+    <h3>Three queues, three different repairs</h3>
+    <p>
+      Your verdicts in <code>/annotate</code> don’t merely correct the proposal;
+      each queue fixes a distinct way it fails.
+    </p>
+  </div>
+  <div class="cards">
+    <div class="card phy">
+      <span class="t3">excluded:&lt;node&gt;</span>
+      <span class="d">For nodes the proposal could not place at all. You either name the regions outright or declare the node absent from every page.</span>
+    </div>
+    <div class="card phy">
+      <span class="t3">audit:&lt;node&gt;</span>
+      <span class="d">Accept or reject a proposal. Accepting promotes it to the <em>audited</em> tier; rejecting removes the node from the gold entirely rather than replacing it with a guess.</span>
+    </div>
+    <div class="card phy">
+      <span class="t3">null:&lt;region&gt;</span>
+      <span class="d">For regions holding ownerless words. Either it is furniture, or it belongs to a node the proposal missed — an assignment <em>extends</em> that node’s gold rather than replacing it.</span>
+    </div>
+  </div>
+
+  <div class="col" style="display:flex;flex-direction:column;gap:18px">
+    <h3>Every entry carries its provenance</h3>
+    <p>
+      Each node’s gold is tagged with the tier it came from — <strong>human</strong>,
+      then <strong>audited</strong>, then unreviewed <strong>oracle</strong> — and every
+      report prints the composition. That is what lets the benchmark run before
+      annotation is finished without quietly passing off unverified gold as
+      verified. Each node also gets a <em>kind</em> (prose, heading, formula,
+      table, image, marker) read from its own text, because the AST’s own types
+      are too coarse to show where a method actually struggles.
+    </p>
+  </div>
+
+  <div class="note">
+    <span class="h">The part that matters most: what is deliberately not scored</span>
+    <p>
+      Four cases are dropped rather than counted wrong — a node the proposal
+      couldn’t place, one whose proposal you rejected, one that dominates no
+      region, and unclaimed regions labelled table or formula, where a word-level
+      procedure is <em>structurally</em> blind.
+    </p>
+    <p>
+      The alternative would be to record “this node belongs nowhere” and score
+      against it. That quietly punishes an aligner for succeeding where the
+      automatic procedure failed, and the resulting error is systematic: it falls
+      hardest on formulas, tables and figures, exactly the material that separates
+      one method from another. Dropping those nodes keeps the measurement honest
+      at the cost of coverage, so thin gold before annotation is the expected
+      state rather than a fault.
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="col" style="display:flex;flex-direction:column;gap:18px">
+    <div class="stage-head"><span class="stage-num">3</span><h2>What a method predicts</h2></div>
+    <p>
+      An aligner returns a <em>reverse map</em> from each region to a ranked list of
+      candidate owner nodes. Scoring keeps <strong>only the primary owner</strong>, then
+      inverts it into <code>node → {predicted regions}</code>. That mirrors exactly how
+      the viewer colours a region, so the benchmark grades what a user actually
+      sees — at the cost of discarding secondary owners, which is a real
+      limitation worth stating in the paper.
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="col" style="display:flex;flex-direction:column;gap:18px">
+    <div class="stage-head"><span class="stage-num">4</span><h2>Scoring, and why by area</h2></div>
+    <p>
+      Both region sets are rasterised into per-page occupancy masks at quarter-pixel
+      resolution and compared as intersection over union. A node counts as
+      localised at <code>IoU ≥ 0.5</code>.
+    </p>
+  </div>
+
+  <figure>
+    <div class="inset">
+      <svg viewBox="0 0 800 190" role="img"
+           aria-label="Gold is two stacked regions; the prediction is one larger region overlapping both. The shared area is hatched. Their intersection over union decides whether the node counts as localised.">
+        <defs>
+          <pattern id="hatch" width="7" height="7" patternTransform="rotate(45)"
+                   patternUnits="userSpaceOnUse">
+            <line x1="0" y1="0" x2="0" y2="7" stroke="var(--verdict)" stroke-width="2.4" opacity=".55"/>
+          </pattern>
+        </defs>
+        <rect x="40"  y="26"  width="150" height="62" rx="4"
+              fill="var(--physical-bg)" stroke="var(--physical)" stroke-width="1.4"/>
+        <rect x="40"  y="98"  width="150" height="62" rx="4"
+              fill="var(--physical-bg)" stroke="var(--physical)" stroke-width="1.4"/>
+        <rect x="78"  y="26"  width="112" height="62" fill="url(#hatch)"/>
+        <rect x="78"  y="98"  width="112" height="40" fill="url(#hatch)"/>
+        <rect x="78"  y="42"  width="150" height="96" rx="4"
+              fill="none" stroke="var(--verdict)" stroke-width="2" stroke-dasharray="6 4"/>
+        <text class="t-s" x="40" y="180">gold <tspan class="t-b" fill="var(--physical)">G</tspan> solid · prediction <tspan class="t-b" fill="var(--verdict)">P</tspan> dashed · shared area hatched</text>
+
+        <text class="t" x="290" y="60">Areas are compared, not lists of regions.</text>
+        <text class="t" x="290" y="84">A node is not punished when the detector splits</text>
+        <text class="t" x="290" y="104">its text into a different number of regions than</text>
+        <text class="t" x="290" y="124">the gold does — both sides draw from the same</text>
+        <text class="t" x="290" y="144">inventory, so region padding cancels out.</text>
+      </svg>
+    </div>
+  </figure>
+
+  <table>
+    <caption>what each run reports</caption>
+    <thead><tr><th>Metric</th><th>Reads as</th></tr></thead>
+    <tbody>
+      <tr><td>localisation accuracy</td><td>Share of gradeable, non-absent nodes reaching IoU ≥ 0.5. The headline number.</td></tr>
+      <tr><td>mean IoU</td><td>Average overlap, which separates “just cleared the bar” from “nailed it”.</td></tr>
+      <tr><td>exact</td><td>Predicted region set identical to gold — a stricter, incidental credit.</td></tr>
+      <tr><td>missed</td><td>Gold exists but the aligner predicted nothing. A recall failure.</td></tr>
+      <tr><td>absent accuracy</td><td>Of nodes that genuinely appear nowhere, how often the aligner correctly stayed silent.</td></tr>
+      <tr><td>false-claim rate</td><td>Share of furniture regions that some node claimed anyway. Catches over-eager aligners.</td></tr>
+      <tr><td>by kind · by tier</td><td>Every figure above, split by content kind and by gold provenance.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <div class="col" style="display:flex;flex-direction:column;gap:18px">
+    <div class="stage-head"><h2>Reading a run honestly</h2></div>
+    <ul class="tight">
+      <li><strong>Check the tier line first.</strong> Every run prints how much of the gold is human, audited, or unreviewed. A headline number resting mostly on the third tier is a provisional number.</li>
+      <li><strong><code>--human-only</code> is the trustworthy mode.</strong> It restricts scoring to human-tier gold — and right now will grade very few nodes, until the annotation pass is further along.</li>
+      <li><strong>Watch the <em>n</em> in the by-kind table.</strong> The per-kind columns are the most useful diagnostic and the most easily over-read; formula and table rows stay thin until their queues are annotated.</li>
+      <li><strong>Nodes pool, not documents.</strong> Corpus figures weight every node equally, so a long document pulls harder than a short one.</li>
+    </ul>
+  </div>
+  <pre><span class="c"># one document, both aligners</span>
+python -m benchmark_v2_0 --docs resnet
+
+<span class="c"># the whole corpus, verified gold only, saved</span>
+python -m benchmark_v2_0 --all --human-only --out results_v2.json</pre>
+</section>
+
+<footer>
+  Source: <span class="m">benchmark_v2_0/gold.py</span> and
+  <span class="m">benchmark_v2_0/score.py</span>. Runs entirely off the on-disk
+  layout cache — no layout inference and no API calls.
+</footer>
+
+</div>

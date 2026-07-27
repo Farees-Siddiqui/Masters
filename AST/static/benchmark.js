@@ -7,6 +7,13 @@
  * essentially solved, while both aligners invent a source for most page
  * furniture, which is the error that matters for provenance.
  *
+ * `v2`: node-level localization (`python -m benchmark_v2_0 --all`). Gold maps
+ * each AST node to the set of layout boxes it owns (or ABSENT), in three tiers
+ * of trust — human > audited > unverified oracle — and a node scores when the
+ * pixel-area IoU of predicted vs. gold box unions clears the threshold. Unlike
+ * the token view this asks "did we find the right boxes", not "the right
+ * characters", and its false-claim rate is per furniture *box*, not per token.
+ *
  * `synthetic`: the OCR-noise sweep (`python -m benchmark synthetic`) as an SVG
  * line chart. Gold is built from the AST's own text, so it measures robustness
  * to character noise under a known box→node owner — a controlled stress test,
@@ -38,6 +45,7 @@ const plotW = W - padL - padR, plotH = H - padT - padB;
 
 let regimes = [];           // [{key, label, rows}]
 let real = null;            // the real-document run, or null if never generated
+let v2 = null;              // the node-localization run, or null if never generated
 let regimeKey = "intact";
 let metric = "f1";
 let mode = "real";
@@ -64,11 +72,13 @@ async function init() {
     const data = await res.json();
     regimes = data.regimes || [];
     real = data.real || null;
+    v2 = data.v2 || null;
     statusEl.textContent = "";
-    // ?mode=synthetic|real deep-links a view, so a specific result is shareable.
+    // ?mode=synthetic|real|v2 deep-links a view, so a specific result is shareable.
     const wanted = new URLSearchParams(location.search).get("mode");
-    if (wanted === "synthetic" || wanted === "real") mode = wanted;
-    if (!real) mode = "synthetic"; // nothing to show until `benchmark real` runs
+    if (wanted === "synthetic" || wanted === "real" || wanted === "v2") mode = wanted;
+    if (mode === "real" && !real) mode = v2 ? "v2" : "synthetic";
+    if (mode === "v2" && !v2) mode = real ? "real" : "synthetic";
     syncMode();
     render();
   } catch (e) {
@@ -86,15 +96,20 @@ document.getElementById("mode-seg").addEventListener("click", (e) => {
   render();
 });
 
+const SUBTITLE = {
+  real: "Real documents vs. PDF text-layer gold &mdash; <em>prose is solved; page furniture is not.</em>",
+  v2: "Node-level localization vs. tiered gold &mdash; <em>did the aligner find the right boxes?</em>",
+  synthetic: "Synthetic OCR-noise sweep, gold by construction &mdash; <em>each method has a regime.</em>",
+};
+
 function syncMode() {
-  const isReal = mode === "real";
-  document.getElementById("real-view").hidden = !isReal;
-  document.getElementById("synthetic-view").hidden = isReal;
-  document.getElementById("regime-seg").hidden = isReal;
-  document.getElementById("metric-seg").hidden = isReal;
-  document.getElementById("page-sub").innerHTML = isReal
-    ? "Real documents vs. PDF text-layer gold &mdash; <em>prose is solved; page furniture is not.</em>"
-    : "Synthetic OCR-noise sweep, gold by construction &mdash; <em>each method has a regime.</em>";
+  const isSynthetic = mode === "synthetic";
+  document.getElementById("real-view").hidden = mode !== "real";
+  document.getElementById("v2-view").hidden = mode !== "v2";
+  document.getElementById("synthetic-view").hidden = !isSynthetic;
+  document.getElementById("regime-seg").hidden = !isSynthetic;
+  document.getElementById("metric-seg").hidden = !isSynthetic;
+  document.getElementById("page-sub").innerHTML = SUBTITLE[mode];
   // Reflect the active mode button even when set programmatically.
   document.querySelectorAll("#mode-seg .seg-btn").forEach((x) =>
     x.classList.toggle("active", x.dataset.mode === mode)
@@ -127,6 +142,7 @@ function curRegime() {
 
 function render() {
   if (mode === "real") return renderReal();
+  if (mode === "v2") return renderV2();
   const rows = curRegime().rows;
   titleEl.textContent = `${METRIC_LABEL[metric]} vs. OCR noise — ${curRegime().label || ""}`;
   takeawayEl.textContent = TAKEAWAY[regimeKey] || "";
@@ -325,6 +341,172 @@ function drawOracle(o) {
       "</ul>";
   }
   document.getElementById("real-oracle").innerHTML = html;
+}
+
+/* ---------- node-localization (v2) view ---------- */
+
+// Colour thresholds: localization accuracy is good when high, false claim rate
+// is good when low — using one scale for both would paint failures green.
+const clsHi = (v) => (v === null || v === undefined ? "" : v >= 0.9 ? "good" : v >= 0.5 ? "mid" : "bad");
+const clsLo = (v) => (v === null || v === undefined ? "" : v <= 0.1 ? "good" : v <= 0.5 ? "mid" : "bad");
+
+function v2Methods() {
+  // Keep the canonical METHODS order, then anything new the backend added.
+  const known = METHODS.map((m) => m.key).filter((k) => v2.aggregate[k]);
+  const extra = Object.keys(v2.aggregate).filter((k) => !known.includes(k)).sort();
+  return [...known, ...extra];
+}
+
+function renderV2() {
+  if (!v2) {
+    document.getElementById("v2-meta").textContent =
+      "No node-localization results yet — run `python -m benchmark_v2_0 --all --out results_v2_all.json`.";
+    return;
+  }
+  const methods = v2Methods();
+  const docs = v2.docs || [];
+  const tiers = { human: 0, audited: 0, oracle: 0 };
+  let nNodes = 0, nUngraded = 0, nFurniture = 0;
+  for (const d of docs) {
+    nNodes += d.gold.n_gold_nodes;
+    nUngraded += d.gold.n_ungraded;
+    nFurniture += d.gold.n_furniture;
+    for (const t of Object.keys(tiers)) tiers[t] += d.gold.by_tier[t] || 0;
+  }
+  const verified = nNodes ? (tiers.human + tiers.audited) / nNodes : 0;
+
+  document.getElementById("v2-meta").innerHTML =
+    `<strong>${docs.length} documents</strong> · ${nNodes.toLocaleString()} gold nodes · ` +
+    `IoU &ge; ${v2.iou_threshold} · granularity <code>${v2.granularity}</code> · ` +
+    `tiers ${tiers.human} human / ${tiers.audited} audited / ${tiers.oracle} oracle ` +
+    `(<strong>${pct(verified)}</strong> verified) · ` +
+    `${nFurniture} furniture boxes · ${nUngraded.toLocaleString()} nodes ungraded` +
+    (v2.human_only ? " · <strong>human-only gold</strong>" : "");
+
+  drawV2Kpis(methods);
+  drawV2Aggregate(methods);
+  drawV2PerDoc(methods);
+  drawV2ByKind(methods);
+  drawV2Tiers(methods);
+
+  // Narrative derived from the shipped numbers, not hardcoded.
+  const acc = (m) => v2.aggregate[m].localization_accuracy;
+  const claim = (m) => v2.aggregate[m].false_claim_rate;
+  const best = methods.reduce((a, b) => (acc(a) >= acc(b) ? a : b));
+  const bestClaim = methods.reduce((a, b) => (claim(a) <= claim(b) ? a : b));
+  const split =
+    best === bestClaim
+      ? `<code>${best}</code> also has the lowest false-claim rate (${pct(claim(bestClaim))}).`
+      : `but <code>${bestClaim}</code> claims less furniture ` +
+        `(${pct(claim(bestClaim))} vs. ${pct(claim(best))}) — the two rankings disagree.`;
+  document.getElementById("v2-takeaway").innerHTML =
+    `Across <strong>${docs.length} documents</strong>, <code>${best}</code> localizes ` +
+    `<strong>${pct(acc(best))}</strong> of gold nodes to the right boxes, ${split} ` +
+    `Only <strong>${pct(verified)}</strong> of the gold is human-verified so far — the rest ` +
+    `is the unverified oracle tier, so treat small per-kind gaps as leads, not conclusions.`;
+}
+
+function drawV2Kpis(methods) {
+  const row = document.getElementById("v2-kpi-row");
+  row.innerHTML = "";
+  for (const m of methods) {
+    const a = v2.aggregate[m];
+    const card = document.createElement("div");
+    card.className = "kpi";
+    card.innerHTML =
+      `<span class="kpi-method m-${m}">${m}</span>` +
+      `<div class="kpi-main"><span class="kpi-val">${fmt(a.localization_accuracy)}</span>` +
+      `<span class="kpi-lab">localization acc.</span></div>` +
+      `<div class="kpi-sub">mean IoU ${fmt(a.mean_iou)}</div>` +
+      `<div class="kpi-sub"><span class="bad">${pct(a.false_claim_rate)}</span> false claims</div>`;
+    row.appendChild(card);
+  }
+}
+
+function drawV2Aggregate(methods) {
+  let html = "<table class='bench-table'><thead><tr><th>method</th><th>nodes</th>" +
+    "<th>loc. acc</th><th>mean IoU</th><th>exact</th><th>missed</th>" +
+    "<th>absent acc</th><th>false claim</th></tr></thead><tbody>";
+  for (const m of methods) {
+    const a = v2.aggregate[m];
+    html += `<tr><td class="m-${m}">${m}</td><td>${a.n_nodes.toLocaleString()}</td>` +
+      `<td class="${clsHi(a.localization_accuracy)}">${fmt(a.localization_accuracy)}</td>` +
+      `<td>${fmt(a.mean_iou)}</td><td>${a.n_exact.toLocaleString()}</td><td>${a.n_missed}</td>` +
+      `<td>${fmt(a.absent_accuracy)}</td>` +
+      `<td class="${clsLo(a.false_claim_rate)}">${fmt(a.false_claim_rate)}</td></tr>`;
+  }
+  html += "</tbody></table>";
+  document.getElementById("v2-aggregate").innerHTML = html;
+}
+
+function drawV2PerDoc(methods) {
+  let html = "<table class='bench-table'><thead><tr><th>document</th><th>gold nodes</th>" +
+    "<th>verified</th><th>furniture</th>";
+  for (const m of methods) html += `<th>${m} loc. acc</th>`;
+  for (const m of methods) html += `<th>${m} false claim</th>`;
+  html += "</tr></thead><tbody>";
+  for (const d of v2.docs) {
+    const g = d.gold;
+    const ver = g.n_gold_nodes
+      ? ((g.by_tier.human || 0) + (g.by_tier.audited || 0)) / g.n_gold_nodes
+      : 0;
+    html += `<tr><td><code>${d.doc}</code></td><td>${g.n_gold_nodes}</td>` +
+      `<td>${pct(ver)}</td><td>${g.n_furniture}</td>`;
+    for (const m of methods) {
+      const v = d.results[m] ? d.results[m].localization_accuracy : null;
+      html += `<td class="${clsHi(v)}">${fmt(v)}</td>`;
+    }
+    for (const m of methods) {
+      const v = d.results[m] ? d.results[m].false_claim_rate : null;
+      html += `<td class="${clsLo(v)}">${fmt(v)}</td>`;
+    }
+    html += "</tr>";
+  }
+  html += "</tbody></table>";
+  document.getElementById("v2-perdoc").innerHTML = html;
+}
+
+function drawV2ByKind(methods) {
+  // Union of kinds across methods, biggest population first — prose leads, the
+  // contested small-n kinds (table, formula) sink to the bottom where their
+  // counts are visible next to the score.
+  const kinds = [...new Set(methods.flatMap((m) => Object.keys(v2.aggregate[m].by_kind)))]
+    .sort((a, b) => (v2.aggregate[methods[0]].by_kind[b]?.n || 0) - (v2.aggregate[methods[0]].by_kind[a]?.n || 0));
+  let html = "<table class='bench-table'><thead><tr><th>kind</th><th>n</th>";
+  for (const m of methods) html += `<th>${m}</th>`;
+  html += "</tr></thead><tbody>";
+  for (const k of kinds) {
+    const n = methods.map((m) => v2.aggregate[m].by_kind[k]?.n).find((x) => x !== undefined) ?? 0;
+    html += `<tr><td><code>${k}</code></td><td>${n}</td>`;
+    for (const m of methods) {
+      const s = v2.aggregate[m].by_kind[k];
+      const v = s ? s.localization_accuracy : null;
+      html += `<td class="${clsHi(v)}">${fmt(v)}</td>`;
+    }
+    html += "</tr>";
+  }
+  html += "</tbody></table>";
+  document.getElementById("v2-bykind").innerHTML = html;
+}
+
+function drawV2Tiers(methods) {
+  const order = ["human", "audited", "oracle"];
+  const present = order.filter((t) => methods.some((m) => v2.aggregate[m].by_tier[t]));
+  let html = "<table class='bench-table'><thead><tr><th>tier</th><th>n</th>";
+  for (const m of methods) html += `<th>${m}</th>`;
+  html += "</tr></thead><tbody>";
+  for (const t of present) {
+    const n = methods.map((m) => v2.aggregate[m].by_tier[t]?.n).find((x) => x !== undefined) ?? 0;
+    html += `<tr><td><code>${t}</code></td><td>${n.toLocaleString()}</td>`;
+    for (const m of methods) {
+      const s = v2.aggregate[m].by_tier[t];
+      const v = s ? s.localization_accuracy : null;
+      html += `<td class="${clsHi(v)}">${fmt(v)}</td>`;
+    }
+    html += "</tr>";
+  }
+  html += "</tbody></table>";
+  document.getElementById("v2-tiers").innerHTML = html;
 }
 
 function escapeHtml(s) {

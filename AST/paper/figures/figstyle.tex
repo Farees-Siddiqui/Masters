@@ -1,0 +1,85 @@
+% Shared TikZ styles for all paper figures.
+%
+% Colour is used to separate the two views (logical = blue, physical = ochre)
+% and to mark the one emphasised relation (rose). Shape, line style and weight
+% carry the same distinctions independently, so the figures still read when
+% printed in black and white -- see the greyscale check in `make gray`.
+\usepackage{tikz}
+\usepackage{amsmath}
+\usepackage[scaled=0.92]{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+% Define \GRAYFIGS before \input{figstyle} to build the same figures in
+% greyscale (xcolor converts every colour below), e.g.
+%   pdflatex -jobname=fig1_gray "\def\GRAYFIGS{}\input{fig1_concept}"
+\ifdefined\GRAYFIGS
+  \usepackage[gray]{xcolor}
+\else
+  \usepackage{xcolor}
+\fi
+\usetikzlibrary{arrows.meta,positioning,fit,backgrounds,calc,shapes.geometric,
+                shapes.misc,decorations.pathreplacing,patterns,matrix,shadows.blur}
+
+% ------------------------------- palette -----------------------------------
+\definecolor{ink}{HTML}{22333F}        % primary text
+\definecolor{inkSoft}{HTML}{6B8299}    % secondary text, hairlines
+\definecolor{astLine}{HTML}{2C7A9B}    % logical view
+\definecolor{astFill}{HTML}{E7F2F7}
+\definecolor{pdfLine}{HTML}{B0762F}    % physical view
+\definecolor{pdfFill}{HTML}{FBF2E3}
+\definecolor{hotLine}{HTML}{B03A55}    % the emphasised relation
+\definecolor{hotFill}{HTML}{FBE9EC}
+\definecolor{mutedLine}{HTML}{9FB3C8}  % furniture / unmatched
+\definecolor{mutedFill}{HTML}{F1F5F8}
+
+\tikzset{
+  every node/.append style = {text=ink},
+  >=Stealth,
+  % --- logical structure (AST) -------------------------------------------
+  astnode/.style   = {draw=astLine!70, fill=white, rounded corners=2.5pt,
+                      line width=0.6pt, font=\scriptsize,
+                      inner xsep=4pt, inner ysep=2.5pt, minimum height=4.6mm},
+  astroot/.style   = {astnode, fill=astLine, draw=astLine, text=white},
+  astsec/.style    = {astnode, fill=astFill},
+  asttree/.style   = {draw=astLine!50, line width=0.6pt, rounded corners=2.5pt},
+  % --- physical layout (page regions) ------------------------------------
+  page/.style      = {draw=inkSoft!45, fill=white, line width=0.6pt,
+                      rounded corners=2pt},
+  lbox/.style      = {draw=pdfLine!55, fill=white, line width=0.6pt,
+                      rounded corners=1.2pt},
+  lboxhi/.style    = {draw=hotLine, fill=hotFill, line width=1.0pt,
+                      rounded corners=1.2pt},
+  furniture/.style = {draw=mutedLine, dash pattern=on 1.6pt off 1.4pt,
+                      fill=mutedFill, line width=0.6pt, rounded corners=1.2pt},
+  % --- relations ----------------------------------------------------------
+  maplink/.style   = {draw=inkSoft, line width=0.6pt,
+                      -{Stealth[length=1.7mm,width=1.3mm]}},
+  maphot/.style    = {draw=hotLine, line width=1.1pt,
+                      -{Stealth[length=2mm,width=1.6mm]}},
+  flow/.style      = {draw=inkSoft, line width=0.7pt,
+                      -{Stealth[length=2mm,width=1.6mm]}, rounded corners=2pt},
+  % --- pipeline stages ----------------------------------------------------
+  stage/.style     = {draw=inkSoft!55, fill=white, rounded corners=2.5pt,
+                      font=\scriptsize, align=center, inner sep=3.5pt,
+                      minimum height=7mm, text width=32mm},
+  artefact/.style  = {draw=inkSoft!35, fill=mutedFill, rounded corners=2.5pt,
+                      font=\scriptsize, align=center, inner sep=3.5pt,
+                      minimum height=7mm, text width=32mm},
+  % --- labels -------------------------------------------------------------
+  grouplbl/.style  = {font=\scriptsize, text=inkSoft},
+  caption/.style   = {font=\scriptsize, text=ink},
+  tinylbl/.style   = {font=\tiny, text=inkSoft},
+  softcard/.style  = {rounded corners=4pt, draw=none},
+}
+
+% Fake text lines inside a layout box.
+% [colour] {x} {y top} {width} {line count}
+\newcommand{\fakelines}[5][pdfLine!32]{%
+  \foreach \fli in {1,...,#5}{%
+    \draw[#1, line width=0.32pt] (#2,{#3-0.115*\fli}) -- ++({#4},0);}%
+}
+% Same, with a short final line (end of a paragraph)
+\newcommand{\fakepara}[5][pdfLine!32]{%
+  \foreach \fli in {1,...,#5}{%
+    \draw[#1, line width=0.32pt] (#2,{#3-0.115*\fli}) -- ++({#4},0);}%
+  \draw[#1, line width=0.32pt] (#2,{#3-0.115*(#5+1)}) -- ++({0.55*#4},0);%
+}

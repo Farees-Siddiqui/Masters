@@ -1,0 +1,65 @@
+\documentclass[border=3pt]{standalone}
+\input{figstyle}
+\begin{document}
+\begin{tikzpicture}[
+  lbl/.style   = {font=\scriptsize},
+  panel/.style = {font=\scriptsize, text=inkSoft},
+]
+
+% ============== (a) tiered gold: provenance of the ground truth ============
+\node[panel, anchor=west] at (0.00,3.30) {(a) tiered ground truth};
+
+\foreach \y/\f/\d/\name/\desc in {%
+  2.35/astLine!40/astLine!70/human/{annotation-tool verdicts},
+  1.70/astLine!20/astLine!50/audited/{automatic, human-checked},
+  1.05/astLine!7/astLine!35/oracle/{automatic, unreviewed}}{
+  \draw[draw=\d, fill=\f, line width=0.6pt, rounded corners=2pt]
+       (0.75,\y) rectangle ++(5.60,0.55);
+  \node[font=\scriptsize\bfseries, anchor=west] at (0.92,{\y+0.275}) {\name};
+  \node[lbl, anchor=west] at (2.55,{\y+0.275}) {\desc};}
+
+\draw[-{Stealth[length=1.9mm,width=1.5mm]}, draw=inkSoft, line width=0.7pt]
+      (0.50,1.05) -- (0.50,2.92);
+\node[font=\tiny, text=inkSoft, rotate=90, anchor=south] at (0.34,1.95) {evidence};
+
+% ============== (b) the localisation metric ===============================
+\node[panel, anchor=west] at (0.00,0.40) {(b) node localisation by area overlap};
+
+% gold boxes (two regions)
+\foreach \yb/\yt in {-1.15/-0.35, -2.05/-1.25}{
+  \draw[draw=pdfLine!65, fill=pdfFill, line width=0.6pt, rounded corners=1.2pt]
+       (0.90,\yb) rectangle (2.60,\yt);}
+
+% intersection with the prediction
+\begin{scope}
+  \clip (0.90,-1.15) rectangle (2.60,-0.35);
+  \fill[pattern=north east lines, pattern color=hotLine!55]
+       (1.30,-1.15) rectangle (2.60,-0.35);
+\end{scope}
+\begin{scope}
+  \clip (0.90,-2.05) rectangle (2.60,-1.25);
+  \fill[pattern=north east lines, pattern color=hotLine!55]
+       (1.30,-1.75) rectangle (2.60,-1.25);
+\end{scope}
+
+% predicted box
+\draw[dash pattern=on 2.2pt off 1.8pt, draw=hotLine, line width=1.0pt,
+      rounded corners=1.2pt] (1.30,-1.75) rectangle (3.05,-0.05);
+
+% legend
+\draw[draw=pdfLine!65, fill=pdfFill, line width=0.6pt, rounded corners=1.2pt]
+     (3.55,-0.52) rectangle ++(0.40,0.28);
+\node[lbl, anchor=west] at (4.05,-0.38) {gold $G$};
+\draw[dash pattern=on 2.2pt off 1.8pt, draw=hotLine, line width=1.0pt,
+      rounded corners=1.2pt] (3.55,-1.12) rectangle ++(0.40,0.28);
+\node[lbl, anchor=west] at (4.05,-0.98) {predicted $P$};
+\draw[pattern=north east lines, pattern color=hotLine!55, draw=pdfLine!45,
+      line width=0.5pt] (3.55,-1.72) rectangle ++(0.40,0.28);
+\node[lbl, anchor=west] at (4.05,-1.58) {intersection};
+
+\node[font=\scriptsize, anchor=west] at (0.90,-2.62)
+      {$\mathsf{IoU} = \dfrac{|P \cap G|}{|P \cup G|} \geq 0.5
+        \;\Rightarrow\; \text{node localised}$};
+
+\end{tikzpicture}
+\end{document}

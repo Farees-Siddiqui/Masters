@@ -25,6 +25,7 @@
     <div class="seg" id="mode-seg">
       <span class="seg-label">Benchmark</span>
       <button class="seg-btn active" data-mode="real">real document</button>
+      <button class="seg-btn" data-mode="v2">node localization (v2)</button>
       <button class="seg-btn" data-mode="synthetic">synthetic sweep</button>
     </div>
     <div class="seg" id="regime-seg" hidden>
@@ -124,6 +125,58 @@
     </section>
   </main>
 
-  <script src="/static/benchmark.js?v=15"></script>
+  <!-- Node localization (benchmark_v2_0) -->
+  <main class="real-main" id="v2-view" hidden>
+    <section class="real-headline">
+      <div class="real-meta" id="v2-meta"></div>
+      <div class="kpi-row" id="v2-kpi-row"></div>
+      <p class="takeaway" id="v2-takeaway"></p>
+    </section>
+
+    <section class="real-tables">
+      <div class="table-block wide">
+        <strong class="pane-title">Aggregate &mdash; node-level</strong>
+        <p class="hint">
+          Gold is <em>node &rarr; {box keys} | ABSENT</em>; a node is localized
+          when the pixel-area IoU of predicted vs. gold box unions is &ge; the
+          threshold. <strong>False claim rate</strong> is the share of furniture
+          boxes (no owning node) a method claimed anyway.
+        </p>
+        <div id="v2-aggregate" class="table-wrap"></div>
+      </div>
+
+      <div class="table-block wide">
+        <strong class="pane-title">Per-document</strong>
+        <p class="hint">
+          One corpus number can be carried by a single easy document. This is
+          the spread it averages over.
+        </p>
+        <div id="v2-perdoc" class="table-wrap"></div>
+      </div>
+
+      <div class="table-block">
+        <strong class="pane-title">By node kind &mdash; localization accuracy</strong>
+        <p class="hint">
+          Prose dominates the corpus; the small-<em>n</em> kinds (table, formula)
+          are where the methods actually differ &mdash; and where counts are too
+          low to be conclusive.
+        </p>
+        <div id="v2-bykind" class="table-wrap"></div>
+      </div>
+
+      <div class="table-block">
+        <strong class="pane-title">Gold tiers</strong>
+        <p class="hint">
+          <strong>human</strong> &gt; <strong>audited</strong> &gt; unverified
+          <strong>oracle</strong> (majority-token ownership). Until the excluded
+          queues are annotated, most gold is machine-derived &mdash; the tier
+          split says how much of the score rests on verified ground truth.
+        </p>
+        <div id="v2-tiers" class="table-wrap"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="/static/benchmark.js?v=16"></script>
 </body>
 </html>

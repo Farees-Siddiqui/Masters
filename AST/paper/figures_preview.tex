@@ -1,0 +1,63 @@
+% Preview sheet: every figure at the exact width it will occupy in the
+% Informatica two-column layout (column = 82.5mm, full width = 170mm).
+% The italic text under each is the caption drafted for the paper.
+\documentclass[11pt]{article}
+\usepackage[a4paper,top=15mm,bottom=15mm,left=20mm,right=20mm]{geometry}
+\usepackage{graphicx}
+\setlength{\parindent}{0pt}
+\pagestyle{empty}
+
+\newcommand{\shot}[4]{%
+  \texttt{\detokenize{#1}} \hfill \textit{#2}\\[4pt]%
+  \fbox{\includegraphics[width=#3]{figures/#1}}\\[3pt]%
+  \begin{minipage}{0.92\textwidth}\small #4\end{minipage}\\[12pt]}
+
+\begin{document}
+{\large\bfseries Figure preview --- shown at final printed size}\\[2pt]
+{\small Column width 82.5\,mm, full width 170\,mm. Grayscale only, so the
+figures stay legible in black and white as the journal requires. The text under
+each figure is the draft caption.}
+\\[10pt]
+
+\shot{fig1_concept}{full width}{170mm}{\textbf{Figure 1:} The two views of a
+document and the alignment between them. The logical structure carries type and
+hierarchy but no position; the page regions carry position but no structure. The
+mapping is not one-to-one: the second paragraph node covers two regions because
+the paragraph continues across the column break, while page furniture such as
+the running header and the page number is matched by no node at all.}
+
+\shot{fig3_readingorder}{column width}{82.5mm}{\textbf{Figure 3:} Detected
+regions do not arrive in reading order. (a) Sorting regions top-to-bottom and
+left-to-right interleaves the two columns, so the sequence of regions no longer
+corresponds to the sequence of nodes. (b) Recursive XY cutting splits the page
+at gaps that no region straddles, recovering the order a reader would follow.}
+
+\newpage
+
+\shot{fig2_pipeline}{column width}{82.5mm}{\textbf{Figure 2:} The system. Both
+views are built independently from the same PDF and share no coordinate system,
+no tokenisation and no unit of comparison. The aligner is the only component
+that sees both, and the alignment it produces drives the interactive viewer and
+the evaluation.}
+
+\shot{fig4_aligners}{column width}{82.5mm}{\textbf{Figure 4:} The two aligners
+rest on opposite assumptions. (a) The stream aligner flattens both sides into
+normalised character streams and diffs them, so a node is mapped by the position
+of its characters; matching is exact about repeated text but depends on the
+recovered reading order being right. (b) The similarity aligner scores every
+node against every region by embedding cosine and ignores order entirely; a
+region whose best score falls below the threshold $\tau$, such as furniture, is
+left unmatched.}
+
+\newpage
+
+\shot{fig5_evaluation}{column width}{82.5mm}{\textbf{Figure 5:} Evaluation.
+(a) Each node's ground truth is drawn from the strongest tier available, and
+every reported result states how much of it rests on each tier, so a number
+resting mostly on unreviewed automatic placement is labelled as such rather than
+presented as verified. (b) A node counts as localised when the pixel area its
+predicted regions cover overlaps the gold area at IoU $\geq 0.5$. Areas rather
+than box identities are compared, so a node is not penalised when the detector
+splits its text into a different number of regions than the gold does.}
+
+\end{document}

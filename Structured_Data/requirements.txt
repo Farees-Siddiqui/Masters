@@ -1,0 +1,4 @@
+anthropic>=0.69
+openai>=1.40
+pydantic>=2
+pypdf>=5

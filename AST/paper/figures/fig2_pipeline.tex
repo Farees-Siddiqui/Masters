@@ -1,0 +1,72 @@
+\documentclass[border=3pt]{standalone}
+\input{figstyle}
+\begin{document}
+\begin{tikzpicture}[
+  lstage/.style = {stage,    draw=astLine!60},
+  lart/.style   = {artefact, draw=astLine!45, fill=astFill},
+  pstage/.style = {stage,    draw=pdfLine!60},
+  part/.style   = {artefact, draw=pdfLine!45, fill=pdfFill},
+  lflow/.style  = {flow, draw=astLine!65},
+  pflow/.style  = {flow, draw=pdfLine!65},
+]
+
+% ------------------------------- input -------------------------------------
+\node[artefact, text width=24mm, draw=inkSoft!50, fill=inkSoft!18]
+     (pdf) at (4.15,9.05) {PDF document};
+
+% --------------------------- logical branch --------------------------------
+\node[lstage] (ocr)  at (2.05,7.20) {OCR transcription\\(large OCR model)};
+\node[lart]   (md)   at (2.05,5.85) {Markdown};
+\node[lstage] (bast) at (2.05,4.50) {Markdown parser};
+\node[lart]   (ast)  at (2.05,3.10)
+      {\textbf{AST}\\[1pt]\tiny typed nodes and hierarchy,\\ no coordinates};
+
+% --------------------------- physical branch -------------------------------
+\node[pstage] (det)  at (6.25,7.20) {Layout detection\\(region detector)};
+\node[part]   (reg)  at (6.25,5.85) {Labelled regions\\[1pt]\tiny + recognised text};
+\node[pstage] (ro)   at (6.25,4.50) {Reading order\\(XY-Cut++)};
+\node[part]   (box)  at (6.25,3.10)
+      {\textbf{Ordered regions}\\[1pt]\tiny coordinates,\\ no hierarchy};
+
+% ------------------------------ aligner ------------------------------------
+\node[stage, draw=hotLine, fill=hotFill!45, text width=66mm, minimum height=10mm]
+     (al) at (4.15,1.55)
+      {\textbf{Aligner}\\[2pt]
+       \tiny (i) positional character stream\\
+             (ii) order-free embedding similarity};
+
+\node[artefact, draw=hotLine!45, fill=hotFill!25, text width=66mm,
+      minimum height=9mm] (out) at (4.15,0.05)
+      {\textbf{Alignment}\; $\mathsf{Loc}[\mathsf{Doc}] \rightarrow
+       \mathsf{Set}[\mathsf{Loc}[\mathsf{PDF}]]$\\[2pt]
+       \tiny node $\rightarrow$ regions, and the reverse map region $\rightarrow$ nodes};
+
+% ----------------------------- consumers -----------------------------------
+\node[stage, text width=30mm] (ui) at (1.90,-1.55)
+      {Interactive viewer\\[1pt]\tiny click a node,\\ highlight its regions};
+\node[stage, text width=30mm] (bm) at (6.40,-1.55)
+      {Evaluation\\[1pt]\tiny token- and node-level\\ benchmarks};
+
+% ------------------------------- flow --------------------------------------
+\draw[lflow] (pdf.south) -- ++(0,-0.30) -| (ocr.north);
+\draw[pflow] (pdf.south) -- ++(0,-0.30) -| (det.north);
+\foreach \a/\b in {ocr/md, md/bast, bast/ast}{ \draw[lflow] (\a) -- (\b); }
+\foreach \a/\b in {det/reg, reg/ro, ro/box}{ \draw[pflow] (\a) -- (\b); }
+\draw[lflow] (ast.south) -- ++(0,-0.32) -| (al.north);
+\draw[pflow] (box.south) -- ++(0,-0.32) -| (al.north);
+\draw[flow, draw=hotLine!70] (al) -- (out);
+\draw[flow] (out.south) -- ++(0,-0.34) -| (ui.north);
+\draw[flow] (out.south) -- ++(0,-0.34) -| (bm.north);
+
+% --------------------------- branch annotations ----------------------------
+\begin{scope}[on background layer]
+  \draw[dash pattern=on 1.8pt off 1.6pt, draw=astLine!40, rounded corners=4pt]
+       (0.25,2.35) rectangle (3.85,7.85);
+  \draw[dash pattern=on 1.8pt off 1.6pt, draw=pdfLine!40, rounded corners=4pt]
+       (4.45,2.35) rectangle (8.05,7.85);
+\end{scope}
+\node[font=\scriptsize, text=astLine, anchor=east] at (3.70,8.05) {logical view};
+\node[font=\scriptsize, text=pdfLine, anchor=west] at (4.60,8.05) {physical view};
+
+\end{tikzpicture}
+\end{document}

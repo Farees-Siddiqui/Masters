@@ -1,0 +1,73 @@
+\documentclass[border=3pt]{standalone}
+\input{figstyle}
+\begin{document}
+\begin{tikzpicture}[
+  atape/.style = {draw=astLine!65, fill=astFill, line width=0.6pt, rounded corners=1.2pt},
+  ptape/.style = {draw=pdfLine!65, fill=pdfFill, line width=0.6pt, rounded corners=1.2pt},
+  tick/.style  = {draw=inkSoft!55, line width=0.45pt, dash pattern=on 1.4pt off 1.4pt},
+  lbl/.style   = {font=\scriptsize},
+  panel/.style = {font=\scriptsize, text=inkSoft},
+]
+
+% ==================== (a) positional stream aligner ========================
+\node[panel, anchor=west] at (0.00,3.90) {(a) positional character-stream alignment};
+
+\node[lbl, text=astLine, anchor=east] at (0.85,2.98) {AST};
+\node[lbl, text=pdfLine, anchor=east] at (0.85,1.78) {regions};
+
+% AST stream: three node spans
+\foreach \x/\w/\lbl in {0.95/2.10/\texttt{n3}, 3.05/2.70/\texttt{n4}, 5.75/2.60/\texttt{n5}}{
+  \draw[atape] (\x,2.75) rectangle ++(\w,0.46);
+  \node[lbl] at ({\x+\w/2},2.98) {\lbl};}
+
+% PDF stream: five box spans, in recovered reading order
+\foreach \x/\w/\lbl in {0.95/1.20/\texttt{b1}, 2.15/0.90/\texttt{b2}, 3.05/2.00/\texttt{b3},
+                        5.05/0.70/\texttt{b4}, 5.75/2.60/\texttt{b5}}{
+  \draw[ptape] (\x,1.55) rectangle ++(\w,0.46);
+  \node[lbl] at ({\x+\w/2},1.78) {\lbl};}
+
+% character-position correspondence
+\foreach \x in {0.95,3.05,5.75,8.35}{ \draw[tick] (\x,2.73) -- (\x,2.03); }
+\foreach \x in {2.15,5.05}{ \draw[tick] (\x,2.03) -- (\x,2.45); }
+
+\draw[decorate, decoration={brace, amplitude=3pt, mirror}, draw=hotLine,
+      line width=0.5pt] (3.07,1.47) -- (5.73,1.47);
+\node[lbl, text=hotLine, anchor=north] at (4.40,1.30)
+      {$\mathsf{n4} \rightarrow \{\mathsf{b3},\mathsf{b4}\}$};
+
+% ==================== (b) order-free similarity aligner ====================
+\node[panel, anchor=west] at (0.00,0.45) {(b) order-free embedding-similarity matching};
+
+% column headers
+\foreach \c/\lbl in {1/\texttt{b1}, 2/\texttt{b2}, 3/\texttt{b3}, 4/\texttt{b4}, 5/\texttt{b5}}{
+  \node[lbl, text=pdfLine] at ({1.60+(\c-1)*0.68+0.34},-0.42) {\lbl};}
+% row headers
+\foreach \r/\lbl in {1/\texttt{n3}, 2/\texttt{n4}, 3/\texttt{n5}}{
+  \node[lbl, text=astLine, anchor=east] at (1.50,{-0.85-(\r-1)*0.68-0.34}) {\lbl};}
+
+% similarity cells: shade = cosine
+\foreach \r/\c/\s/\tc/\v in {%
+  1/1/78/white/.82, 1/2/12/ink/.11, 1/3/10/ink/.09, 1/4/6/ink/.05, 1/5/8/ink/.07,
+  2/1/9/ink/.08,  2/2/15/ink/.14, 2/3/76/white/.79, 2/4/68/white/.71, 2/5/11/ink/.10,
+  3/1/7/ink/.06,  3/2/10/ink/.09, 3/3/13/ink/.12, 3/4/16/ink/.15, 3/5/84/white/.88}{
+  \fill[ink!\s] ({1.60+(\c-1)*0.68},{-0.85-(\r-1)*0.68}) rectangle ++(0.68,-0.68);
+  \draw[white, line width=0.6pt] ({1.60+(\c-1)*0.68},{-0.85-(\r-1)*0.68})
+        rectangle ++(0.68,-0.68);
+  \node[lbl, text=\tc] at ({1.60+(\c-1)*0.68+0.34},{-0.85-(\r-1)*0.68-0.34}) {\v};}
+
+% cells above threshold
+\foreach \r/\c in {1/1, 2/3, 2/4, 3/5}{
+  \draw[hotLine, line width=1.2pt, rounded corners=1pt]
+        ({1.60+(\c-1)*0.68},{-0.85-(\r-1)*0.68}) rectangle ++(0.68,-0.68);}
+
+% b2 scores below the threshold against every node
+\draw[dotted, draw=inkSoft, line width=1.0pt, rounded corners=1pt]
+      (2.26,-0.81) rectangle (2.98,-2.93);
+
+\node[lbl, anchor=west, align=left] at (5.30,-1.19)
+     {\textcolor{hotLine}{bold}: $\cos \geq \tau$,\\ a match};
+\node[lbl, anchor=west, align=left] at (5.30,-2.55)
+     {\textcolor{inkSoft}{dotted}: \texttt{b2} matches\\ nothing};
+
+\end{tikzpicture}
+\end{document}

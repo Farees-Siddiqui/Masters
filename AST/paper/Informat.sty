@@ -1,0 +1,137 @@
+%
+% document style for journal `Informatica'
+%
+%      author: Borut "Znidar
+% last update: 6.4.2021
+%
+
+\def\journal{Informatica {\bf 45} page 501--yyy}
+\def\doi{ https://doi.org/10.31449/inf.v42i3.0000}
+
+\immediate\write16{Document Style Option `Informatica' <October 19, 2018> ver 2.9   B.Žnidar}
+
+\newif\iftitle \titlefalse
+\newif\if@papertypeon \@papertypeonfalse
+
+\hoffset=11mm
+\voffset=10mm
+\oddsidemargin=-14mm
+\evensidemargin=-14mm
+\topmargin=-33mm
+\headheight=17mm
+\headsep=10mm
+%\footheight=8.4mm
+\footskip=52.5mm
+\textheight=242mm
+\textwidth=170mm
+\columnsep=5mm
+\columnseprule=0pt
+
+\twocolumn
+\sloppy
+\flushbottom
+\parindent 1em
+\leftmargini 2em
+\leftmargin\leftmargini
+\leftmarginv .5em
+\leftmarginvi .5em
+
+\def\labelitemi{\bf --}
+\def\labelitemii{--}
+\def\labelitemiii{--}
+
+\setcounter{secnumdepth}{3}
+
+\def\startoftitle{}
+\def\endoftitle{}
+
+\def\maketitle{\startoftitle \twocolumn[%
+  \vbox{\hsize=\textwidth\Large\bf\raggedright \uppercase{\@title}}
+  \vss \bigskip\bigskip
+  \vbox{\hsize=\textwidth \@author}
+  \bigskip\smallskip
+  \if@papertypeon
+    \vbox{\hsize=\textwidth \bf \@papertype}
+    \bigskip
+  \fi
+  \vbox{\hsize=\textwidth {\bf Keywords:} \@keywords}
+  \bigskip
+  \hbox{{\bf Received:}\hbox to 10em{ \@received\hss}}
+  \bigskip
+  \vbox{\hsize=\textwidth
+    \leftskip=3em \rightskip=3em \sl \@abstract \\[5pt] Povzetek: \@abstractSi}
+  \bigskip\bigskip]
+  \endoftitle\titletrue}
+
+\def\maketitleauthor{\twocolumn[%
+  \vbox{\hsize=\textwidth\Large\bf\raggedright \@title}
+  \vss \bigskip\bigskip
+  \vbox{\hsize=\textwidth \@author}
+  \bigskip\bigskip]
+  \gdef\@title{}\titletrue}
+
+\def\makeonlytitle{\twocolumn[%
+  \vbox{\hsize=\textwidth\Large\bf\raggedright \@title}
+  \vss \bigskip\bigskip]
+  \gdef\@title{}\global\titletrue}
+
+\def\makecallforpaper{\twocolumn[\large
+  \vbox{\hsize=\textwidth\bf\raggedright \@callfor}\medskip
+  \vbox{\hsize=\textwidth\Large\bf\raggedright \@title}\medskip
+  \vbox{\hsize=\textwidth\raggedright \@calldata}
+  \bigskip\bigskip]
+  \gdef\@title{}\titletrue}
+
+\def\@title{} \def\@author{}
+\def\@titleH{} \def\@authorH{}
+\def\@keywords{} \def\@edited{} \def\@abstract{} \def\@abstractSi{}
+\def\@received{} \def\@revised{} \def\@accepted{}
+\def\@papertype{}
+\def\authoreven#1{\gdef\@authorH{#1}}
+\def\titleodd#1{\gdef\@titleH{#1}}
+\def\papertype#1#2{\if#10 \@papertypeonfalse \else \@papertypeontrue \fi \gdef\@papertype{#2}}
+\def\keywords#1{
+  \gdef\@keywords{#1}}
+\def\edited#1{\gdef\@edited{#1}}
+\def\received#1{\gdef\@received{#1}}
+\def\revised#1{\gdef\@revised{#1}}
+\def\accepted#1{\gdef\@accepted{#1}}
+\long\def\abstract#1{\gdef\@abstract{#1}\gdef\@abstractSi{}}
+\long\def\abstractSi#1{\gdef\@abstractSi{#1}}
+\def\AndAuthor{\\[2mm]}
+
+\def\callfor#1{\gdef\@callfor{#1}}
+\def\calldata#1{\gdef\@calldata{#1}}
+
+\def\section{\@startsection {section}
+  {1}{\z@}{-3.5ex plus -1ex minus
+  -.2ex}{2.3ex plus .2ex}{\Large\bf\raggedright}}
+\def\subsection{\@startsection{subsection}
+  {2}{\z@}{-3.25ex plus -1ex minus -.2ex}
+  {1.5ex plus .2ex}{\large\bf\raggedright}}
+\def\subsubsection{\@startsection{subsubsection}
+  {3}{\z@}{-3.25ex plus -1ex minus -.2ex}
+  {1.5ex plus .2ex}{\normalsize\bf\raggedright}}
+
+%\def\@makecaption #1#2{#1: #2}
+
+\def\@evenhead{\hbox to 3em{\bf\thepage\hss}
+  {\small\journal\hfil \iftitle\else \@authorH \fi}
+  \global\titlefalse}
+\def\@oddhead{{\small\iftitle \doi \else \@titleH \fi
+  \hfil\journal}\hbox to 3em{\hss\bf\thepage}
+  \global\titlefalse}
+\def\@evenfoot{\hfil}
+\def\@oddfoot{\hfil}
+
+\def\repeatloop #1#2{
+  \newcount\@pgs \@pgs=0
+  \@whilenum \@pgs < #1 \do {\advance\@pgs by 1 #2}
+}
+
+\def\repeatloopM #1#2{
+  \newcount\@pgs \@pgs=1
+  \@whilenum \@pgs < #1 \do {\advance\@pgs by 1 #2}
+}
+
+\endinput
