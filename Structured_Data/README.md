@@ -13,23 +13,37 @@ grounded records. Every record carries a verbatim `evidence` quote and a
 un-traceable. Run it on a handful of docs, look at the keys that emerge — that
 tells us what the next stages (key canonicalization, metadata rules) need to be.
 
-## Setup
+## Setup on a fresh machine (e.g. GPU server)
 
 ```bash
 pip install -r requirements.txt
 ```
 
-Pick a backend (Groq is free and the default):
+Secrets are **not** committed. Set them once via environment variables — the
+code reads env vars first, then falls back to `GROQ_API_KEY.txt` /
+`MISTRAL_API_KEY.txt` if you'd rather drop key files in this folder.
 
-| Backend | Env var | Cost | Get a key |
-|---|---|---|---|
-| `groq` (default) | `GROQ_API_KEY` | free (rate-limited) | https://console.groq.com |
-| `ollama` | — (local server) | free / private | https://ollama.com |
-| `anthropic` | `ANTHROPIC_API_KEY` | paid | https://platform.claude.com |
-
-```powershell
-$env:GROQ_API_KEY = "gsk_..."
+```bash
+# Linux / server
+export GROQ_API_KEY="gsk_..."        # extraction LLM  — https://console.groq.com (free)
+export MISTRAL_API_KEY="..."         # OCR             — https://console.mistral.ai (paid)
 ```
+```powershell
+# Windows
+$env:GROQ_API_KEY = "gsk_..."
+$env:MISTRAL_API_KEY = "..."
+```
+
+### Extraction backends
+
+| Backend | Env var | Cost | Notes |
+|---|---|---|---|
+| `groq` (default) | `GROQ_API_KEY` | free (100k tokens/day cap) | `llama-3.3-70b-versatile` |
+| `ollama` | — (local server) | free / unlimited | run 70B locally on a GPU box: `ollama pull llama3.3:70b` |
+| `anthropic` | `ANTHROPIC_API_KEY` | paid | `claude-opus-4-8` |
+
+On a GPU server, `--backend ollama --model llama3.3:70b` gives unlimited local
+70B with no daily caps.
 
 ## Run
 
