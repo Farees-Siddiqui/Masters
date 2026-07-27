@@ -1,0 +1,13 @@
+---
+name: unlimited-ocr-examples
+description: "OCR_Learning: Unlimited_OCR/{docs,Examples} + DeepSeek_OCR/Examples; comparison harness across OCR engines"
+metadata: 
+  node_type: memory
+  type: project
+  originSessionId: 59c69d1f-a4d4-46b7-81b8-e060287c95e2
+  modified: 2026-07-23T08:01:36.937Z
+---
+
+`OCR_Learning/` was restructured (July 2026) into `Unlimited_OCR/` with `docs/unlimited-ocr.html` (survival guide for Baidu's Unlimited-OCR, a 3B VLM OCR model, successor to DeepSeek-OCR) and `Examples/`. Examples follow the guide exactly: fixed prompts (`<image>document parsing.` / `<image>Multi page parsing.`), gundam mode for single images vs base mode for PDFs, repetition guards `no_repeat_ngram_size=35`. `Examples/ocr_engines.py` is a common adapter registry (unlimited, paddle, tesseract, easyocr) used by `03_compare_models.py` (timing, CER/WER vs truth, pairwise similarity). Verified end-to-end with CPU PaddleOCR (needs `enable_mkldnn=False`, see [[paddle-gpu-env]]). Unlimited-OCR verified on GPU (venv at `Unlimited_OCR/.venv`, torch 2.10.0+cu128 + transformers 4.57.1 pinned — global 5.9.0 breaks the pin): parsed 12-page resnet.pdf cleanly in 2 chunks, ~11 GB VRAM on the 4070 Ti. Contra guide §6, it DOES emit bounding boxes (`<|det|>label [x1,y1,x2,y2]<|/det|>`, coords ~0-1000 normalized) and save_results writes `result.md` + `result_with_boxes_N.jpg` overlays — relevant to the AST↔PDF alignment project as a single-model AST+boxes source.
+
+Added (2026-07-23) `DeepSeek_OCR/{docs,Examples}` mirroring the structure — `docs/deepseek-ocr.html` is a survival guide in the same style/CSS as the Unlimited one (prompts table, five modes, grounding format, OmniDocBench numbers). Examples: `deepseek_engine.py` (fixed prompts `<image>\n<|grounding|>Convert the document to markdown. ` / `Free OCR. `, five modes tiny→gundam, flash-attn→eager fallback for Windows), `01_deepseek_single_image.py`, `02_deepseek_pdf.py` (per-page loop — no infer_multi; `<PAGE>`-joined result.md to match Unlimited's shape). Registered as `deepseek` in `Unlimited_OCR/Examples/ocr_engines.py` via sys.path shim. Pins are load-bearing: remote code imports `LlamaFlashAttention2`, removed after transformers 4.46 — the Unlimited venv's 4.57.1 fails at load (verified), so DeepSeek has its own venv at `DeepSeek_OCR/.venv` (torch 2.6.0+cu126, transformers 4.46.3, tokenizers 0.20.3; eager attention — no flash-attn on Windows). A replay-animation webapp of the scrolling-OCR gif was built then deleted at the user's request: they want *real-time* parsing streamed from the model, not a replay of saved results (SGLang serving is Unlimited's documented streaming path).

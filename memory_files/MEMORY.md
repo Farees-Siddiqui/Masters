@@ -1,0 +1,10 @@
+- [Project overview](project-overview.md) — AST↔PDF alignment; Mistral OCR AST + Paddle layout boxes; FastAPI, 3 tabs
+- [Paddle GPU env](paddle-gpu-env.md) — cu126 GPU wheel, RTX 4070 Ti, device=auto, CPU needs enable_mkldnn=False, benign cuDNN warning
+- [Reading order (XY-Cut++)](reading-order-xycut.md) — layout/reading_order.py; titles kept in backbone (deviation from paper); single-widest-gap cut
+- [Similarity aligner](alignment-similarity-method.md) — semantic embedding cosine method; ?method=similarity|stream; MiniLM
+- [Alignment benchmark](alignment-benchmark.md) — benchmark/ CLI; synthetic noise+shuffle sweep; each aligner has a regime; FA numbers pre-fix, inflated
+- [Benchmark v2 + annotation tool](benchmark-v2-and-annotation-tool.md) — /annotate 3 queues → annotations.json (force-add!); benchmark_v2_0 node localization IoU≥0.5; next: user annotates resnet
+- [Dev server reload gotcha](dev-server-reload-gotcha.md) — uvicorn --reload unreliable on Windows; restart manually, watch zombie port sockets
+- [Lakeridge SAM3 demo](lakeridge-sam3-demo.md) — incident-image segmentation web app for hospital funding pitch; SAM 3 (facebook/sam3, gated) + FastAPI; heuristic accident verdict
+- [Unlimited-OCR examples](unlimited-ocr-examples.md) — OCR_Learning: Unlimited_OCR + DeepSeek_OCR examples; engine-comparison harness; user wants real-time OCR streaming, not replay
+- [Structured Data KV extractor](structured-data-kv-extractor.md) — Structured_Data/: open-schema key-value extraction; Mistral OCR → Groq Llama 70B; resume on GPU server for local 70B + no-dedupe count
