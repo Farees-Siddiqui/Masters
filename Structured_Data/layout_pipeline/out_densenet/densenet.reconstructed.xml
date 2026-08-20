@@ -1,0 +1,823 @@
+<?xml version='1.0' encoding='utf-8'?>
+<document title="Densely Connected Convolutional Networks" pages="9" blocks="150">
+  <page number="0">
+    <heading level="1" id="0" bbox="449.0,290.0,1204.0,335.0" status="extracted" label="doc_title">Densely Connected Convolutional Networks</heading>
+    <paragraph id="1" bbox="212.0,402.0,474.0,517.0" status="extracted" label="text">Gao Huang*
+*
+Cornell University
+gh349@cornell.edu</paragraph>
+    <paragraph id="2" bbox="544.0,399.0,1047.0,517.0" status="extracted" label="text">Zhuang Liu
+*
+Tsinghua University
+liuzhuangl3@mails.tsinghua.edu.cn</paragraph>
+    <paragraph id="3" bbox="680.0,536.0,976.0,651.0" status="extracted" label="text">Kilian Q. Weinberger
+Cornell University
+kqw4@cornell.edu</paragraph>
+    <paragraph id="4" bbox="1111.0,402.0,1441.0,516.0" status="extracted" label="text">Laurens van der Maaten
+Facebook AI Research
+lvdmaaten@fb.com</paragraph>
+    <heading level="2" id="5" bbox="401.0,725.0,535.0,761.0" status="extracted" label="paragraph_title">Abstract</heading>
+    <paragraph id="6" bbox="131.0,797.0,804.0,1565.0" status="extracted" label="abstract">Recent work has shown that convolutional networks can
+be substantially deeper, more accurate, and efficient to train
+if they contain shorter connections between layers close to
+the input and those close to the output. In this paper, we
+embrace this observation and introduce the Dense Convo-
+lutional Network (DenseNet), which connects each layer
+to every other layer in a feed-forward fashion. Whereas
+traditional convolutional networks with L layers have L
+connections—one between each layer and its subsequent
+layer—our network has
+L(L+1)
+2
+direct connections. For
+each layer, the feature-maps of all preceding layers are
+used as inputs, and its own feature-maps are used as inputs
+into all subsequent layers. DenseNets have several com-
+pelling advantages: they alleviate the vanishing-gradient
+problem, strengthen feature propagation, encourage fea-
+ture reuse, and substantially reduce the number of parame-
+ters. We evaluate our proposed architecture on four highly
+competitive object recognition benchmark tasks (CIFAR-10,
+CIFAR-100, SVHN, and ImageNet). DenseNets obtain sig-
+nificant improvements over the state-of-the-art on most of
+them, whilst requiring less computation to achieve high per-
+formance. Code and pre-trained models are available at
+https://github.com/liuzhuang13/DenseNet.</paragraph>
+    <paragraph id="7" bbox="39.0,590.0,98.0,1555.0" status="extracted" label="aside_text"> 0
+10069080988</paragraph>
+    <heading level="2" id="8" bbox="135.0,1636.0,356.0,1670.0" status="extracted" label="paragraph_title">1. Introduction</heading>
+    <paragraph id="9" bbox="131.0,1694.0,802.0,1928.0" status="extracted" label="text">Convolutional neural networks (CNNs) have become
+the dominant machine learning approach for visual object
+recognition. Although they were originally introduced over
+20 years ago [18], improvements in computer hardware and
+network structure have enabled the training of truly deep
+CNNs only recently. The original LeNet5 [19] consisted of
+5 layers, VGG featured 19 [29], and only last year Highway</paragraph>
+    <paragraph id="10" bbox="161.0,1954.0,431.0,1984.0" status="extracted" label="footnote">* Authors contributed equally</paragraph>
+    <paragraph id="11" bbox="818.0,2037.0,835.0,2062.0" status="extracted" label="number">1</paragraph>
+    <paragraph id="12" bbox="850.0,1239.0,1515.0,1304.0" status="extracted" label="figure_title">Figure 1: A 5-layer dense block with a growth rate of k = 4.
+Each layer takes all preceding feature-maps as input.</paragraph>
+    <paragraph id="13" bbox="849.0,1377.0,1518.0,1445.0" status="extracted" label="text">Networks [34] and Residual Networks (ResNets) [11] have
+surpassed the 100-layer barrier.</paragraph>
+    <paragraph id="14" bbox="848.0,1454.0,1521.0,1986.0" status="extracted" label="text">As CNNs become increasingly deep, a new research
+problem emerges: as information about the input or gra-
+dient passes through many layers, it can vanish and "wash
+out" by the time it reaches the end (or beginning) of the
+network. Many recent publications address this or related
+problems. ResNets [11] and Highway Networks [34] by-
+pass signal from one layer to the next via identity connec-
+tions. Stochastic depth [13] shortens ResNets by randomly
+dropping layers during training to allow better information
+and gradient flow. FractalNets [17] repeatedly combine sev-
+eral parallel layer sequences with different number of con-
+volutional blocks to obtain a large nominal depth, while
+maintaining many short paths in the network. Although
+these different approaches vary in network topology and
+training procedure, they all share a key characteristic: they
+create short paths from early layers to later layers.</paragraph>
+    <figure src="figures/fig_p0_15.png" alt="Input X0 H1 BN-RebU-Conv X1 H2 BN-Reb-Conv X2 H3 BN-Rel-Conv X3 H4 BN-RelU-Conv X4 Transition Layer" id="15" bbox="865.0,729.0,1533.0,1201.0" status="completed" label="image" />
+  </page>
+  <page number="1">
+    <paragraph id="16" bbox="129.0,205.0,802.0,806.0" status="extracted" label="text">In this paper, we propose an architecture that distills this
+insight into a simple connectivity pattern: to ensure maxi-
+mum information flow between layers in the network, we
+connect all layers (with matching feature-map sizes) di-
+rectly with each other. To preserve the feed-forward nature,
+each layer obtains additional inputs from all preceding lay-
+ers and passes on its own feature-maps to all subsequent
+layers. Figure 1 illustrates this layout schematically. Cru-
+cially, in contrast to ResNets, we never combine features
+through summation before they are passed into a layer; in-
+stead, we combine features by concatenating them. Hence,
+the (cth layer has l inputs, consisting of the feature-maps
+of all preceding convolutional blocks. Its own feature-maps
+are passed on to al L −  subsequent layers. This introduces
+L(L+1)
+2
+connections in an L-layer network, instead of just
+L, as in traditional architectures. Because of its dense con-
+nectivity pattern, we refer to our approach as Dense Convo-
+lutional Network (DenseNet).</paragraph>
+    <paragraph id="17" bbox="130.0,812.0,802.0,1575.0" status="extracted" label="text">A possibly counter-intuitive effect of this dense connec-
+tivity pattern is that it requires fewer parameters than tra-
+ditional convolutional networks, as there is no need to re-
+learn redundant feature-maps. Traditional feed-forward ar-
+chitectures can be viewed as algorithms with a state, which
+is passed on from layer to layer. Each layer reads the state
+from its preceding layer and writes to the subsequent layer.
+It changes the state but also passes on information that needs
+to be preserved. ResNets [11] make this information preser-
+vation explicit through additive identity transformations.
+Recent variations of ResNets [13] show that many layers
+contribute very little and can in fact be randomly dropped
+during training. This makes the state of ResNets similar
+to (unrolled) recurrent neural networks [21], but the num-
+ber of parameters of ResNets is substantially larger because
+each layer has its own weights. Our proposed DenseNet ar-
+chitecture explicitly differentiates between information that
+is added to the network and information that is preserved.
+DenseNet layers are very narrow (e.g., 12 filters per layer),
+adding only a small set of feature-maps to the "collective
+knowledge" of the network and keep the remaining feature-
+maps unchanged—and the final classifier makes a decision
+based on all feature-maps in the network.</paragraph>
+    <paragraph id="18" bbox="130.0,1580.0,801.0,1879.0" status="extracted" label="text">Besides better parameter effi ciency, one big advantage of
+DenseNets is their improved flow of information and gra-
+dients throughout the network, which makes them easy to
+train. Each layer has direct access to the gradients from the
+loss function and the original input signal, leading to an im-
+plicit deep supervision [20]. This helps training of deeper
+network architectures. Further, we also observe that dense
+connections have a regularizing effect, which reduces over-
+fi tting on tasks with smaller training set sizes.</paragraph>
+    <paragraph id="19" bbox="130.0,1884.0,802.0,1986.0" status="extracted" label="text">We evaluate DenseNets on four highly competitive
+benchmark datasets (CIFAR-10, CIFAR-100, SVHN, and
+ImageNet). Our models tend to require much fewer param-</paragraph>
+    <paragraph id="20" bbox="849.0,204.0,1518.0,304.0" status="extracted" label="text">eters than existing algorithms with comparable accuracy.
+Further, we significanly outperform the current state-of-
+the-art results on most of the benchmark tasks.</paragraph>
+    <heading level="2" id="21" bbox="851.0,333.0,1094.0,368.0" status="extracted" label="paragraph_title">2. Related Work</heading>
+    <paragraph id="22" bbox="848.0,391.0,1520.0,622.0" status="extracted" label="text">The exploration of network architectures has been a part
+of neural network research since their initial discovery. The
+recent resurgence in popularity of neural networks has also
+revived this research domain. The increasing number of lay-
+ers in modern networks amplifies the differences between
+architectures and motivates the exploration of different con-
+nectivity patterns and the revisiting of old research ideas.</paragraph>
+    <paragraph id="23" bbox="848.0,623.0,1520.0,1053.0" status="extracted" label="text">A cascade structure similar to our proposed dense net-
+work layout has already been studied in the neural networks
+literature in the 1980s [3]. Their pioneering work focuses on
+fully connected multi-layer perceptrons trained in a layer-
+by-layer fashion. More recently, fully connected cascade
+networks to be trained with batch gradient descent were
+proposed [40]. Although effective on small datasets, this
+approach only scales to networks with a few hundred pa-
+rameters. In [9, 23, 31, 41], utilizing multi-level features
+in CNNs through skip-connnections has been found to be
+effective for various vision tasks. Parallel to our work, [1]
+derived a purely theoretical framework for networks with
+cross-layer connections similar to ours.</paragraph>
+    <paragraph id="24" bbox="847.0,1054.0,1521.0,1752.0" status="extracted" label="text">Highway Networks [34] were amongst the first architec-
+tures that provided a means to effectively train end-to-end
+networks with more than 100 layers. Using bypassing paths
+along with gating units, Highway Networks with hundreds
+of layers can be optimized without difficulty. The bypass-
+ing paths are presumed to be the key factor that eases the
+training of these very deep networks. This point is further
+supported by ResNets[11], in which pure identity mapings
+are used as bypassing paths. ResNets have achieved im-
+pressive, record-breaking performance on many challeng-
+ing image recognition, localization, and detection tasks,
+such as ImageNet and COCO object detection [11]. Re-
+cently, stochastic depth was proposed as a way to success-
+fully train a 1202-layer ResNet [13]. Stochastic depth im-
+proves the training of deep residual networks by dropping
+layers randomly during training. This shows that not all
+layers may be needed and highlights that there is a great
+amount of redundancy in deep (residual) networks. Our pa-
+per was partly inspired by that observation. ResNets with
+pre-activation also facilitate the training of state-of-the-art
+networks with &gt; 1000 layers [12].</paragraph>
+    <paragraph id="25" bbox="848.0,1752.0,1521.0,1986.0" status="extracted" label="text">An orthogonal approach to making networks deeper
+(e.g., with the help of skip connections) is to increase the
+network width. The GoogLeNet [36, 37] uses an "Incep-
+tion module" which concatenates feature-maps produced
+by filters of different sizes. In [38], a variant of ResNets
+with wide generalized residual blocks was proposed. In
+fact, simply increasing the number of filters in each layer of</paragraph>
+  </page>
+  <page number="2">
+    <paragraph id="26" bbox="131.0,399.0,1518.0,461.0" status="extracted" label="figure_title">Figure 2: A deep DenseNet with three dense blocks. The layers between two adjacent blocks are referred to as transition layers and change
+feature-map sizes via convolution and pooling.</paragraph>
+    <figure src="figures/fig_p2_27.png" alt="Input Prediction Convolution Dense Block 1 - Convolution - Pooling Dense Block 2 - Convolution - Pooling Dense Block 3 - Pooling - Linear - &quot;horse&quot;" id="27" bbox="157.0,194.0,1505.0,364.0" status="completed" label="image" />
+    <paragraph id="28" bbox="131.0,493.0,801.0,594.0" status="extracted" label="text">ResNets can improve its performance provided the depth is
+sufficient [42]. FractalNets also achieve competitive results
+on several datasets using a wide network structure [17].</paragraph>
+    <paragraph id="29" bbox="131.0,597.0,802.0,926.0" status="extracted" label="text">Instead of drawing representational power from ex-
+tremely deep or wide architectures, DenseNets exploit the
+potential of the network through feature reuse, yielding con-
+densed models that are easy to train and highly parameter-
+efficient. Concatenating feature-maps learned by different
+layers increases variation in the input of subsequent layers
+and improves effi ciency. This constitutes a major difference
+between DenseNets and ResNets. Compared to Inception
+networks [36, 37], which also concatenate features from dif-
+ferent layers, DenseNets are simpler and more efficient.</paragraph>
+    <paragraph id="30" bbox="130.0,927.0,801.0,1427.0" status="extracted" label="text">There are other notable network architecture innovations
+which have yielded competitive results. The Network in
+Network (NIN) [22] structure includes micro multi-layer
+perceptrons into the filters of convolutional layers to ex-
+tract more complicated features. In Deeply Supervised Net-
+work (DSN) [20], internal layers are directly supervised
+by auxiliary classifiers, which can strengthen the gradients
+received by earlier layers. Ladder Networks [27, 25] in-
+troduce lateral connections into autoencoders, producing
+impressive accuracies on semi-supervised learning tasks.
+In [39], Deeply-Fused Nets (DFNs) were proposed to im-
+prove information flow by combining intermediate layers
+of different base networks. The augmentation of networks
+with pathways that minimize reconstruction losses was also
+shown to improve image classification models [43].</paragraph>
+    <heading level="2" id="31" bbox="133.0,1450.0,326.0,1484.0" status="extracted" label="paragraph_title">3. DenseNets</heading>
+    <paragraph id="32" bbox="130.0,1507.0,797.0,1740.0" status="extracted" label="text">Consider a single image x that is passed through a con-
+volutional network. The network comprises L layers, each
+of which implements a non-linear transformation H(ei(),
+where  indexes the layer. H(·) can be composite func-
+tion of operations such as Batch Normalization (BN) [14],
+rectified linear units (ReLU) [6], Pooling [19]], or Convolu-
+tion (Conv). We denote the output of the th layer as X.</paragraph>
+    <paragraph id="33" bbox="129.0,1752.0,800.0,1950.0" status="extracted" label="text">ResNets. Traditional convolutional feed-forward net-
+works connect the output of the th layer as input to the
+(c + 1)th layer [16], which gives rise to the following
+layer transition: X = H(c(xe−1). ResNets [11] add a
+skip-connection that bypasses the non-linear transforma-
+tions with an identity function:</paragraph>
+    <formula format="latex" latex="\mathbf{x}_{\ell}=H_{\ell}(\mathbf{x}_{\ell-1})+\mathbf{x}_{\ell-1}." id="34" bbox="323.0,1957.0,606.0,1991.0" status="completed" label="display_formula">$$
+\mathbf{x}_{\ell}=H_{\ell}(\mathbf{x}_{\ell-1})+\mathbf{x}_{\ell-1}.
+$$</formula>
+    <paragraph id="35" bbox="761.0,1958.0,796.0,1988.0" status="extracted" label="formula_number">(1)</paragraph>
+    <paragraph id="36" bbox="849.0,494.0,1520.0,660.0" status="extracted" label="text">An advantage of ResNets is that the gradient can flow di-
+rectly through the identity function from later layers to the
+earlier layers. However, the identity function and the output
+of H( are combined by summation, which may impede the
+information flow in the network.</paragraph>
+    <paragraph id="37" bbox="848.0,677.0,1521.0,910.0" status="extracted" label="text">Dense connectivity. To further improve the information
+flow between layers we propose a different connectivity
+pattern: we introduce direct connections from any layer
+to all subsequent layers. Figure 1 illustrates the layout of
+the resulting DenseNet schematically. Consequently, the
+(th layer receives the feature-maps of all preceding layers,
+X0, . . . ,X−1, as input:</paragraph>
+    <paragraph id="38" bbox="1481.0,925.0,1516.0,955.0" status="extracted" label="formula_number">(2)</paragraph>
+    <paragraph id="39" bbox="849.0,974.0,1519.0,1173.0" status="extracted" label="text">where [x0, X1, . . . ,x−1] refers to the concatenation of the
+feature-maps produced in layers 0,. . . , −1. Because of its
+dense connectivity we refer to this network architecture as
+Dense Convolutional Network (DenseNet). For ease of im-
+plementation, we concatenate the multiple inputs of H(ci()
+in eq. (2) into a single tensor.</paragraph>
+    <paragraph id="40" bbox="849.0,1187.0,1518.0,1323.0" status="extracted" label="text">Composite function. Motivated by [12], we define Hi(·)
+as a composite function of three consecutive operations:
+batch normalization (BN) [14], followed by a rectified lin-
+ear unit (ReLU) [6] and a 3 × 3 convolution (Conv).</paragraph>
+    <formula format="latex" latex="\mathbf{x}_{\ell}=\:H_{\ell}([\mathbf{x}_{0},\mathbf{x}_{1},\ldots,\mathbf{x}_{\ell-1}])," id="41" bbox="1007.0,924.0,1358.0,958.0" status="completed" label="display_formula">$$
+\mathbf{x}_{\ell}=\:H_{\ell}([\mathbf{x}_{0},\mathbf{x}_{1},\ldots,\mathbf{x}_{\ell-1}]),
+$$</formula>
+    <paragraph id="42" bbox="849.0,1337.0,1520.0,1704.0" status="extracted" label="text">Pooling layers. The concatenation operation used in
+Eq. (2) is not viable when the size of feature-maps changes.
+However, an essential part of convolutional networks is
+down-sampling layers that change the size of feature-maps.
+To facilitate down-sampling in our architecture we divide
+the network into multiple densely connected dense blocks;
+see Figure 2. We refer to layers between blocks as transition
+layers, which do convolution and pooling. The transition
+layers used in our experiments consist of a batch normal-
+ization layer and an 1×1 convolutional layer followed by a
+2×2 average pooling layer.</paragraph>
+    <paragraph id="43" bbox="848.0,1719.0,1522.0,1985.0" status="extracted" label="text">Growth rate. If each function H( produces k feature-
+maps, it follows that the th layer has k0 + k × ( − 1) input
+feature-maps, where k0 is the number of channels in the in-
+put layer. An important difference between DenseNet and
+existing network architectures is that DenseNet can have
+very narrow layers, e.g., k = 12. We refer to the hyper-
+parameter k as the growth rate of the network. We show in
+Section 4 that a relatively small growth rate is suffi cient to</paragraph>
+  </page>
+  <page number="3">
+    <paragraph id="44" bbox="131.0,772.0,1518.0,834.0" status="extracted" label="figure_title">Table 1: DenseNet architectures for ImageNet. The growth rate for all the networks is k = 32. Note that each "conv" layer shown in the
+table corresponds the sequence BN-ReLU-Conv.</paragraph>
+    <table format="html" rows="16" columns="11" merged_cells="true" id="45" bbox="231.0,195.0,1407.0,758.0" status="completed" label="table">&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;td&gt;Layers&lt;/td&gt;&lt;td&gt;Output Size&lt;/td&gt;&lt;td colspan="2"&gt;DenseNet-121&lt;/td&gt;&lt;td colspan="2"&gt;DenseNet-169&lt;/td&gt;&lt;td colspan="2"&gt;DenseNet-201&lt;/td&gt;&lt;td colspan="2"&gt;DenseNet-264&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Convolution&lt;/td&gt;&lt;td&gt;112 × 112&lt;/td&gt;&lt;td colspan="9"&gt;7×7conv,stride 2&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Pooling&lt;/td&gt;&lt;td&gt;56×56&lt;/td&gt;&lt;td colspan="9"&gt;3×3 maxpool,stride 2&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;DenseBlock (1)&lt;/td&gt;&lt;td&gt;56×56&lt;/td&gt;&lt;td&gt;1×1conv 3×3conv&lt;/td&gt;&lt;td&gt;×6&lt;/td&gt;&lt;td&gt;1×1conv 3×3conv&lt;/td&gt;&lt;td&gt;×6&lt;/td&gt;&lt;td&gt;1×1conv 3×3conv&lt;/td&gt;&lt;td&gt;×6&lt;/td&gt;&lt;td&gt;1×1conv 3×3conv&lt;/td&gt;&lt;td&gt;×6&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;TransitionLayer (1)&lt;/td&gt;&lt;td&gt;56×56&lt;/td&gt;&lt;td&gt;1 ×1conv&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;td&gt;28×28&lt;/td&gt;&lt;td&gt;2×2 average pool, stride 2&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;td colspan="9"&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;DenseBlock (2)&lt;/td&gt;&lt;td&gt;28×28&lt;/td&gt;&lt;td colspan="9"&gt;1×1conv 3×3conv&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;TransitionLayer (2)&lt;/td&gt;&lt;td&gt;28×28&lt;/td&gt;&lt;td&gt;1×1conv&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;td&gt;14×14&lt;/td&gt;&lt;td&gt;2 ×2 average pool, stride 2&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;td colspan="9"&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;DenseBlock (3)&lt;/td&gt;&lt;td&gt;14×14&lt;/td&gt;&lt;td colspan="9"&gt;1×1conv 3×3conv&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;TransitionLayer (3)&lt;/td&gt;&lt;td&gt;14×14&lt;/td&gt;&lt;td&gt;1×1conv&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;td&gt;7×7&lt;/td&gt;&lt;td&gt;2×2 average pool, stride 2&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;td colspan="9"&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;DenseBlock (4)&lt;/td&gt;&lt;td&gt;7×7&lt;/td&gt;&lt;td colspan="9"&gt;1×1conv 3×3conv&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Classification Layer&lt;/td&gt;&lt;td&gt;1×1&lt;/td&gt;&lt;td&gt;7×7global average pool&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;td&gt;1000D fully-connected,softmax&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;td colspan="9"&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;td colspan="9"&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;</table>
+    <paragraph id="46" bbox="130.0,883.0,801.0,1252.0" status="extracted" label="text">obtain state-of-the-art results on the datasets that we tested
+on. One explanation for this is that each layer has access
+to all the preceding feature-maps in its block and, therefore,
+to the network's "collective knowledge". One can view the
+feature-maps as the global state of the network. Each layer
+adds k feature-maps of its own to this state. The growth
+rate regulates how much new information each layer con-
+tributes to the global state. The global state, once written,
+can be accessed from everywhere within the network and,
+unlike in traditional network architectures, there is no need
+to replicate it from layer to layer.</paragraph>
+    <paragraph id="47" bbox="131.0,1279.0,801.0,1646.0" status="extracted" label="text">Bottleneck layers. Although each layer only produces k
+output feature-maps, it typically has many more inputs. It
+has been noted in [37, 11] that a 1×1 convolution can be in-
+troduced as bottleneck layer before each 3×3 convolution
+to reduce the number of input feature-maps, and thus to
+improve computational efficiency. We find this design es-
+pecially effective for DenseNet and we refer to our network
+with such a bottleneck layer, i.e., to the BN-ReLU-Conv(1×
+1)-BN-ReLU-Conv(3×3) version of H, as DenseNet-B. In
+our experiments, we let each 1×1 convolution produce 4k
+feature-maps.</paragraph>
+    <paragraph id="48" bbox="129.0,1673.0,801.0,2007.0" status="extracted" label="text">Compression. To further improve model compactness,
+we can reduce the number of feature-maps at transition
+layers. If a dense block contains m feature-maps, we let
+the following transition layer generate | θm  output feature-
+maps, where 0 &lt;θ ≤1 is referred to as the compression fac-
+tor. When θ = 1, the number of feature-maps across transi-
+tion layers remains unchanged. We refer the DenseNet with
+θ &lt;1 as DenseNet-C, and we set θ = 0.5 in our experiment.
+When both the bottleneck and transition layers with θ &lt; 1
+are used, we refer to our model as DenseNet-BC.</paragraph>
+    <paragraph id="49" bbox="849.0,884.0,1520.0,1485.0" status="extracted" label="text">Implementation Details. On all datasets except Ima-
+geNet, the DenseNet used in our experiments has three
+dense blocks that each has an equal number of layers. Be-
+fore entering the first dense block, a convolution with 16 (or
+twice the growth rate for DenseNet-BC) output chanels is
+performed on the input images. For convolutional layers
+with kernel size 3×3, each side of the inputs is zero-padded
+by one pixel to keep the feature-map size fixed. We use 1× 1
+convolution followed by 2×2 average pooling as transition
+layers between two contiguous dense blocks. At the end of
+the last dense block, a global average pooling is performed
+and then a softmax classifier is attached. The feature-map
+sizes in the three dense blocks are 32× 32, 16×16, and
+8×8, respectively. We experiment with the basic DenseNet
+structure with configurations {L = 40, k = 12}, {L =
+100, k = 12} and {L = 100, k = 24}. For DenseNet-
+BC, the networks with configurations {L = 100, k = 12},
+{L = 250, k= 24} and {L=190, k = 40} are evaluated.</paragraph>
+    <paragraph id="50" bbox="848.0,1504.0,1522.0,1706.0" status="extracted" label="text">In our experiments on ImageNet, we use a DenseNet-BC
+structure with 4 dense blocks on 224×224 input images.
+The initial convolution layer comprises 2k convolutions of
+size 7×7 with stride 2; the number of feature-maps in all
+other layers also follow from setting k. The exact network
+configurations we used on ImageNet are shown in Table 1.</paragraph>
+    <heading level="2" id="51" bbox="851.0,1804.0,1078.0,1841.0" status="extracted" label="paragraph_title">4. Experiments</heading>
+    <paragraph id="52" bbox="848.0,1884.0,1519.0,1985.0" status="extracted" label="text">We empirically demonstrate DenseNet's effectiveness on
+several benchmark datasets and compare with state-of-the-
+art architectures, especially with ResNet and its variants.</paragraph>
+  </page>
+  <page number="4">
+    <paragraph id="53" bbox="131.0,934.0,1519.0,1058.0" status="extracted" label="figure_title">Table 2: Error rates (%) on CIFAR and SVHN datasets. k denotes network's growth rate. Results that surpass all competing methods are
+bold and the overall best results are blue. "+" indicates standard data augmentation (translation and/or mirroring). * indicates results run
+by ourselves. All the results of DenseNets without data augmentation (C10, C100, SVHN) are obtained using Dropout. DenseNets achieve
+lower error rates while using fewer parameters than ResNet. Without data augmentation, DenseNet performs better by a large margin.</paragraph>
+    <table format="markdown" rows="21" columns="8" id="54" bbox="197.0,196.0,1445.0,924.0" status="completed" label="table">| Method | Depth | Params | C10 10.41 | C10+ 8.81 | C100 | C100+ | SVHN |
+|---|---|---|---|---|---|---|---|
+| NetworkinNetwork [22] | 1 | 1 | 35.68 | = | 2.35 |  |  |
+| All-CNN [32] |  | 1 | 9.08 | 7.25 | - | 33.71 | = |
+| Deeply SupervisedNet [20] | 1 | 1 | 9.69 | 7.97 | 1 | 34.57 | 1.92 |
+| Highway Network [34] | 1 | - | - | 7.72 | = | 32.39 | 1 |
+| FractalNet[17] | 21 | 38.6M | 10.18 | 5.22 | 35.34 | 23.30 | 2.01 |
+| with Dropout/Drop-path | 21 | 38.6M | 7.33 | 4.60 | 28.20 | 23.73 | 1.87 |
+| ResNet[11] | 110 | 1.7M | 1 | 6.61 | 1 | 1 | - |
+| ResNet (reported by [13]) | 110 | 1.7M | 13.63 | 6.41 | 44.74 | 27.22 | 2.01 |
+| ResNet with Stochastic Depth[13] | 110 | 1.7M | 11.66 | 5.23 | 37.80 | 24.58 | 1.75 |
+| 1202 | 10.2M | - | 4.91 | 1 | 1 | - |  |
+| WideResNet | [42] | 16 | 11.0M | - | 4.81 | 1 | 22.07 |
+| 28 | 36.5M | - | 4.17 | - | 20.50 | = 1.64 |  |
+| with Dropout | 16 | 2.7M | 1 | 1 | 1 | 1 |  |
+| ResNet(pre-activation)[12] | 164 | 1.7M | 11.26* | 5.46 | 35.58* | 24.33 | - |
+| 1001 | 10.2M | 10.56* | 4.62 | 33.47* | 22.71 | = |  |
+| DenseNet (k = 12) DenseNet (k = 12) | 40 | 1.0M | 7.00 | 5.24 | 27.55 | 24.42 | 1.79 1.67 |
+| 100 | 7.0M | 5.77 | 4.10 | 23.79 | 20.20 |  |  |
+| DenseNet (k = 24) | 100 | 27.2M | 5.83 | 3.74 | 23.42 | 19.25 | 1.59 |
+| DenseNet-BC (k = 12) | 100 | 0.8M | 5.92 | 4.51 | 24.15 | 22.27 | 1.76 1.74 |
+| DenseNet-BC (k= 40) | 190 | 25.6M | - | 3.46 | - | 17.18 | 一 |</table>
+    <heading level="2" id="55" bbox="132.0,1128.0,309.0,1162.0" status="extracted" label="paragraph_title">4.1. Datasets</heading>
+    <paragraph id="56" bbox="129.0,1183.0,802.0,1619.0" status="extracted" label="text">CIFAR. The two CIFAR datasets [15] consist of colored
+natural images with 32×32 pixels. CIFAR-10 (C10) con-
+sists of images drawn from 10 and CIFAR-100 (C100) from
+100 classes. The training and test sets contain 50,000 and
+10,000 images respectively, and we hold out 5,000 training
+images as a validation set. We adopt a standard data aug-
+mentation scheme (mirroring/shifting) that is widely used
+for these two datasets [11, 13, 17,22, 28, 20, 32, 34]. We
+denote this data augmentation scheme by a "+" mark at the
+end of the dataset name (e.g., C10+). For preprocessing,
+we normalize the data using the channel means and stan-
+dard deviations. For the final run we use all 50,000 training
+images and report the final test error at the end of training.</paragraph>
+    <paragraph id="57" bbox="129.0,1651.0,802.0,1986.0" status="extracted" label="text">SVHN. The Street View House Numbers (SVHN) dataset
+[24] contains 32×32 colored digit images. There are 73,257
+images in the training set, 26,032 images in the test set, and
+531,131 images for additional training. Following common
+practice[7,13,20,22,30] we use all the training data with-
+out any data augmentation, and a validation set with 6,000
+images is split from the training set. We select the model
+with the lowest validation error during training and report
+the test error. We follow [42] and divide the pixel values by
+255 so they are in the [0, 1] range.</paragraph>
+    <paragraph id="58" bbox="848.0,1130.0,1521.0,1365.0" status="extracted" label="text">ImageNet. The ILSVRC 2012 classification dataset [2]
+consists 1.2 million images for training, and 50,000 for val-
+idation, from 1,000 classes. We adopt the same data aug-
+mentation scheme for training images as in [8, 11, 12], and
+apply a single-crop or 10-crop with size 224×224 at test
+time. Following [11, 12, 13], we report classification errors
+on the validation set.</paragraph>
+    <heading level="2" id="59" bbox="850.0,1394.0,1031.0,1428.0" status="extracted" label="paragraph_title">4.2. Training</heading>
+    <paragraph id="60" bbox="848.0,1448.0,1521.0,1848.0" status="extracted" label="text">All the networks are trained using stochastic gradient de-
+scent (SGD). On CIFAR and SVHN we train using batch
+size 64 for 300 and 40 epochs, respectively. The initial
+learning rate is set to 0.1, and is divided by 10 at 50% and
+75% of the total number of training epochs. On ImageNet,
+we train models for 90 epochs with a batch size of 256.
+The learning rate is set to 0.1 initially, and is lowered by
+10 times at epoch 30 and 60. Note that a naive implemen-
+tation of DenseNet may contain memory ineffi ciencies. To
+reduce the memory consumption on GPUs, please refer to
+our technical report on the memory-efficient implementa-
+tion of DenseNets [26].</paragraph>
+    <paragraph id="61" bbox="849.0,1849.0,1522.0,1984.0" status="extracted" label="text">Following [8], we use a weight decayof 10−4 and a
+Nesterov momentum [35] of 0.9 without dampening. We
+adopt the weight initialization introduced by [1o]. For the
+three datasets without data augmentation, i.e., C10, C100</paragraph>
+  </page>
+  <page number="5">
+    <paragraph id="62" bbox="132.0,500.0,625.0,593.0" status="extracted" label="figure_title">Table 3: The top-1 and top-5 error rates on the
+ImageNet validation set, with single-crop / 10-
+crop testing.</paragraph>
+    <table format="none" id="63" bbox="188.0,237.0,567.0,472.0" status="fallback" label="table">&lt;!-- WARNING: Table extraction failed --&gt;
+Model
+top-1
+top-5
+DenseNet-121
+25.02 / 23.61
+7.71/ 6.66
+DenseNet-169
+23.80 / 22.08
+6.85 / 5.92
+DenseNet-201
+22.58 / 21.46
+6.34/5.54
+DenseNet-264
+22.15 / 20.80
+6.12 / 5.29</table>
+    <paragraph id="64" bbox="673.0,501.0,1511.0,591.0" status="extracted" label="figure_title">Figure 3: Comparison of the DenseNets and ResNets top-1 error rates (single-crop
+testing) on the ImageNet validation dataset as a function of learned parameters (left)
+and FLOPs during test-time (right).</paragraph>
+    <figure src="figures/fig_p5_65.png" alt="27.5 AResNets ResNet-34 —DenseNets-BC 26.5 ae e 24.5 25.5 23.5 ADenseNet-121 DenseNet-169 ResNet-50 DenseNet-201ResNet-101 22.5 ResNet-152 4 DenseNet-264 21.5 0 1 2 3 4 5 6 7 8 #parameters ×10^{7" id="65" bbox="681.0,194.0,1071.0,498.0" status="completed" label="chart" />
+    <paragraph id="66" bbox="130.0,654.0,802.0,788.0" status="extracted" label="text">and SVHN, we add a dropout layer [33] after each convolu-
+tional layer (except the first one) and set the dropout rate to
+0.2. The test errors were only evaluated once for each task
+and model setting.</paragraph>
+    <heading level="2" id="67" bbox="130.0,811.0,764.0,844.0" status="extracted" label="paragraph_title">4.3. Classifi cation Results on CIFAR and SVHN</heading>
+    <paragraph id="68" bbox="130.0,864.0,801.0,1031.0" status="extracted" label="text">We train DenseNets with different depths, L, and growth
+rates, k. The main results on CIFAR and SVHN are shown
+in Table 2. To highlight general trends, we mark all results
+that outperform the existing state-of-the-art in boldface and
+the overall best result in blue.</paragraph>
+    <paragraph id="69" bbox="129.0,1051.0,802.0,1586.0" status="extracted" label="text">Accuracy. Possibly the most noticeable trend may orig-
+inate from the bottom row of Table 2, which shows that
+DenseNet-BC with L= 190 and k = 40outperforms
+the existing state-of-the-art consistently on all the CIFAR
+datasets. Its error rates of 3.46% on C10+ and 17.18% on
+C100+ are significantly lower than the error rates achieved
+by wide ResNet architecture[42]. Ourbest results on
+C10 and C100 (without data augmentation) are even more
+encouraging: both are close to 30% lower than Fractal-
+Net with drop-path regularization [17]. On SVHN, with
+dropout, the DenseNet with L = 100 and k = 24 also
+surpasses the current best result achieved by wide ResNet.
+However, the 250-layer DenseNet-BC doesn't further im-
+prove the performance over its shorter counterpart. This
+may be explained by that SVHN is a relatively easy task,
+and extremely deep models may overfit to the training set.</paragraph>
+    <paragraph id="70" bbox="129.0,1606.0,802.0,2006.0" status="extracted" label="text">Capacity. Without compression or bottleneck layers,
+there is a general trend that DenseNets perform better as
+L and k increase. We attribute this primarily to the corre-
+sponding growth in model capacity. This is best demon-
+strated by the column of C10+ and C100+. On C10+, the
+error drops from 5.24% to 4.10% and finally to 3.74% as
+the number of parameters increases from 1.0M, over 7.0M
+to 27.2M. On C100+, we observe a similar trend. This sug-
+gests that DenseNets can utilize the increased representa-
+tional power of bigger and deeper models. It also indicates
+that they do not suffer from overfi tting or the optimization
+diffi culties of residual networks [11].</paragraph>
+    <paragraph id="71" bbox="847.0,653.0,1522.0,1188.0" status="extracted" label="text">Parameter Effi ciency. The results in Table 2 indicate that
+DenseNets utilize parameters more efficiently than alterna-
+tive architectures (in particular, ResNets). The DenseNet-
+BC with bottleneck structure and dimension reduction at
+transition layers is particularly parameter-effi cient. For ex-
+ample, our 250-layer model only has 15.3M parameters, but
+it consistently outperforms other models such as FractalNet
+and Wide ResNets that have more than 30M parameters. We
+also highlight that DenseNet-BC with L = 100 and k = 12
+achieves comparable performance (e.g., 4.51% vs 4.62% er-
+ror on C10+, 22.27% vs 22.71% error on C100+) as the
+1001-layer pre-activation ResNet using 90% fewer parame-
+ters. Figure 4 (right panel) shows the training loss and test
+errors of these two networks on C10+. The 1001-layer deep
+ResNet converges to a lower training loss value but a similar
+test error. We analyze this effect in more detail below.</paragraph>
+    <figure src="figures/fig_p5_72.png" alt="27.5 AResNets A ResNet-34 —DenseNets-BC 26.5 e 25.5 23.5 24.5 DenseNet-121 DenseNet-169 ResNet-50 DenseNet-201 ResNet-101 22.5 ResNet-152 ADenseNet-264 0.75 1 1.25 1.5 1.75 2 2.25 2.5 #flops $× {10^{0^}$" id="72" bbox="1111.0,194.0,1505.0,499.0" status="completed" label="chart" />
+    <paragraph id="73" bbox="847.0,1202.0,1521.0,1633.0" status="extracted" label="text">Overfi tting.  One positive side-effect of the more effi cient
+use of parameters is a tendency of DenseNets to be less
+prone to overfi tting. We observe that on the datasets without
+data augmentation, the improvements of DenseNet architec-
+tures over prior work are particularly pronounced. On C10,
+the improvement denotes a 29% relative reduction in error
+from 7.33% to 5.19%. On C100, the reduction is about 30%
+from 28.20% to 19.64%. In our experiments, we observed
+potential overfi tting in a single setting: on C10, a 4× growth
+of parameters produced by increasing k = 12 to k = 24 lead
+to a modest increase in error from 5.77% to 5.83%, The
+DenseNet-BC bottleneck and compression layers appear to
+be an effective way to counter this trend.</paragraph>
+    <heading level="2" id="74" bbox="850.0,1652.0,1368.0,1685.0" status="extracted" label="paragraph_title">4.4. Classification Results on ImageNet</heading>
+    <paragraph id="75" bbox="848.0,1702.0,1521.0,1937.0" status="extracted" label="text">We evaluate DenseNet-BC with different depths and
+growth rates on the ImageNet classification task, and com-
+pare it with state-of-the-art ResNet architectures. To en-
+sure a fair comparison between the two architectures, we
+eliminate all other factors such as differences in data pre-
+processing and optimization settings by adopting the pub-
+licly available Torch implementation for ResNet by [8].</paragraph>
+    <paragraph id="76" bbox="879.0,1953.0,1473.0,1983.0" status="extracted" label="footnote">1https://github.com/facebook/fb.resnet.torch</paragraph>
+  </page>
+  <page number="6">
+    <paragraph id="77" bbox="131.0,526.0,1519.0,649.0" status="extracted" label="figure_title">Figure 4: Left: Comparison of the parameter efficiency on C10+ between DenseNet variations. Middle: Comparison of the parameter
+effi ciency between DenseNet-BC and (pre-activation) ResNets. DenseNet-BC requires about 1/3 of the parameters as ResNet to achieve
+comparable accuracy. Right: Training and testing curves of the 1001-layer pre-activation ResNet [12] with more than 10M parameters and
+a 100-layer DenseNet with only 0.8M parameters.</paragraph>
+    <paragraph id="78" bbox="131.0,670.0,801.0,768.0" status="extracted" label="text">We simply replace the ResNet model with the DenseNet-
+BC network, and keep all the experiment settings exactly
+the same as those used for ResNet.</paragraph>
+    <paragraph id="79" bbox="130.0,771.0,802.0,1269.0" status="extracted" label="text">We report the single-crop and 10-crop validation errors
+of DenseNets on ImageNet in Table 3. Figure 3shows
+the single-crop top-1 validation errors of DenseNets and
+ResNets as a function of the number of parameters (left) and
+FLOPs (right). The results presented in the figure reveal that
+DenseNets perform on par with the state-of-the-art ResNets,
+whilst requiring signifi cantly fewer parameters and compu-
+tation to achieve comparable performance. For example, a
+DenseNet-201 with 20M parameters model yields similar
+validation error as a 101-layer ResNet with more than 40M
+parameters. Similar trends can be observed from the right
+panel, which plots the validation error as a function of the
+number of FLOPs: a DenseNet that requires as much com-
+putation as a ResNet-50 performs on par with a ResNet-101,
+which requires twice as much computation.</paragraph>
+    <paragraph id="80" bbox="131.0,1272.0,801.0,1438.0" status="extracted" label="text">It is worth noting that our experimental setup implies
+that we use hyperparameter setings that are optimized for
+ResNets but not for DenseNets. It is conceivable that more
+extensive hyper-parameter searches may further improve
+the performance of DenseNet on ImageNet.</paragraph>
+    <heading level="2" id="81" bbox="132.0,1470.0,327.0,1506.0" status="extracted" label="paragraph_title">5. Discussion</heading>
+    <paragraph id="82" bbox="130.0,1528.0,799.0,1696.0" status="extracted" label="text">Superficially, DenseNets are quite similar to ResNets:
+Eq. (2) differs from Eq. (1) only in that the inputs to H(i()
+are concatenated instead of summed. However, the implica-
+tions of this seemingly small modification lead to substan-
+tially different behaviors of the two network architectures.</paragraph>
+    <figure src="figures/fig_p6_83.png" alt="16 DenseNet 14 DenseNet-C DenseNet-B ir 10 12 8 DenseNet-BC 6 + 80 1 2 3 4 5 6 7 8 #parameters ×105" id="83" bbox="145.0,196.0,555.0,512.0" status="completed" label="chart" />
+    <paragraph id="84" bbox="130.0,1716.0,800.0,1882.0" status="extracted" label="text">Model compactness. As a direct consequence of the in-
+put concatenation, the feature-maps learned by any of the
+DenseNet layers can be accessed by all subsequent layers.
+This encourages feature reuse throughout the network, and
+leads to more compact models.</paragraph>
+    <paragraph id="85" bbox="129.0,1885.0,802.0,1985.0" status="extracted" label="text">The left two plots in Figure 4show the result of an
+experiment that aims to compare the parameter efficiency
+of all variants of DenseNets (left) and also a comparable</paragraph>
+    <paragraph id="86" bbox="848.0,670.0,1520.0,968.0" status="extracted" label="text">ResNet architecture (middle). We train multiple small net-
+works with varying depths on C10+ and plot their test ac-
+curacies as a function of network parameters. In com-
+parison with other popular network architectures, such as
+AlexNet [16] or VGG-net [29], ResNets with pre-activation
+use fewer parameters while typically achieving better re-
+sults [12]. Hence, we compare DenseNet (k = 12) against
+this architecture. The training setting for DenseNet is kept
+the same as in the previous section.</paragraph>
+    <paragraph id="87" bbox="848.0,970.0,1520.0,1272.0" status="extracted" label="text">The graph shows that DenseNet-BC is consistently the
+most parameter effi cient variant of DenseNet. Further, to
+achieve the same level of accuracy, DenseNet-BC only re-
+quires around 1/3 of the parameters of ResNets (middle
+plot). This result is in line with the results on ImageNet
+we presented in Figure 3. The right plot in Figure 4 shows
+that a DenseNet-BC with only 0.8M trainable parameters
+is able to achieve comparable accuracy as the 1001-layer
+(pre-activation) ResNet [12] with 10.2M parameters.</paragraph>
+    <paragraph id="88" bbox="848.0,1293.0,1520.0,1593.0" status="extracted" label="text">Implicit Deep Supervision. One explanation for the im-
+proved accuracy of dense convolutional networks may be
+that individual layers receive additional supervision from
+the loss function through the shorter connections. One can
+interpret DenseNets to perform a kind of "deep supervi-
+sion". The benefits of deep supervision have previously
+been shown in deeply-supervised nets (DSN; [20]), which
+have classifiers attached to every hidden layer, enforcing the
+intermediate layers to learn discriminative features.</paragraph>
+    <paragraph id="89" bbox="848.0,1595.0,1521.0,1796.0" status="extracted" label="text">DenseNets perform a similar deep supervision in an im-
+plicit fashion: a single classifier on top of the network pro-
+vides direct supervision to all layers through at most two or
+three transition layers. However, the loss function and gra-
+dient of DenseNets are substantially less complicated, as the
+same loss function is shared between all layers.</paragraph>
+    <figure src="figures/fig_p6_90.png" alt="16 Test error: ResNet-1001 (10.2M) $100 14 Test error: DenseNet-BC-100 (0.8M) Training loss: ResNet-1001 (10.2M) e es 12 10 8 Training loss: DenseNet-BC-100 (0.8M) 10-1 10-2 see e 6 40 50 100 150 200 250 300 $10- epoch" id="90" bbox="968.0,200.0,1514.0,511.0" status="completed" label="chart" />
+    <figure src="figures/fig_p6_91.png" alt="16 ResNet 14 DenseNet-BC e e e 12 10 8 3x fewer parameters 6 4 0 1 2 3 4 5 6 7 8 #parameters ×105" id="91" bbox="557.0,201.0,963.0,512.0" status="completed" label="chart" />
+    <paragraph id="92" bbox="848.0,1817.0,1521.0,1985.0" status="extracted" label="text">Stochastic vs. deterministic connection. There is an
+interesting connection between dense convolutional net-
+works and stochastic depth regularization of residual net-
+works [13]. In stochastic depth, layers in residual networks
+are randomly dropped, which creates direct connections be-</paragraph>
+  </page>
+  <page number="7">
+    <paragraph id="93" bbox="130.0,205.0,801.0,472.0" status="extracted" label="text">tween the surrounding layers. As the pooling layers are
+never dropped, the network results in a similar connectiv-
+ity pattern as DenseNet: there is a small probability for
+any two layers, between the same pooling layers, to be di-
+rectly connected—if all intermediate layers are randomly
+dropped. Although the methods are ultimately quite dif-
+ferent, the DenseNet interpretation of stochastic depth may
+provide insights into the success of this regularizer.</paragraph>
+    <paragraph id="94" bbox="130.0,512.0,801.0,979.0" status="extracted" label="text">Feature Reuse. By design, DenseNets allow layers ac-
+cess to feature-maps from all of its preceding layers (al-
+though sometimes through transition layers). We conduct
+an experiment to investigate if a trained network takes ad-
+vantage of this opportunity. We first train a DenseNet on
+C10+ with L = 40 and k = 12. For each convolutional
+layer l within a block, we compute the average (absolute)
+weight assigned to connections with layer s. Figure 5 shows
+a heat-map for all three dense blocks. The average absolute
+weight serves as a surrogate for the dependency of a convo-
+lutional layer on its preceding layers. A red dot in position
+(l, s) indicates that the layer  makes, on average, strong use
+of feature-maps produced s-layers before. Several observa-
+tions can be made from the plot:</paragraph>
+    <paragraph id="95" bbox="155.0,996.0,800.0,1129.0" status="extracted" label="text">1. All layers spread their weights over many inputs within
+the same block. This indicates that features extracted
+by very early layers are, indeed, directly used by deep
+layers throughout the same dense block.</paragraph>
+    <paragraph id="96" bbox="153.0,1134.0,801.0,1266.0" status="extracted" label="text">2. The weights of the transition layers also spread their
+weight across all layers within the preceding dense
+block, indicating information flow from the first to the
+last layers of the DenseNet through few indirections.</paragraph>
+    <paragraph id="97" bbox="155.0,1271.0,800.0,1503.0" status="extracted" label="text">3. The layers within the second and third dense block
+consistently assign the least weight to the outputs of
+the transition layer (the top row of the triangles), in-
+dicating that the transition layer outputs many redun-
+dant features (with low weight on average). This is in
+keeping with the strong results of DenseNet-BC where
+exactly these outputs are compressed.</paragraph>
+    <paragraph id="98" bbox="152.0,1508.0,801.0,1677.0" status="extracted" label="text">4. Although the final classification layer, shown on the
+very right, also uses weights across the entire dense
+block, there seems to be a concentration towards final
+feature-maps, suggesting that there may be some more
+high-level features produced late in the network.</paragraph>
+    <heading level="2" id="99" bbox="134.0,1728.0,335.0,1764.0" status="extracted" label="paragraph_title">6. Conclusion</heading>
+    <paragraph id="100" bbox="130.0,1784.0,801.0,1987.0" status="extracted" label="text">We proposed a new convolutional network architec-
+ture, which we refer to as Dense Convolutional Network
+(DenseNet). It introduces direct connections between any
+two layers with the same feature-map size. We showed that
+DenseNets scale naturally to hundreds of layers, while ex-
+hibiting no optimization diffi culties. In our experiments,</paragraph>
+    <paragraph id="101" bbox="849.0,499.0,1520.0,714.0" status="extracted" label="figure_title">Figure 5: The average absolute filter weights of convolutional lay-
+ers in a trained DenseNet. The color of pixel (s, ) encodes the av-
+erage L1 norm (normalized by number of input feature-maps) of
+the weights connecting convolutional layer s to l within a dense
+block. Three columns highlighted by black rectangles correspond
+to two transition layers and the classification layer. The first row
+encodes weights connected to the input layer of the dense block.</paragraph>
+    <paragraph id="102" bbox="849.0,746.0,1520.0,1112.0" status="extracted" label="text">DenseNets tend to yield consistent improvement in accu-
+racy with growing number of parameters, without any signs
+of performance degradation or overfi tting. Under multi-
+ple settings, it achieved state-of-the-art results across sev-
+eral highly competitive datasets. Moreover, DenseNets
+require substantially fewer parameters and less computa-
+tion to achieve state-of-the-art performances. Because we
+adopted hyperparameter settings optimized for residual net-
+works in our study, we believe that further gains in accuracy
+of DenseNets may be obtained by more detailed tuning of
+hyperparameters and learning rate schedules.</paragraph>
+    <paragraph id="103" bbox="849.0,1113.0,1520.0,1446.0" status="extracted" label="text">Whilst following a simple connectivity rule, DenseNets
+naturally integrate the properties of identity mappings, deep
+supervision, and diversified depth. They allow feature reuse
+throughout the networks and can consequently learn more
+compact and, according to our experiments, more accurate
+models. Because of their compact internal representations
+and reduced feature redundancy, DenseNets may be good
+feature extractors for various computer vision tasks that
+build on convolutional features, e.g., [4, 5]. We plan to
+study such feature transfer with DenseNets in future work.</paragraph>
+    <paragraph id="104" bbox="849.0,1476.0,1521.0,1810.0" status="extracted" label="text">Acknowledgements. The authors are supported in part by
+the NSF III-1618134, III-1526012, IIS-1149882,theOf-
+fice of Naval Research Grant N00014-17-1-2175 andthe
+Bill and Melinda Gates foundation. GH is supported by
+the International Postdoctoral Exchange Fellowship Pro-
+gram of China Postdoctoral Council (No.20150015). ZL
+is supported by the National Basic Research Program of
+China Grants 2011CBA00300, 2011CBA00301, the NSFC
+61361136003. We also thank Daniel Sedra, Geoff Pleiss
+and Yu Sun for many insightful discussions.</paragraph>
+    <figure src="figures/fig_p7_105.png" alt="Dense Block 1 Dense Block 2 Dense Block 3 0.9 0.8 ) ee 3 5 5 3 7 0.6 0.5 0.4 0.3 0.7 9 9 9 0.2 11 11 0.1 Transition layer 1 Transition layer 2 Classification layer 0 2 4 6 8 10 12 2 4 6 8 10 12 2 4 6 8 10 12 Target layer (l) Target layer (l) Target layer (l)" id="105" bbox="857.0,199.0,1517.0,468.0" status="completed" label="image" />
+    <heading level="2" id="106" bbox="853.0,1836.0,1018.0,1871.0" status="extracted" label="paragraph_title">References</heading>
+    <paragraph id="107" bbox="867.0,1893.0,1517.0,1980.0" status="extracted" label="reference_content">[1] C. Cortes, X. Gonzalvo, V. Kuznetsov, M. Mohri, and
+S. Yang. Adanet: Adaptive structural learning of artificial
+neural networks. arXiv preprint arXiv:1607.01097, 2016. 2</paragraph>
+  </page>
+  <page number="8">
+    <paragraph id="108" bbox="148.0,207.0,799.0,294.0" status="extracted" label="reference_content">[2] J. Deng, W. Dong, R. Socher, L.-J. Li, K. Li, and L. Fei-
+Fei. Imagenet: A large-scale hierarchical image database. In
+CVPR, 2009. 5</paragraph>
+    <paragraph id="109" bbox="148.0,300.0,797.0,358.0" status="extracted" label="reference_content">[3] S.E. Fahlman and C.Lebiere. The cascade-correlation learn-
+ing architecture. In NIPS, 1989. 2</paragraph>
+    <paragraph id="110" bbox="149.0,363.0,799.0,480.0" status="extracted" label="reference_content">[4] J. R. Gardner, M. J. Kusner, Y. Li, P. Upchurch, K. Q.
+Weinberger, and J. E. Hopcroft. Deep manifold traversal:
+Changing labels with convolutional features. arXiv preprint
+arXiv:1511.06421, 2015. 8</paragraph>
+    <paragraph id="111" bbox="148.0,487.0,799.0,545.0" status="extracted" label="reference_content">[5] L. Gatys, A. Ecker, and M. Bethge. A neural algorithm of
+artistic style. Nature Communications, 2015. 8</paragraph>
+    <paragraph id="112" bbox="149.0,550.0,798.0,608.0" status="extracted" label="reference_content">[6] X. Glorot, A. Bordes, and Y. Bengio. Deep sparse rectifier
+neural networks. In AISTATS, 2011. 3</paragraph>
+    <paragraph id="113" bbox="149.0,612.0,797.0,670.0" status="extracted" label="reference_content">[7] I. Goodfellow, D. Warde-Farley, M. Mirza, A. Courville, and
+Y. Bengio. Maxout networks. In ICML, 2013. 5</paragraph>
+    <paragraph id="114" bbox="149.0,675.0,797.0,733.0" status="extracted" label="reference_content">[8] S. Gross and M. Wilber. Training and investigating residual
+nets, 2016. 5, 7</paragraph>
+    <paragraph id="115" bbox="146.0,738.0,797.0,825.0" status="extracted" label="reference_content">[9] B. Hariharan, P. Arbelaez, R. Girshick, and J. Malik. Hyper-
+columns for object segmentation and fine-grained localliza-
+tion. In CVPR, 2015. 2</paragraph>
+    <paragraph id="116" bbox="137.0,832.0,799.0,919.0" status="extracted" label="reference_content">[10] K. He, X. Zhang, S. Ren, and J. Sun. Delving deep into
+rectifiers: Surpassing human-level performance on imagenet
+classification. In ICCV, 2015. 5</paragraph>
+    <paragraph id="117" bbox="138.0,925.0,797.0,984.0" status="extracted" label="reference_content">[11] K. He, X. Zhang, S. Ren, and J. Sun. Deep residual learning
+for image recognition. In CVPR, 2016. 1,2, 3, 4, 5, 6</paragraph>
+    <paragraph id="118" bbox="137.0,988.0,798.0,1046.0" status="extracted" label="reference_content">[12] K. He, X. Zhang, S. Ren, and J. Sun. Identity mappings in
+deep residual networks. In ECCV, 2016. 2, 3, 5, 7</paragraph>
+    <paragraph id="119" bbox="137.0,1051.0,798.0,1136.0" status="extracted" label="reference_content">[13] G. Huang, Y. Sun, Z. Liu, D. Sedra, and K. Q. Weinberger.
+Deep networks with stochastic depth. In ECCV, 2016. 1,2,
+5,8</paragraph>
+    <paragraph id="120" bbox="138.0,1145.0,798.0,1232.0" status="extracted" label="reference_content">[14] S. Ioffe and C. Szegedy. Batch normalization: Accelerating
+deep network training by reducing internal covariate shift. In
+ICML, 2015. 3</paragraph>
+    <paragraph id="121" bbox="137.0,1239.0,799.0,1296.0" status="extracted" label="reference_content">[15] A. Krizhevsky and G. Hinton. Learning multiple layers of
+features from tiny images. Tech Report, 2009. 5</paragraph>
+    <paragraph id="122" bbox="138.0,1302.0,798.0,1387.0" status="extracted" label="reference_content">[16] A. Krizhevsky, I. Sutskever, and G. E. Hinton. Imagenet
+classification with deep convolutional neural networks. In
+NIPS, 2012. 3, 7</paragraph>
+    <paragraph id="123" bbox="137.0,1394.0,798.0,1482.0" status="extracted" label="reference_content">[17] G. Larsson, M. Maire, and G. Shakhnarovich. Fractalnet:
+Ultra-deep neural networks without residuals. arXiv preprint
+arXiv:1605.07648,2016.1,3, 5,6</paragraph>
+    <paragraph id="124" bbox="138.0,1487.0,799.0,1605.0" status="extracted" label="reference_content">[18] Y. LeCun, B. Boser, J. S. Denker, D. Henderson, R. E.
+Howard, W. Hubbard, and L. D. Jackel. Backpropagation
+applied to handwritten zip code recognition. Neural compu-
+tation, 1(4):541–551, 1989. 1</paragraph>
+    <paragraph id="125" bbox="137.0,1610.0,797.0,1700.0" status="extracted" label="reference_content">[19]Y. LeCun, L. Bottou, Y. Bengio, and P. Haffner. Gradient-
+based learning applied to document recognition. Proceed-
+ings of the IEEE, 86(11):2278–2324, 1998. 1, 3</paragraph>
+    <paragraph id="126" bbox="137.0,1703.0,796.0,1763.0" status="extracted" label="reference_content">[20] C.-Y. Lee, S. Xie, P. Gallagher, Z. Zhang, and Z. Tu. Deeply-
+supervised nets. In AISTATS, 2015. 2, 3, 5, 7</paragraph>
+    <paragraph id="127" bbox="138.0,1767.0,798.0,1855.0" status="extracted" label="reference_content">[21] Q. Liao and T. Poggio. Bridging the gaps between residual
+learning, recurrent neural networks and visual cortex. arXiv
+preprint arXiv:1604.03640, 2016. 2</paragraph>
+    <paragraph id="128" bbox="137.0,1860.0,797.0,1916.0" status="extracted" label="reference_content">[22] M. Lin, Q. Chen, and S. Yan. Network in network. In ICLR,
+2014.3,5</paragraph>
+    <paragraph id="129" bbox="136.0,1924.0,797.0,1981.0" status="extracted" label="reference_content">[23] J. Long, E. Shelhamer, and T. Darrell. Fully convolutional
+networks for semantic segmentation. In CVPR, 2015. 2</paragraph>
+    <paragraph id="130" bbox="856.0,207.0,1517.0,295.0" status="extracted" label="reference_content">[24] Y. Netzer, T. Wang, A. Coates, A. Bissacco, B. Wu, and A. Y.
+Ng. Reading digits in natural images with unsupervised fea
+ture learning, 2011. In NIPS Workshop, 2011. 5</paragraph>
+    <paragraph id="131" bbox="856.0,299.0,1515.0,385.0" status="extracted" label="reference_content">[25] M. Pezeshki, L. Fan, P. Brakel, A. Courville, and Y. Bengio.
+Deconstructing the ladder network architecture. In ICML,
+2016.3</paragraph>
+    <paragraph id="132" bbox="857.0,392.0,1518.0,480.0" status="extracted" label="reference_content">[26] G. Pleiss, D. Chen, G. Huang, T. Li, L. van der Maaten,
+and K. Q. Weinberger. Memory-efficient implementation of
+densenets. arXiv preprint arXiv:1707.06990, 2017. 5</paragraph>
+    <paragraph id="133" bbox="856.0,485.0,1517.0,572.0" status="extracted" label="reference_content">[27] A. Rasmus, M. Berglund, M. Honkala, H. Valpola, and
+T. Raiko. Semi-supervised learning with ladder networks.
+In NIPS, 2015. 3</paragraph>
+    <paragraph id="134" bbox="856.0,578.0,1516.0,664.0" status="extracted" label="reference_content">[28] A. Romero, N. Ballas, S. E. Kahou, A. Chassang, C. Gatta,
+and Y. Bengio. Fitnets: Hints for thin deep nets. In ICLR,
+2015.5</paragraph>
+    <paragraph id="135" bbox="856.0,669.0,1517.0,788.0" status="extracted" label="reference_content">[29] O. Russakovsky, J. Deng, H. Su, J. Krause, S. Satheesh,
+S. Ma, Z. Huang, A. Karpathy, A. Khosla, M. Bernstein,
+et al. Imagenet large scale visual recognition challenge.
+IJCV.1,7</paragraph>
+    <paragraph id="136" bbox="855.0,793.0,1517.0,881.0" status="extracted" label="reference_content">[30] P. Sermanet, S. Chintala, and Y. LeCun. Convolutional neu-
+ral networks applied to house numbers digit classification. In
+ICPR, pages 3288–3291. IEEE, 2012. 5</paragraph>
+    <paragraph id="137" bbox="856.0,887.0,1517.0,973.0" status="extracted" label="reference_content">[31]P. Sermanet, K. Kavukcuoglu, S. Chintala, and Y. LeCun.
+Pedestrian detection with unsupervised multi-stage feature
+learning. In CVPR, 2013. 2</paragraph>
+    <paragraph id="138" bbox="854.0,979.0,1516.0,1067.0" status="extracted" label="reference_content">[32] J. T. Springenberg, A. Dosovitskiy, T. Brox, and M. Ried-
+miller. Striving for simplicity: The all convolutional net.
+arXiv preprint arXiv:1412.6806, 2014. 5</paragraph>
+    <paragraph id="139" bbox="855.0,1071.0,1517.0,1158.0" status="extracted" label="reference_content">[33] N. Srivastava, G. E. Hinton, A. Krizhevsky, I. Sutskever, and
+R. Salakhutdinov. Dropout: a simple way to prevent neural
+networks from overfi tting. JMLR, 2014. 6</paragraph>
+    <paragraph id="140" bbox="855.0,1165.0,1517.0,1222.0" status="extracted" label="reference_content">[34] R. K. Srivastava, K. Greff, and J. Schmidhuber. Training
+very deep networks. In NIPS, 2015. 1,2, 5</paragraph>
+    <paragraph id="141" bbox="855.0,1228.0,1517.0,1313.0" status="extracted" label="reference_content">[35] I. Sutskever, J. Martens, G. Dahl, and G. Hinton. On the
+importance of initialization and momentum in deep learning.
+In ICML, 2013. 5</paragraph>
+    <paragraph id="142" bbox="856.0,1319.0,1516.0,1408.0" status="extracted" label="reference_content">[36] C. Szegedy, W. Liu, Y. Jia, P. Sermanet, S. Reed,
+D. Anguelov, D. Erhan, V. Vanhoucke, and A. Rabinovich.
+Going deeper with convolutions. In CVPR, 2015. 2, 3</paragraph>
+    <paragraph id="143" bbox="857.0,1413.0,1517.0,1499.0" status="extracted" label="reference_content">[37] C. Szegedy, V. Vanhoucke, S. Ioffe, J. Shlens, and Z. Wojna.
+Rethinking the inception architecture for computer vision. In
+CVPR, 2016. 2, 3, 4</paragraph>
+    <paragraph id="144" bbox="857.0,1506.0,1516.0,1592.0" status="extracted" label="reference_content">[38] S. Targ, D. Almeida, and K. Lyman.
+Resnet in
+resnet: Generalizing residual architectures. arXiv preprint
+arXiv:1603.08029, 2016. 2</paragraph>
+    <paragraph id="145" bbox="855.0,1596.0,1514.0,1656.0" status="extracted" label="reference_content">[39] J. Wang, Z. Wei, T. Zhang, and W. Zeng. Deeply-fused nets.
+arXiv preprint arXiv:1605.07716, 2016. 3</paragraph>
+    <paragraph id="146" bbox="855.0,1660.0,1517.0,1747.0" status="extracted" label="reference_content">[40] B. M. Wilamowski and H. Yu. Neural network learning
+without backpropagation. IEEE Transactions on Neural Net-
+works, 21(11):1793–1803, 2010. 2</paragraph>
+    <paragraph id="147" bbox="855.0,1753.0,1516.0,1810.0" status="extracted" label="reference_content">[41] S. Yang and D. Ramanan. Multi-scale recognition with dag-
+cnns. In ICCV, 2015. 2</paragraph>
+    <paragraph id="148" bbox="856.0,1815.0,1516.0,1873.0" status="extracted" label="reference_content">[42] S. Zagoruyko and N. Komodakis. Wide residual networks.
+arXiv preprint arXiv:1605.07146, 2016. 3, 5, 6</paragraph>
+    <paragraph id="149" bbox="857.0,1878.0,1518.0,1964.0" status="extracted" label="reference_content">[43] Y. Zhang, K. Lee, and H. Lee. Augmenting supervised neural
+networks with unsupervised objectives for large-scale image
+classification. In ICML, 2016. 3</paragraph>
+  </page>
+</document>

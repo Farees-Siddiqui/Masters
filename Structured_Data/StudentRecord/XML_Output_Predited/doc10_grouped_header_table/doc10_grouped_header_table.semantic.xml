@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<consolidated_student_register title="doc10_grouped_header_table" source="doc10_grouped_header_table.pdf">
+  <header>
+    <columns>Name</columns>
+    <columns>Address</columns>
+    <columns>Evaluation</columns>
+  </header>
+  <subheaders>
+    <name>Last</name>
+    <name>First</name>
+    <address>Street</address>
+    <address>City</address>
+    <evaluation>Grade</evaluation>
+    <evaluation>Remark</evaluation>
+  </subheaders>
+  <students last_name="Chen" first_name="Wei" street="704Highland Avenue" city="Hamilton" grade="97" remark="Excellent" />
+</consolidated_student_register>

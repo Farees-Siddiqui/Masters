@@ -1,0 +1,168 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\newif\ifcomments
+\commentsfalse
+\commentstrue
+
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{wrapfig}
+\usepackage{multirow}
+\usepackage[T1]{fontenc}
+\usepackage[font=small,labelfont=bf,tableposition=top]{caption}
+
+\DeclareCaptionLabelFormat{andtable}{#1~#2  \&  \tablename~\thetable}
+
+%\usepackage[T1]{fontenc}
+%\usepackage[utf8]{inputenc}
+%\usepackage{babel}
+%\usepackage[font=small,labelfont=bf]{caption}
+% Include other packages here, before hyperref.
+
+% If you comment hyperref and then uncomment it, you should delete
+% egpaper.aux before re-running latex.  (Or just hit 'q' on the first latex
+% run, let it finish, and you should be clear).
+\usepackage[pagebackref=true,breaklinks=true,letterpaper=true,colorlinks,bookmarks=false]{hyperref}
+
+\cvprfinalcopy % *** Uncomment this line for the final submission
+
+\def\cvprPaperID{1954} % *** Enter the CVPR Paper ID here
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+
+% Pages are numbered in submission mode, and unnumbered in camera-ready
+\ifcvprfinal\pagestyle{empty}\fi
+\begin{document}
+
+\ifcomments
+  \newcommand{\comments}[1]{#1}
+\else
+  \newcommand{\comments}[1]{}
+\fi
+
+\newcommand{\name}{Deep Feature Interpolation}
+\newcommand{\nameshort}{DFI}
+
+\newcommand{\kqw}[1]{\comments{\textcolor{blue}{[Kilian: #1]}}}
+
+%%%%%%%%% TITLE
+\title{Densely Connected Convolutional Networks}
+
+%\author{Gao Huang\\
+%%Cornell University\\
+%{\tt\small gh349@cornell.edu}
+%% For a paper whose authors are all at the same institution,
+%% omit the following lines up until the closing ``}''.
+%% Additional authors and addresses can be added with ``\and'',
+%% just like the second author.
+%% To save space, use either the email address or home page, not both
+%\and
+%Zhuang Liu\\
+%%Tsinghua University\\
+%%{\tt\small liuzhuang13@mails.tsinghua.edu.cn}
+%\and
+%Kilian Q. Weinberger\\
+%%Cornell University\\
+%{\tt\small kqw4@cornell.edu}
+%\and
+%Laurens van der Maaten\\
+%%Facebook AI Research\\
+%{\tt\small lvdmaaten@fb.com}
+%}
+%
+%\author{Gao Huang\thanks{Both authors contributed equally} $^{,1,2}$~~~~~~ Zhuang Liu$^{*,2}$~~~~~~ Kilian Q. Weinberger$^{1}$~~~~~~ Laurens van der Maaten$^{3}$\\
+%$^{1}$Cornell University~~~~~~$^{2}$Tsinghua University~~~~~~$^{3}$Facebook AI Research\\
+%{\tt\small \{gh349,kqw4\}@cornell.edu liuzhuang13@mails.tsinghua.edu.cn lvdmaaten@fb.com}
+%%\and
+%%Zhuang Liu\\
+%%%Tsinghua University\\
+%%%{\tt\small liuzhuang13@mails.tsinghua.edu.cn}
+%%\and
+%%Kilian Q. Weinberger\\
+%%%Cornell University\\
+%%{\tt\small kqw4@cornell.edu}
+%%\and
+%%Laurens van der Maaten\\
+%%%Facebook AI Research\\
+%%{\tt\small lvdmaaten@fb.com}
+%}
+
+\author{Gao Huang\thanks{Authors contributed equally}\\
+Cornell University\\
+{\tt\small gh349@cornell.edu}
+% For a paper whose authors are all at the same institution,
+% omit the following lines up until the closing ``}''.
+% Additional authors and addresses can be added with ``\and'',
+% just like the second author.
+% To save space, use either the email address or home page, not both
+\and
+Zhuang Liu$^*$\\
+Tsinghua University\\
+{\tt\small liuzhuang13@mails.tsinghua.edu.cn}
+\and
+Laurens van der Maaten\\
+Facebook AI Research\\
+{\tt\small lvdmaaten@fb.com}
+\and
+Kilian Q. Weinberger\\
+Cornell University\\
+{\tt\small kqw4@cornell.edu}
+}
+
+\input{macros}
+\maketitle
+%\thispagestyle{empty}
+
+%%%%%%%%% ABSTRACT
+\begin{abstract}
+\input{abstract.tex}
+\end{abstract}
+
+%%%%%%%%% BODY TEXT
+
+\input{intro}
+
+\input{related_work}
+
+\input{method}
+
+\input{experiments}
+
+\input{analytic}
+
+\input{conclusion}
+
+\vspace{-3pt}
+\paragraph{Acknowledgements.} The authors are supported in part by the NSF III-1618134, III-1526012, IIS-1149882, the Office of Naval Research Grant N00014-17-1-2175 and the Bill and Melinda Gates foundation. GH is supported by the International Postdoctoral Exchange Fellowship Program of China Postdoctoral Council (No.20150015). ZL is supported by the National Basic Research Program of China Grants 2011CBA00300, 2011CBA00301, the NSFC 61361136003. We also thank Daniel Sedra, Geoff Pleiss and Yu Sun
+for many insightful discussions.
+
+{\small
+\bibliographystyle{ieee}
+\bibliography{citations}}
+
+%\begin{figure*}[!t]
+%      \centerline{\includegraphics[width=1.2\textwidth]{changelog.pdf}}
+%      \label{fig:changelog}
+%\end{figure*}
+%
+%\newpage
+%\onecolumn
+%\vspace*{50px}
+%\begin{center}{\title{\Large \textbf{Change Log} \\}}	
+%\end{center}
+%\vspace*{20px}
+%Several changes were made to this manuscript, from its previous version (\url{https://arxiv.org/pdf/1608.06993v1.pdf}) to the current version (\url{https://arxiv.org/pdf/1608.06993v2.pdf}), as listed below:
+%\begin{itemize}
+%	\item [1.] In the current version, we introduce an improvement to DenseNet (DenseNet-BC), which has an additional 1$\times$1 convolution in each composite function (cf. Section 3) and compressive transition layers. Experimental results with this architecture are added (cf. Section 4.3 and Section 4.4).
+%	\item [2.] Results of DenseNets on the ImageNet classification task are added (cf. Section 4.4).
+%	\item [3.] A brief discussion on the connection between DenseNets and Stochastic Depth Networks is added (cf. Section 5).
+%	\item [4.] We replaced the heat map (Fig. 4) in the previous version which was not clear enough.
+%	\item [5.] Due to length limit, we removed the comparison between DenseNets and Partial DenseNets in the previous version (Fig. 6).
+%\end{itemize}
+
+
+\maketitle
+
+\end{document}

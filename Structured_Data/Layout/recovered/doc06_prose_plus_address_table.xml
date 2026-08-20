@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='utf-8'?>
+<document source="doc06_prose_plus_address_table.pdf" model="nielsr/layoutlmv3-finetuned-funsd">
+  <unkeyed by="layoutlmv3">Ronan</unkeyed>
+  <mailing_address label="Mailing Address" by="layoutlmv3">315 Colborne Street</mailing_address>
+  <city label="City" by="layoutlmv3">Kitchener</city>
+  <first_name label="First Name" by="gliner" score="0.67">Ronan Fitzgerald</first_name>
+  <grade label="Grade" by="gliner" score="0.81">final grade</grade>
+  <grade label="Grade" by="gliner" score="0.87">91</grade>
+  <standing label="Standing" by="gliner" score="0.84">Excellent</standing>
+  <street label="Street" by="gliner" score="0.96">Colborne Street</street>
+</document>

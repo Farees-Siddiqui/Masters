@@ -278,7 +278,7 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("records", type=Path, nargs="?", default=Path("records.json"))
     ap.add_argument("--out", type=Path, default=Path("view.html"))
-    ap.add_argument("--backend", default="Groq · Llama 3.3 70B")
+    ap.add_argument("--backend", default="local ollama · llama3.3:70b")
     args = ap.parse_args()
     build(args.records, args.out, args.backend)
     return 0

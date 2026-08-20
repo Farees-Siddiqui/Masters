@@ -1,0 +1,421 @@
+{
+  "n_pages": 1,
+  "pages": [
+    {
+      "page": 0,
+      "blocks": [
+        {
+          "block_id": 0,
+          "block_type": "TITLE",
+          "bbox": [
+            214.0,
+            221.0,
+            588.0,
+            298.0
+          ],
+          "parsed_content": "Offi ce of the Registrar\nMilton College",
+          "crop_path": null,
+          "metadata": {
+            "label": "doc_title",
+            "page": 0,
+            "reading_position": 0,
+            "handler": "_handle_text",
+            "n_lines": 2,
+            "mean_line_confidence": 0.9515,
+            "is_marginal": false,
+            "source_order": 0,
+            "status": "extracted"
+          },
+          "raw_lines": [
+            {
+              "text": "Offi ce of the Registrar",
+              "bbox": [
+                216.0,
+                219.0,
+                584.0,
+                256.0
+              ],
+              "score": 0.9036
+            },
+            {
+              "text": "Milton College",
+              "bbox": [
+                213.0,
+                260.0,
+                401.0,
+                296.0
+              ],
+              "score": 0.9994
+            }
+          ]
+        },
+        {
+          "block_id": 1,
+          "block_type": "TEXT",
+          "bbox": [
+            217.0,
+            378.0,
+            421.0,
+            413.0
+          ],
+          "parsed_content": "19 March 2026",
+          "crop_path": null,
+          "metadata": {
+            "label": "text",
+            "page": 0,
+            "reading_position": 1,
+            "handler": "_handle_text",
+            "n_lines": 1,
+            "mean_line_confidence": 0.9833,
+            "is_marginal": false,
+            "source_order": 1,
+            "status": "extracted"
+          },
+          "raw_lines": [
+            {
+              "text": "19 March 2026",
+              "bbox": [
+                218.0,
+                379.0,
+                417.0,
+                410.0
+              ],
+              "score": 0.9833
+            }
+          ]
+        },
+        {
+          "block_id": 2,
+          "block_type": "TEXT",
+          "bbox": [
+            213.0,
+            478.0,
+            484.0,
+            593.0
+          ],
+          "parsed_content": "Thuy Nguyen\n88 Braemar Avenue\nGuelph",
+          "crop_path": null,
+          "metadata": {
+            "label": "text",
+            "page": 0,
+            "reading_position": 2,
+            "handler": "_handle_text",
+            "n_lines": 3,
+            "mean_line_confidence": 0.9972,
+            "is_marginal": false,
+            "source_order": 2,
+            "synthetic": true,
+            "status": "extracted"
+          },
+          "raw_lines": [
+            {
+              "text": "Thuy Nguyen",
+              "bbox": [
+                215.0,
+                478.0,
+                403.0,
+                515.0
+              ],
+              "score": 0.9988
+            },
+            {
+              "text": "88 Braemar Avenue",
+              "bbox": [
+                215.0,
+                517.0,
+                484.0,
+                549.0
+              ],
+              "score": 0.9935
+            },
+            {
+              "text": "Guelph",
+              "bbox": [
+                213.0,
+                552.0,
+                321.0,
+                593.0
+              ],
+              "score": 0.9994
+            }
+          ]
+        },
+        {
+          "block_id": 3,
+          "block_type": "TEXT",
+          "bbox": [
+            212.0,
+            656.0,
+            464.0,
+            695.0
+          ],
+          "parsed_content": "Dear Ms. Nguyen,",
+          "crop_path": null,
+          "metadata": {
+            "label": "text",
+            "page": 0,
+            "reading_position": 3,
+            "handler": "_handle_text",
+            "n_lines": 1,
+            "mean_line_confidence": 0.986,
+            "is_marginal": false,
+            "source_order": 3,
+            "status": "extracted"
+          },
+          "raw_lines": [
+            {
+              "text": "Dear Ms. Nguyen,",
+              "bbox": [
+                214.0,
+                654.0,
+                461.0,
+                693.0
+              ],
+              "score": 0.986
+            }
+          ]
+        },
+        {
+          "block_id": 4,
+          "block_type": "TEXT",
+          "bbox": [
+            212.0,
+            715.0,
+            1484.0,
+            790.0
+          ],
+          "parsed_content": "I am writing to confirm that your placement term has now been formally closed and that the\nresult has been entered on your permanent record.",
+          "crop_path": null,
+          "metadata": {
+            "label": "text",
+            "page": 0,
+            "reading_position": 4,
+            "handler": "_handle_text",
+            "n_lines": 2,
+            "mean_line_confidence": 0.9775,
+            "is_marginal": false,
+            "source_order": 4,
+            "status": "extracted"
+          },
+          "raw_lines": [
+            {
+              "text": "I am writing to confirm that your placement term has now been formally closed and that the",
+              "bbox": [
+                213.0,
+                714.0,
+                1478.0,
+                746.0
+              ],
+              "score": 0.9739
+            },
+            {
+              "text": "result has been entered on your permanent record.",
+              "bbox": [
+                215.0,
+                751.0,
+                889.0,
+                784.0
+              ],
+              "score": 0.9812
+            }
+          ]
+        },
+        {
+          "block_id": 5,
+          "block_type": "TEXT",
+          "bbox": [
+            212.0,
+            807.0,
+            1485.0,
+            883.0
+          ],
+          "parsed_content": "The grade awarded for the term is 76. The evaluation recorded alongside it is Satisfactory. Both\nentries are final and will appear on any transcript issued from this point forward.",
+          "crop_path": null,
+          "metadata": {
+            "label": "text",
+            "page": 0,
+            "reading_position": 5,
+            "handler": "_handle_text",
+            "n_lines": 2,
+            "mean_line_confidence": 0.9678,
+            "is_marginal": false,
+            "source_order": 5,
+            "status": "extracted"
+          },
+          "raw_lines": [
+            {
+              "text": "The grade awarded for the term is 76. The evaluation recorded alongside it is Satisfactory. Both",
+              "bbox": [
+                216.0,
+                809.0,
+                1478.0,
+                841.0
+              ],
+              "score": 0.9727
+            },
+            {
+              "text": "entries are final and will appear on any transcript issued from this point forward.",
+              "bbox": [
+                216.0,
+                846.0,
+                1298.0,
+                878.0
+              ],
+              "score": 0.963
+            }
+          ]
+        },
+        {
+          "block_id": 6,
+          "block_type": "TEXT",
+          "bbox": [
+            212.0,
+            901.0,
+            1485.0,
+            977.0
+          ],
+          "parsed_content": "Should any part of this record require correction, please contact this office in writing within\nthirty days.",
+          "crop_path": null,
+          "metadata": {
+            "label": "text",
+            "page": 0,
+            "reading_position": 6,
+            "handler": "_handle_text",
+            "n_lines": 2,
+            "mean_line_confidence": 0.9569,
+            "is_marginal": false,
+            "source_order": 6,
+            "status": "extracted"
+          },
+          "raw_lines": [
+            {
+              "text": "Should any part of this record require correction, please contact this office in writing within",
+              "bbox": [
+                217.0,
+                903.0,
+                1478.0,
+                935.0
+              ],
+              "score": 0.9346
+            },
+            {
+              "text": "thirty days.",
+              "bbox": [
+                213.0,
+                938.0,
+                375.0,
+                976.0
+              ],
+              "score": 0.9791
+            }
+          ]
+        },
+        {
+          "block_id": 7,
+          "block_type": "TEXT",
+          "bbox": [
+            216.0,
+            1042.0,
+            429.0,
+            1078.0
+          ],
+          "parsed_content": "Yours sincerely,",
+          "crop_path": null,
+          "metadata": {
+            "label": "text",
+            "page": 0,
+            "reading_position": 7,
+            "handler": "_handle_text",
+            "n_lines": 1,
+            "mean_line_confidence": 0.9989,
+            "is_marginal": false,
+            "source_order": 7,
+            "status": "extracted"
+          },
+          "raw_lines": [
+            {
+              "text": "Yours sincerely,",
+              "bbox": [
+                214.0,
+                1039.0,
+                426.0,
+                1076.0
+              ],
+              "score": 0.9989
+            }
+          ]
+        },
+        {
+          "block_id": 8,
+          "block_type": "TEXT",
+          "bbox": [
+            215.0,
+            1174.0,
+            393.0,
+            1210.0
+          ],
+          "parsed_content": "A. Whitfield",
+          "crop_path": null,
+          "metadata": {
+            "label": "text",
+            "page": 0,
+            "reading_position": 8,
+            "handler": "_handle_text",
+            "n_lines": 1,
+            "mean_line_confidence": 0.9951,
+            "is_marginal": false,
+            "source_order": 8,
+            "status": "extracted"
+          },
+          "raw_lines": [
+            {
+              "text": "A. Whitfield",
+              "bbox": [
+                216.0,
+                1173.0,
+                388.0,
+                1207.0
+              ],
+              "score": 0.9951
+            }
+          ]
+        },
+        {
+          "block_id": 9,
+          "block_type": "TEXT",
+          "bbox": [
+            217.0,
+            1215.0,
+            457.0,
+            1247.0
+          ],
+          "parsed_content": "Assistant Registrar",
+          "crop_path": null,
+          "metadata": {
+            "label": "text",
+            "page": 0,
+            "reading_position": 9,
+            "handler": "_handle_text",
+            "n_lines": 1,
+            "mean_line_confidence": 0.9702,
+            "is_marginal": false,
+            "source_order": 9,
+            "status": "extracted"
+          },
+          "raw_lines": [
+            {
+              "text": "Assistant Registrar",
+              "bbox": [
+                215.0,
+                1213.0,
+                453.0,
+                1245.0
+              ],
+              "score": 0.9702
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+% Format: fully tabular, vertical orientation. One row per field,
+% label in the left column, value in the right.
+\documentclass[11pt]{article}
+\usepackage[margin=1.25in]{geometry}
+\usepackage{booktabs}
+\usepackage{parskip}
+\pagestyle{empty}
+
+\begin{document}
+
+\begin{center}
+{\large\bfseries Student Record}
+\end{center}
+
+\vspace{1em}
+
+\begin{center}
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Field} & \textbf{Entry} \\
+\midrule
+Last Name   & Okonkwo \\
+First Name  & Chidi \\
+Street      & 2201 Lakeshore Road \\
+City        & Burlington \\
+Grade       & 94 \\
+Evaluation  & Excellent \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{2em}
+
+{\footnotesize Generated from the student information system. Entries are shown
+exactly as stored.}
+
+\end{document}

@@ -1,0 +1,103 @@
+% ---------------------------------------------------------------------------
+% resnet_kv.tex -- hand annotation of key-value pairs in
+% "Deep Residual Learning for Image Recognition" (arXiv:1512.03385v1).
+%
+% Source is the PDF only. Conventions are in ANNOTATION.md.
+% Sections are generated: python Resnet/build_annotation.py
+% Build:  latexmk -pdf -outdir=Output resnet_kv.tex
+% ---------------------------------------------------------------------------
+\documentclass[10pt]{article}
+
+\usepackage[letterpaper,margin=2.0cm,top=2.2cm,bottom=2.2cm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage[hidelinks,breaklinks]{hyperref}
+\usepackage{url}
+
+\definecolor{rule}{gray}{0.45}
+\definecolor{keycol}{HTML}{1F3864}
+
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash\small}p{#1}}
+
+% \leavevmode is load-bearing: a bare \color at the top of a p{} cell is a
+% whatsit contributed in vertical mode, which sets the following paragraph a
+% full \baselineskip lower than its neighbours.
+\newcommand{\usbreak}{\textunderscore\discretionary{}{}{}}
+\newcommand{\K}[1]{\leavevmode{\color{keycol}\ttfamily\let\_\usbreak #1}}
+\newcommand{\Sd}[1]{\leavevmode{\color{rule}#1}}
+
+\newcommand{\kvhead}[2]{%
+  \caption{#1}\label{#2}\\
+  \toprule \textbf{Key} & \textbf{Value} & \textbf{Page} \\ \midrule
+  \endfirsthead
+  \caption[]{#1\ \emph{(continued)}}\\
+  \toprule \textbf{Key} & \textbf{Value} & \textbf{Page} \\ \midrule
+  \endhead
+  \midrule \multicolumn{3}{r}{\footnotesize\itshape continued on next page}\\
+  \endfoot
+  \bottomrule
+  \endlastfoot}
+
+\newenvironment{kvtable}[2]
+  {\begin{longtable}{@{}L{4.3cm} L{10.6cm} L{1.3cm}@{}}\kvhead{#1}{#2}}
+  {\end{longtable}}
+
+\setlength{\LTcapwidth}{\textwidth}
+\renewcommand{\arraystretch}{1.15}
+\titleformat{\section}{\normalfont\large\bfseries}{\thesection}{0.6em}{}
+\titlespacing*{\section}{0pt}{1.6em}{0.7em}
+
+\title{\textbf{Key--Value Annotation of}\\[0.25em]
+       \emph{Deep Residual Learning for Image Recognition}\\[0.4em]
+       {\normalsize He, Zhang, Ren \& Sun --- arXiv:1512.03385v1 [cs.CV], 10 Dec 2015}}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\vspace{-3.2em}
+
+\noindent\rule{\textwidth}{0.4pt}
+\vspace{0.4em}
+
+\noindent
+A hand annotation of the key--value pairs stated in the source paper:
+\textbf{547 distinct records} across \textbf{51 keys}. Values are read off the
+rendered PDF pages; the pipeline's OCR of the same paper is deliberately not
+used as a source, so where the OCR is wrong this annotation still agrees with
+the paper.
+
+\medskip
+\noindent
+Keys are Title Case, values are taken as printed, and the unit lives in the key
+rather than the value --- the paper's ``a depth of up to 152 layers'' is
+recorded as \K{Depth} / 152. Each distinct \emph{(key, value)} pair is recorded
+\textbf{once for the whole paper}, so the count is a count of distinct facts
+rather than of sentences. The \textbf{Page} column is annotation metadata, not
+part of the pair: it records where the pair was first seen.
+
+\medskip
+\noindent
+Conventions, and the decisions still open --- chiefly that this flat
+\emph{key\,:\,value} form cannot express which table row a number belongs
+to --- are written up in \texttt{ANNOTATION.md}.
+
+\medskip
+\noindent\rule{\textwidth}{0.4pt}
+
+\tableofcontents
+
+\input{sec_bibliographic}
+\input{sec_datasets}
+\input{sec_architecture}
+\input{sec_method}
+\input{sec_training}
+\input{sec_results}
+
+\end{document}

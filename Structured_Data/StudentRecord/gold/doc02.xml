@@ -1,0 +1,8 @@
+<student-record>
+  <name lastname="Nguyen" firstname="Thuy"/>
+  <address>
+    <street>88 Braemar Avenue</street>
+    <city>Guelph</city>
+  </address>
+  <evaluation grade="76">Satisfactory</evaluation>
+</student-record>

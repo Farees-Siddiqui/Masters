@@ -1,0 +1,336 @@
+{
+  "n_pages": 1,
+  "pages": [
+    {
+      "page": 0,
+      "blocks": [
+        {
+          "block_id": 0,
+          "block_type": "TEXT",
+          "bbox": [
+            194.0,
+            407.0,
+            317.0,
+            445.0
+          ],
+          "parsed_content": "Student:",
+          "crop_path": null,
+          "metadata": {
+            "label": "text",
+            "page": 0,
+            "reading_position": 0,
+            "handler": "_handle_text",
+            "n_lines": 1,
+            "mean_line_confidence": 0.9999,
+            "is_marginal": false,
+            "source_order": 0,
+            "synthetic": true,
+            "status": "extracted"
+          },
+          "raw_lines": [
+            {
+              "text": "Student:",
+              "bbox": [
+                194.0,
+                407.0,
+                317.0,
+                445.0
+              ],
+              "score": 0.9999
+            }
+          ]
+        },
+        {
+          "block_id": 1,
+          "block_type": "TEXT",
+          "bbox": [
+            195.0,
+            465.0,
+            420.0,
+            499.0
+          ],
+          "parsed_content": "Mailing address:",
+          "crop_path": null,
+          "metadata": {
+            "label": "text",
+            "page": 0,
+            "reading_position": 1,
+            "handler": "_handle_text",
+            "n_lines": 1,
+            "mean_line_confidence": 0.9651,
+            "is_marginal": false,
+            "source_order": 1,
+            "synthetic": true,
+            "status": "extracted"
+          },
+          "raw_lines": [
+            {
+              "text": "Mailing address:",
+              "bbox": [
+                195.0,
+                465.0,
+                420.0,
+                499.0
+              ],
+              "score": 0.9651
+            }
+          ]
+        },
+        {
+          "block_id": 2,
+          "block_type": "TITLE",
+          "bbox": [
+            652.0,
+            200.0,
+            1047.0,
+            329.0
+          ],
+          "parsed_content": "MILTON COLLEGE\nStudent Progress Report\nAcademic Year 2025–2026",
+          "crop_path": null,
+          "metadata": {
+            "label": "doc_title",
+            "page": 0,
+            "reading_position": 2,
+            "handler": "_handle_text",
+            "n_lines": 3,
+            "mean_line_confidence": 0.9826,
+            "is_marginal": false,
+            "source_order": 2,
+            "status": "extracted"
+          },
+          "raw_lines": [
+            {
+              "text": "MILTON COLLEGE",
+              "bbox": [
+                675.0,
+                200.0,
+                1022.0,
+                233.0
+              ],
+              "score": 0.9838
+            },
+            {
+              "text": "Student Progress Report",
+              "bbox": [
+                656.0,
+                247.0,
+                1041.0,
+                279.0
+              ],
+              "score": 0.9763
+            },
+            {
+              "text": "Academic Year 2025–2026",
+              "bbox": [
+                703.0,
+                300.0,
+                996.0,
+                323.0
+              ],
+              "score": 0.9877
+            }
+          ]
+        },
+        {
+          "block_id": 3,
+          "block_type": "TABLE",
+          "bbox": [
+            705.0,
+            626.0,
+            996.0,
+            734.0
+          ],
+          "parsed_content": "| Grade | Standing |\n|---|---|\n| 85 | Satisfactory |",
+          "crop_path": "layout_pipeline/out_xml/doc08_report_card/crops/page_0_block_3.png",
+          "metadata": {
+            "label": "table",
+            "page": 0,
+            "reading_position": 3,
+            "handler": "_handle_table",
+            "n_lines": 4,
+            "mean_line_confidence": 0.9996,
+            "is_marginal": false,
+            "source_order": 3,
+            "status": "completed",
+            "table_format": "markdown",
+            "table_rows": 2,
+            "table_columns": 2,
+            "merged_cells": false,
+            "cell_fill": 1.0,
+            "extractor": "paddle:TableRecognitionPipelineV2",
+            "ocr_fallback_text": "Grade\nStanding\n85\nSatisfactory"
+          },
+          "raw_lines": [
+            {
+              "text": "Grade",
+              "bbox": [
+                702.0,
+                630.0,
+                807.0,
+                669.0
+              ],
+              "score": 0.9998
+            },
+            {
+              "text": "Standing",
+              "bbox": [
+                838.0,
+                631.0,
+                987.0,
+                672.0
+              ],
+              "score": 0.9996
+            },
+            {
+              "text": "85",
+              "bbox": [
+                732.0,
+                685.0,
+                777.0,
+                722.0
+              ],
+              "score": 0.9994
+            },
+            {
+              "text": "Satisfactory",
+              "bbox": [
+                829.0,
+                683.0,
+                995.0,
+                725.0
+              ],
+              "score": 0.9998
+            }
+          ]
+        },
+        {
+          "block_id": 4,
+          "block_type": "TEXT",
+          "bbox": [
+            464.0,
+            407.0,
+            655.0,
+            445.0
+          ],
+          "parsed_content": "Abebe, Selam",
+          "crop_path": null,
+          "metadata": {
+            "label": "text",
+            "page": 0,
+            "reading_position": 4,
+            "handler": "_handle_text",
+            "n_lines": 1,
+            "mean_line_confidence": 0.9773,
+            "is_marginal": false,
+            "source_order": 4,
+            "synthetic": true,
+            "status": "extracted"
+          },
+          "raw_lines": [
+            {
+              "text": "Abebe, Selam",
+              "bbox": [
+                464.0,
+                407.0,
+                655.0,
+                445.0
+              ],
+              "score": 0.9773
+            }
+          ]
+        },
+        {
+          "block_id": 5,
+          "block_type": "TEXT",
+          "bbox": [
+            462.0,
+            466.0,
+            821.0,
+            536.0
+          ],
+          "parsed_content": "1180 Fanshawe Park Road\nLondon",
+          "crop_path": null,
+          "metadata": {
+            "label": "text",
+            "page": 0,
+            "reading_position": 5,
+            "handler": "_handle_text",
+            "n_lines": 2,
+            "mean_line_confidence": 0.9896,
+            "is_marginal": false,
+            "source_order": 5,
+            "synthetic": true,
+            "status": "extracted"
+          },
+          "raw_lines": [
+            {
+              "text": "1180 Fanshawe Park Road",
+              "bbox": [
+                465.0,
+                466.0,
+                821.0,
+                496.0
+              ],
+              "score": 0.9796
+            },
+            {
+              "text": "London",
+              "bbox": [
+                462.0,
+                501.0,
+                573.0,
+                536.0
+              ],
+              "score": 0.9996
+            }
+          ]
+        },
+        {
+          "block_id": 6,
+          "block_type": "TEXT",
+          "bbox": [
+            195.0,
+            831.0,
+            1504.0,
+            903.0
+          ],
+          "parsed_content": "This report is issued for information only and is not a transcript. Queries should be addressed to the Office of the\nRegistrar.",
+          "crop_path": null,
+          "metadata": {
+            "label": "text",
+            "page": 0,
+            "reading_position": 6,
+            "handler": "_handle_text",
+            "n_lines": 2,
+            "mean_line_confidence": 0.9817,
+            "is_marginal": false,
+            "source_order": 6,
+            "status": "extracted"
+          },
+          "raw_lines": [
+            {
+              "text": "This report is issued for information only and is not a transcript. Queries should be addressed to the Office of the",
+              "bbox": [
+                198.0,
+                834.0,
+                1500.0,
+                858.0
+              ],
+              "score": 0.9637
+            },
+            {
+              "text": "Registrar.",
+              "bbox": [
+                194.0,
+                869.0,
+                312.0,
+                900.0
+              ],
+              "score": 0.9996
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,117 @@
+# PaddleOCR / PP-StructureV3 -- isolated venv, GPU.
+#
+#   python3 -m venv .venv
+#   .venv/bin/pip install paddlepaddle-gpu==3.2.1 \
+#       -i https://www.paddlepaddle.org.cn/packages/stable/cu126/
+#   .venv/bin/pip install -r requirements.txt
+#
+# paddlepaddle-gpu is NOT on PyPI -- it comes from the paddlepaddle.org.cn index,
+# which is why it is a separate command above rather than a line in this file.
+# That mirror is slow: the wheel took ~20 min here.
+#
+# cu126 for the same reason as every other engine: CUDA 13 dropped Volta.
+# Verified in this venv -- paddle 3.2.1, is_compiled_with_cuda() True,
+# 4 GPUs, get_device_capability(0) == (7, 0).
+#
+# Model weights are NOT pip-installed. PP-StructureV3 pulls them on first use
+# into ~/.paddlex/official_models/ (~6.8 GB here, already cached). Pipeline
+# construction costs ~116 s even fully cached, because it builds every stage
+# (layout, OCR det/rec, table cell det, formula, chart-to-table, orientation).
+#
+# Run it as: CUDA_VISIBLE_DEVICES=N python run_paddle.py --device gpu:0
+#
+# Note on VRAM: `paddle.device.cuda.max_memory_allocated(0)` works fine, but the
+# index must be the card in use. Running `--device gpu:3` while querying index 0
+# reports ~2 KB because index 0 is an idle card. Always run as
+# CUDA_VISIBLE_DEVICES=N with --device gpu:0. Measured: ~7.0 GB allocator peak
+# (nvidia-smi shows ~11.6 GB, which includes context + allocator reserve).
+
+# paddlex MUST carry the [ocr] extra. Without it, PPStructureV3 construction dies
+# with "DependencyError: `PP-StructureV3` requires additional dependencies", and
+# `pip install paddleocr` alone does NOT pull them in. Found by a clean-venv
+# rebuild failing where the system install worked.
+paddleocr==3.4.0
+paddlex[ocr]==3.4.3
+# paddlepaddle-gpu==3.2.1   <- install separately, see header
+
+# pulled in by paddlex[ocr]:
+beautifulsoup4==4.15.0
+einops==0.8.2
+ftfy==6.3.1
+lxml==6.1.1
+openpyxl==3.1.5
+premailer==3.10.0
+scikit-learn==1.9.0
+scipy==1.18.0
+sentencepiece==0.2.2
+tiktoken==0.13.0
+tokenizers==0.23.1
+
+# --- transitive, pinned so a rebuild is byte-comparable ---
+PyYAML==6.0.2
+aistudio_sdk==0.3.9
+annotated-types==0.8.0
+anyio==4.12.1
+bce-python-sdk==0.9.76
+certifi==2026.1.4
+chardet==7.4.3
+charset-normalizer==3.4.9
+click==8.4.2
+colorlog==6.12.0
+crc32c==2.8
+filelock==3.32.2
+fsspec==2026.7.0
+future==1.0.0
+h11==0.16.0
+hf-xet==1.6.0
+httpcore==1.0.9
+httpx==0.28.1
+huggingface_hub==1.26.0
+idna==3.11
+imagesize==2.0.0
+modelscope==1.39.1
+modelscope-hub==0.2.0
+networkx==3.6.1
+numpy==2.4.1
+nvidia-cublas-cu12==12.6.4.1
+nvidia-cuda-cccl-cu12==12.6.77
+nvidia-cuda-cupti-cu12==12.6.80
+nvidia-cuda-nvrtc-cu12==12.6.77
+nvidia-cuda-runtime-cu12==12.6.77
+nvidia-cudnn-cu12==9.5.1.17
+nvidia-cufft-cu12==11.3.0.4
+nvidia-cufile-cu12==1.11.1.6
+nvidia-curand-cu12==10.3.7.77
+nvidia-cusolver-cu12==11.7.1.2
+nvidia-cusparse-cu12==12.5.4.2
+nvidia-cusparselt-cu12==0.6.3
+nvidia-nccl-cu12==2.25.1
+nvidia-nvjitlink-cu12==12.6.85
+nvidia-nvtx-cu12==12.6.77
+opencv-contrib-python==4.10.0.84
+opt-einsum==3.3.0
+packaging==26.3
+pandas==3.0.5
+pillow==12.1.0
+prettytable==3.18.0
+protobuf==6.33.4
+psutil==7.2.2
+py-cpuinfo==9.0.0
+pyclipper==1.4.0
+pycryptodome==3.23.0
+pydantic==2.13.4
+pydantic_core==2.46.4
+pypdfium2==5.12.1
+python-bidi==0.6.11
+python-dateutil==2.9.0.post0
+requests==2.34.2
+ruamel.yaml==0.19.1
+safetensors==0.7.0
+shapely==2.1.2
+six==1.17.0
+tqdm==4.70.0
+typing-inspection==0.4.2
+typing_extensions==4.15.0
+ujson==5.13.0
+urllib3==2.7.0
+wcwidth==0.8.2

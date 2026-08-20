@@ -1,0 +1,262 @@
+{
+  "n_pages": 1,
+  "pages": [
+    {
+      "page": 0,
+      "blocks": [
+        {
+          "block_id": 0,
+          "block_type": "TITLE",
+          "bbox": [
+            225.0,
+            232.0,
+            583.0,
+            269.0
+          ],
+          "parsed_content": "Term Summary Note",
+          "crop_path": null,
+          "metadata": {
+            "label": "paragraph_title",
+            "page": 0,
+            "reading_position": 0,
+            "handler": "_handle_text",
+            "n_lines": 1,
+            "mean_line_confidence": 0.9632,
+            "is_marginal": false,
+            "source_order": 0,
+            "status": "extracted"
+          },
+          "raw_lines": [
+            {
+              "text": "Term Summary Note",
+              "bbox": [
+                227.0,
+                230.0,
+                579.0,
+                267.0
+              ],
+              "score": 0.9632
+            }
+          ]
+        },
+        {
+          "block_id": 1,
+          "block_type": "TEXT",
+          "bbox": [
+            222.0,
+            336.0,
+            1474.0,
+            448.0
+          ],
+          "parsed_content": "Ronan Fitzgerald has completed all requirements for the term. The final grade awarded is 91,\nand the evaluation entered against the record is Excellent. No outstanding items remain on\nthe file.",
+          "crop_path": null,
+          "metadata": {
+            "label": "text",
+            "page": 0,
+            "reading_position": 1,
+            "handler": "_handle_text",
+            "n_lines": 3,
+            "mean_line_confidence": 0.9745,
+            "is_marginal": false,
+            "source_order": 1,
+            "status": "extracted"
+          },
+          "raw_lines": [
+            {
+              "text": "Ronan Fitzgerald has completed all requirements for the term. The final grade awarded is 91,",
+              "bbox": [
+                226.0,
+                334.0,
+                1470.0,
+                369.0
+              ],
+              "score": 0.9797
+            },
+            {
+              "text": "and the evaluation entered against the record is Excellent. No outstanding items remain on",
+              "bbox": [
+                227.0,
+                374.0,
+                1469.0,
+                406.0
+              ],
+              "score": 0.9742
+            },
+            {
+              "text": "the file.",
+              "bbox": [
+                225.0,
+                410.0,
+                333.0,
+                444.0
+              ],
+              "score": 0.9697
+            }
+          ]
+        },
+        {
+          "block_id": 2,
+          "block_type": "TEXT",
+          "bbox": [
+            223.0,
+            468.0,
+            1475.0,
+            544.0
+          ],
+          "parsed_content": "Correspondence relating to this record should be directed to the address set out below, which\nwas confirmed with the student at the exit interview.",
+          "crop_path": null,
+          "metadata": {
+            "label": "text",
+            "page": 0,
+            "reading_position": 2,
+            "handler": "_handle_text",
+            "n_lines": 2,
+            "mean_line_confidence": 0.968,
+            "is_marginal": false,
+            "source_order": 2,
+            "status": "extracted"
+          },
+          "raw_lines": [
+            {
+              "text": "Correspondence relating to this record should be directed to the address set out below, which",
+              "bbox": [
+                228.0,
+                467.0,
+                1469.0,
+                500.0
+              ],
+              "score": 0.9725
+            },
+            {
+              "text": "was confirmed with the student at the exit interview.",
+              "bbox": [
+                228.0,
+                508.0,
+                935.0,
+                535.0
+              ],
+              "score": 0.9635
+            }
+          ]
+        },
+        {
+          "block_id": 3,
+          "block_type": "TABLE",
+          "bbox": [
+            657.0,
+            599.0,
+            1042.0,
+            744.0
+          ],
+          "parsed_content": "<table><tr><td colspan=\"2\">Mailing Address</td></tr><tr><td>Street</td><td>315Colborne Street Kitchener</td></tr><tr><td>City</td><td></td></tr></table>",
+          "crop_path": "layout_pipeline/out_xml/doc06_prose_plus_address_table/crops/page_0_block_3.png",
+          "metadata": {
+            "label": "table",
+            "page": 0,
+            "reading_position": 3,
+            "handler": "_handle_table",
+            "n_lines": 5,
+            "mean_line_confidence": 0.997,
+            "is_marginal": false,
+            "source_order": 3,
+            "status": "completed",
+            "table_format": "html",
+            "table_rows": 3,
+            "table_columns": 2,
+            "merged_cells": true,
+            "cell_fill": 0.75,
+            "extractor": "paddle:TableRecognitionPipelineV2",
+            "ocr_fallback_text": "Mailing Address\nStreet\n315 Colborne Street\nCity\nKitchener"
+          },
+          "raw_lines": [
+            {
+              "text": "Mailing Address",
+              "bbox": [
+                654.0,
+                606.0,
+                914.0,
+                645.0
+              ],
+              "score": 0.9918
+            },
+            {
+              "text": "Street",
+              "bbox": [
+                657.0,
+                662.0,
+                745.0,
+                693.0
+              ],
+              "score": 0.9998
+            },
+            {
+              "text": "315 Colborne Street",
+              "bbox": [
+                768.0,
+                662.0,
+                1040.0,
+                695.0
+              ],
+              "score": 0.9954
+            },
+            {
+              "text": "City",
+              "bbox": [
+                652.0,
+                694.0,
+                725.0,
+                739.0
+              ],
+              "score": 0.9988
+            },
+            {
+              "text": "Kitchener",
+              "bbox": [
+                767.0,
+                697.0,
+                905.0,
+                733.0
+              ],
+              "score": 0.9995
+            }
+          ]
+        },
+        {
+          "block_id": 4,
+          "block_type": "TEXT",
+          "bbox": [
+            226.0,
+            807.0,
+            964.0,
+            844.0
+          ],
+          "parsed_content": "Filed by the Office of Student Records, 24 March 2026.",
+          "crop_path": null,
+          "metadata": {
+            "label": "text",
+            "page": 0,
+            "reading_position": 4,
+            "handler": "_handle_text",
+            "n_lines": 1,
+            "mean_line_confidence": 0.9646,
+            "is_marginal": false,
+            "source_order": 4,
+            "status": "extracted"
+          },
+          "raw_lines": [
+            {
+              "text": "Filed by the Office of Student Records, 24 March 2026.",
+              "bbox": [
+                227.0,
+                807.0,
+                961.0,
+                839.0
+              ],
+              "score": 0.9646
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

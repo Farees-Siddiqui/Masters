@@ -1,0 +1,143 @@
+{
+  "labels": {
+    "ADDRESS": [
+      "doc05"
+    ],
+    "Academic": [
+      "doc08"
+    ],
+    "Address": [
+      "doc10"
+    ],
+    "Assessment": [
+      "doc05"
+    ],
+    "City": [
+      "doc03",
+      "doc04",
+      "doc06",
+      "doc10"
+    ],
+    "Closing": [
+      "doc01"
+    ],
+    "Date": [
+      "doc01"
+    ],
+    "Dear": [
+      "doc02"
+    ],
+    "Evaluation": [
+      "doc03",
+      "doc07",
+      "doc10"
+    ],
+    "Family Name": [
+      "doc05"
+    ],
+    "First": [
+      "doc10"
+    ],
+    "First Name": [
+      "doc03",
+      "doc07"
+    ],
+    "From": [
+      "doc01"
+    ],
+    "Given Name": [
+      "doc04"
+    ],
+    "Given Name(s)": [
+      "doc05"
+    ],
+    "Grade": [
+      "doc03",
+      "doc08",
+      "doc10"
+    ],
+    "Last": [
+      "doc10"
+    ],
+    "Last Name": [
+      "doc03"
+    ],
+    "Mailing Address": [
+      "doc06"
+    ],
+    "Mailing address": [
+      "doc08"
+    ],
+    "Mark": [
+      "doc07"
+    ],
+    "Municipality": [
+      "doc05"
+    ],
+    "NAME": [
+      "doc05"
+    ],
+    "Name": [
+      "doc10"
+    ],
+    "Numeric Grade": [
+      "doc05"
+    ],
+    "Remark": [
+      "doc10"
+    ],
+    "SECTION 1": [
+      "doc05"
+    ],
+    "SECTION 3": [
+      "doc05"
+    ],
+    "Score": [
+      "doc04"
+    ],
+    "Standing": [
+      "doc04",
+      "doc08"
+    ],
+    "Street": [
+      "doc03",
+      "doc05",
+      "doc06",
+      "doc10"
+    ],
+    "Street Address": [
+      "doc04"
+    ],
+    "Student": [
+      "doc08"
+    ],
+    "Subject": [
+      "doc01"
+    ],
+    "Surname": [
+      "doc04",
+      "doc07"
+    ],
+    "The": [
+      "doc01"
+    ],
+    "They": [
+      "doc01"
+    ],
+    "still": [
+      "doc01"
+    ]
+  },
+  "transferable": [
+    "ADDRESS",
+    "City",
+    "Evaluation",
+    "First Name",
+    "Grade",
+    "Mailing Address",
+    "NAME",
+    "Standing",
+    "Street",
+    "Surname"
+  ]
+}

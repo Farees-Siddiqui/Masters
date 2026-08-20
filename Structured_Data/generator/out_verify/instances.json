@@ -1,0 +1,138 @@
+{
+  "schema_domain": "education",
+  "total_records": 9,
+  "metadata": {
+    "stage": "3-4:instance_graph",
+    "domain": "education",
+    "records_per_entity": 3,
+    "null_probability": 0.05,
+    "orphan_rate": 0.0,
+    "seed": 7,
+    "topological_order": [
+      "Course",
+      "Student",
+      "Enrollment"
+    ],
+    "model": "llama3.1:8b",
+    "base_url": "http://127.0.0.1:11434",
+    "backend": "ollama",
+    "generated_at": "2026-08-20T11:26:05+00:00"
+  },
+  "counts_by_entity": {
+    "Course": 3,
+    "Student": 3,
+    "Enrollment": 3
+  },
+  "foreign_keys": {
+    "declared": 3,
+    "resolved": 3,
+    "orphaned": 0
+  },
+  "records": [
+    {
+      "id": "course-001",
+      "entity_name": "Course",
+      "attributes": {
+        "id": "course-001",
+        "title": "Early Childhood Education",
+        "credits": 30,
+        "duration": "2 years"
+      },
+      "foreign_keys": {}
+    },
+    {
+      "id": "course-002",
+      "entity_name": "Course",
+      "attributes": {
+        "id": "course-002",
+        "title": "Master of Business Administration",
+        "credits": 120,
+        "duration": "1 year full-time or 2-3 years part-time"
+      },
+      "foreign_keys": {}
+    },
+    {
+      "id": "course-003",
+      "entity_name": "Course",
+      "attributes": {
+        "id": "course-003",
+        "title": "Diploma in Nursing",
+        "credits": 80,
+        "duration": "18 months"
+      },
+      "foreign_keys": {}
+    },
+    {
+      "id": "student-001",
+      "entity_name": "Student",
+      "attributes": {
+        "id": "student-001",
+        "first_name": "Emily",
+        "last_name": "Patel",
+        "email": "emily.patel@edu.ac.uk"
+      },
+      "foreign_keys": {}
+    },
+    {
+      "id": "student-002",
+      "entity_name": "Student",
+      "attributes": {
+        "id": "student-002",
+        "first_name": "Liam",
+        "last_name": "Brown",
+        "email": "liam.brown@edu.ac.uk"
+      },
+      "foreign_keys": {}
+    },
+    {
+      "id": "student-003",
+      "entity_name": "Student",
+      "attributes": {
+        "id": "student-003",
+        "first_name": "Ava",
+        "last_name": "Lee",
+        "email": null
+      },
+      "foreign_keys": {}
+    },
+    {
+      "id": "enrollment-001",
+      "entity_name": "Enrollment",
+      "attributes": {
+        "id": "enrollment-001",
+        "course_id": "course_id-2144",
+        "start_date": "2022-09-01"
+      },
+      "foreign_keys": {
+        "student_id": "student-001"
+      }
+    },
+    {
+      "id": "enrollment-002",
+      "entity_name": "Enrollment",
+      "attributes": {
+        "id": "enrollment-002",
+        "course_id": "course_id-4943",
+        "start_date": "2021-02-15"
+      },
+      "foreign_keys": {
+        "student_id": "student-003"
+      }
+    },
+    {
+      "id": "enrollment-003",
+      "entity_name": "Enrollment",
+      "attributes": {
+        "id": "enrollment-003",
+        "course_id": "course_id-2486",
+        "start_date": "2019-08-26"
+      },
+      "foreign_keys": {
+        "student_id": "student-002"
+      }
+    }
+  ],
+  "warnings": [
+    "Enrollment.course_id: id-typed column with no relationship behind it in the schema; assigned locally so it cannot be mistaken for a join"
+  ]
+}

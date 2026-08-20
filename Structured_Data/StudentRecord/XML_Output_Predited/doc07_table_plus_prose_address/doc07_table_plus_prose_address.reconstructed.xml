@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='utf-8'?>
+<document title="doc07_table_plus_prose_address" pages="1" blocks="3">
+  <page number="0">
+    <heading level="2" id="0" bbox="225.0,232.0,528.0,269.0" status="extracted" label="paragraph_title">Assessment Entry</heading>
+    <paragraph id="1" bbox="224.0,504.0,1476.0,620.0" status="extracted" label="text">The above entry was reviewed on 2 April 2026 and requires no further action. For the pur-
+poses of the mailed notice, Hana Yamamoto resides at 62 Winston Churchill Boulevardin
+Mississauga; the notice was posted to that address on the same day.</paragraph>
+    <table format="markdown" rows="2" columns="4" id="2" bbox="514.0,335.0,1183.0,442.0" status="completed" label="table">| Surname | First Name | Mark | Evaluation |
+|---|---|---|---|
+| Yamamoto | Hana | 79 | Satisfactory |</table>
+  </page>
+</document>

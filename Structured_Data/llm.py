@@ -1,39 +1,30 @@
 """Backend-agnostic structured extraction.
 
 One function, `extract`, turns a (system, user) prompt into a validated
-`Extraction`. It dispatches over three backends:
+`Extraction`. It dispatches over two backends:
 
-- groq       : hosted Llama 3.3 70B via Groq's free, OpenAI-compatible API
-               (needs GROQ_API_KEY from https://console.groq.com)
-- ollama     : a local model on your own GPU (needs Ollama running)
+- ollama     : a local model on your own GPU (needs Ollama running). The
+               default, and the only one used for real runs.
 - anthropic  : Claude via the native SDK (needs ANTHROPIC_API_KEY, paid)
 
-groq/ollama go through the OpenAI SDK in JSON mode and we validate the result
-with pydantic; anthropic uses native structured outputs.
+ollama goes through the OpenAI SDK in JSON mode and we validate the result with
+pydantic; anthropic uses native structured outputs.
+
+Extraction runs **locally on purpose**. A hosted endpoint adds variance nothing
+downstream can account for — the served weights, quantization and batching are
+all outside our control and can change between runs without notice, which shows
+up as unexplained swings in record counts. Local inference pins every one of
+those. It also removes daily token caps, which silently truncated runs.
 """
 
 from __future__ import annotations
 
 import json
-import os
-from pathlib import Path
 
 from schema import Extraction
 
-
-def _groq_key() -> str | None:
-    """GROQ_API_KEY from the environment, falling back to GROQ_API_KEY.txt."""
-    key = os.environ.get("GROQ_API_KEY")
-    if key:
-        return key.strip()
-    key_file = Path(__file__).with_name("GROQ_API_KEY.txt")
-    if key_file.exists():
-        return key_file.read_text(encoding="utf-8").strip()
-    return None
-
 DEFAULT_MODEL = {
-    "groq": "llama-3.3-70b-versatile",
-    "ollama": "llama3.1:8b",
+    "ollama": "llama3.3:70b",
     "anthropic": "claude-opus-4-8",
 }
 
@@ -71,10 +62,10 @@ def _sanitize(raw: dict) -> dict:
     return {"records": clean}
 
 
-def _extract_openai(system: str, user: str, model: str, base_url: str, api_key: str) -> Extraction:
+def _extract_ollama(system: str, user: str, model: str, base_url: str) -> Extraction:
     from openai import OpenAI
 
-    client = OpenAI(base_url=base_url, api_key=api_key)
+    client = OpenAI(base_url=base_url, api_key="ollama")
     resp = client.chat.completions.create(
         model=model,
         messages=[
@@ -83,6 +74,13 @@ def _extract_openai(system: str, user: str, model: str, base_url: str, api_key: 
         ],
         response_format={"type": "json_object"},
         temperature=0,
+        max_tokens=8000,
+        # Ollama defaults to OLLAMA_CONTEXT_LENGTH (4096) regardless of what the
+        # model supports. A ~2.2k-token chunk plus the system prompt leaves under
+        # 1.9k for output, so dense chunks had their record list silently closed
+        # early — invisible in the JSON, visible only as a low record count. Ask
+        # for the headroom explicitly.
+        extra_body={"options": {"num_ctx": 32768}},
     )
     raw = json.loads(resp.choices[0].message.content)
     return Extraction.model_validate(_sanitize(raw))
@@ -102,18 +100,13 @@ def _extract_anthropic(system: str, user: str, model: str) -> Extraction:
     return resp.parsed_output or Extraction(records=[])
 
 
-def extract(system: str, user: str, backend: str = "groq", model: str | None = None) -> Extraction:
+OLLAMA_URL = "http://localhost:11434/v1"
+
+
+def extract(system: str, user: str, backend: str = "ollama", model: str | None = None) -> Extraction:
     model = model or DEFAULT_MODEL[backend]
-    if backend == "groq":
-        key = _groq_key()
-        if not key:
-            raise RuntimeError(
-                "No Groq key. Set GROQ_API_KEY or create GROQ_API_KEY.txt "
-                "(free key at https://console.groq.com)"
-            )
-        return _extract_openai(system, user, model, "https://api.groq.com/openai/v1", key)
     if backend == "ollama":
-        return _extract_openai(system, user, model, "http://localhost:11434/v1", "ollama")
+        return _extract_ollama(system, user, model, OLLAMA_URL)
     if backend == "anthropic":
         return _extract_anthropic(system, user, model)
     raise ValueError(f"Unknown backend: {backend!r}")

@@ -1,0 +1,4743 @@
+{
+  "source": "samples/resnet.mistral.md",
+  "extractor": "table",
+  "table_count": 15,
+  "record_count": 364,
+  "distinct_keys": 59,
+  "distinct_entities": 49,
+  "span_mismatches": 0,
+  "records": [
+    {
+      "key": "layer_name",
+      "entity": "",
+      "value": "conv1",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 18903,
+          "end": 18908,
+          "text": "conv1"
+        }
+      ]
+    },
+    {
+      "key": "output_size",
+      "entity": "conv1",
+      "value": "\\( 112 \\times 112 \\)",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 18911,
+          "end": 18931,
+          "text": "\\( 112 \\times 112 \\)"
+        }
+      ]
+    },
+    {
+      "key": "18_layer",
+      "entity": "conv1",
+      "value": "\\( 7 \\times 7,64 \\), stride 2",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 18934,
+          "end": 18963,
+          "text": "\\( 7 \\times 7,64 \\), stride 2"
+        }
+      ]
+    },
+    {
+      "key": "layer_name",
+      "entity": "",
+      "value": "conv2.x",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 18986,
+          "end": 18993,
+          "text": "conv2.x"
+        }
+      ]
+    },
+    {
+      "key": "output_size",
+      "entity": "conv2.x",
+      "value": "\\( 56 \\times 56 \\)",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 18996,
+          "end": 19014,
+          "text": "\\( 56 \\times 56 \\)"
+        }
+      ]
+    },
+    {
+      "key": "18_layer",
+      "entity": "conv2.x",
+      "value": "\\( 3 \\times 3 \\) max pool, stride 2",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 19017,
+          "end": 19052,
+          "text": "\\( 3 \\times 3 \\) max pool, stride 2"
+        }
+      ]
+    },
+    {
+      "key": "18_layer",
+      "entity": "",
+      "value": "\\( \\left[ \\begin{array}{c}3 \\times 3,64 \\\\ 3 \\times 3,64 \\end{array} \\right] \\times 2 \\)",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 19083,
+          "end": 19171,
+          "text": "\\( \\left[ \\begin{array}{c}3 \\times 3,64 \\\\ 3 \\times 3,64 \\end{array} \\right] \\times 2 \\)"
+        }
+      ]
+    },
+    {
+      "key": "34_layer",
+      "entity": "",
+      "value": "\\( \\left[ \\begin{array}{c}3 \\times 3,64 \\\\ 3 \\times 3,64 \\end{array} \\right] \\times 3 \\)",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 19174,
+          "end": 19262,
+          "text": "\\( \\left[ \\begin{array}{c}3 \\times 3,64 \\\\ 3 \\times 3,64 \\end{array} \\right] \\times 3 \\)"
+        }
+      ]
+    },
+    {
+      "key": "50_layer",
+      "entity": "",
+      "value": "\\( \\left[ \\begin{array}{c}1 \\times 1,64 \\\\ 3 \\times 3,64 \\\\ 1 \\times 1,256 \\end{array} \\right] \\times 3 \\)",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 19265,
+          "end": 19371,
+          "text": "\\( \\left[ \\begin{array}{c}1 \\times 1,64 \\\\ 3 \\times 3,64 \\\\ 1 \\times 1,256 \\end{array} \\right] \\times 3 \\)"
+        }
+      ]
+    },
+    {
+      "key": "101_layer",
+      "entity": "",
+      "value": "\\( \\left[ \\begin{array}{c}1 \\times 1,64 \\\\ 3 \\times 3,64 \\\\ 1 \\times 1,256 \\end{array} \\right] \\times 3 \\)",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 19374,
+          "end": 19480,
+          "text": "\\( \\left[ \\begin{array}{c}1 \\times 1,64 \\\\ 3 \\times 3,64 \\\\ 1 \\times 1,256 \\end{array} \\right] \\times 3 \\)"
+        }
+      ]
+    },
+    {
+      "key": "152_layer",
+      "entity": "",
+      "value": "\\( \\left[ \\begin{array}{c}1 \\times 1,64 \\\\ 3 \\times 3,64 \\\\ 1 \\times 1,256 \\end{array} \\right] \\times 3 \\)",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 19483,
+          "end": 19589,
+          "text": "\\( \\left[ \\begin{array}{c}1 \\times 1,64 \\\\ 3 \\times 3,64 \\\\ 1 \\times 1,256 \\end{array} \\right] \\times 3 \\)"
+        }
+      ]
+    },
+    {
+      "key": "layer_name",
+      "entity": "",
+      "value": "conv3.x",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 19596,
+          "end": 19603,
+          "text": "conv3.x"
+        }
+      ]
+    },
+    {
+      "key": "output_size",
+      "entity": "conv3.x",
+      "value": "\\( 28 \\times 28 \\)",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 19606,
+          "end": 19624,
+          "text": "\\( 28 \\times 28 \\)"
+        }
+      ]
+    },
+    {
+      "key": "18_layer",
+      "entity": "conv3.x",
+      "value": "\\( \\left[ \\begin{array}{c}3 \\times 3,128 \\\\ 3 \\times 3,128 \\end{array} \\right] \\times 2 \\)",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 19627,
+          "end": 19717,
+          "text": "\\( \\left[ \\begin{array}{c}3 \\times 3,128 \\\\ 3 \\times 3,128 \\end{array} \\right] \\times 2 \\)"
+        }
+      ]
+    },
+    {
+      "key": "34_layer",
+      "entity": "conv3.x",
+      "value": "\\( \\left[ \\begin{array}{c}3 \\times 3,128 \\\\ 3 \\times 3,128 \\end{array} \\right] \\times 4 \\)",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 19720,
+          "end": 19810,
+          "text": "\\( \\left[ \\begin{array}{c}3 \\times 3,128 \\\\ 3 \\times 3,128 \\end{array} \\right] \\times 4 \\)"
+        }
+      ]
+    },
+    {
+      "key": "50_layer",
+      "entity": "conv3.x",
+      "value": "\\( \\left[ \\begin{array}{c}1 \\times 1,128 \\\\ 3 \\times 3,128 \\\\ 1 \\times 1,512 \\end{array} \\right] \\times 4 \\)",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 19813,
+          "end": 19921,
+          "text": "\\( \\left[ \\begin{array}{c}1 \\times 1,128 \\\\ 3 \\times 3,128 \\\\ 1 \\times 1,512 \\end{array} \\right] \\times 4 \\)"
+        }
+      ]
+    },
+    {
+      "key": "101_layer",
+      "entity": "conv3.x",
+      "value": "\\( \\left[ \\begin{array}{c}1 \\times 1,128 \\\\ 3 \\times 3,128 \\\\ 1 \\times 1,512 \\end{array} \\right] \\times 4 \\)",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 19924,
+          "end": 20032,
+          "text": "\\( \\left[ \\begin{array}{c}1 \\times 1,128 \\\\ 3 \\times 3,128 \\\\ 1 \\times 1,512 \\end{array} \\right] \\times 4 \\)"
+        }
+      ]
+    },
+    {
+      "key": "152_layer",
+      "entity": "conv3.x",
+      "value": "\\( \\left[ \\begin{array}{c}1 \\times 1,128 \\\\ 3 \\times 3,128 \\\\ 1 \\times 1,512 \\end{array} \\right] \\times 8 \\)",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 20035,
+          "end": 20143,
+          "text": "\\( \\left[ \\begin{array}{c}1 \\times 1,128 \\\\ 3 \\times 3,128 \\\\ 1 \\times 1,512 \\end{array} \\right] \\times 8 \\)"
+        }
+      ]
+    },
+    {
+      "key": "layer_name",
+      "entity": "",
+      "value": "conv4.x",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 20150,
+          "end": 20157,
+          "text": "conv4.x"
+        }
+      ]
+    },
+    {
+      "key": "output_size",
+      "entity": "conv4.x",
+      "value": "\\( 14 \\times 14 \\)",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 20160,
+          "end": 20178,
+          "text": "\\( 14 \\times 14 \\)"
+        }
+      ]
+    },
+    {
+      "key": "18_layer",
+      "entity": "conv4.x",
+      "value": "\\( \\left[ \\begin{array}{c}3 \\times 3,256 \\\\ 3 \\times 3,256 \\end{array} \\right] \\times 2 \\)",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 20181,
+          "end": 20271,
+          "text": "\\( \\left[ \\begin{array}{c}3 \\times 3,256 \\\\ 3 \\times 3,256 \\end{array} \\right] \\times 2 \\)"
+        }
+      ]
+    },
+    {
+      "key": "34_layer",
+      "entity": "conv4.x",
+      "value": "\\( \\left[ \\begin{array}{c}3 \\times 3,256 \\\\ 3 \\times 3,256 \\end{array} \\right] \\times 6 \\)",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 20274,
+          "end": 20364,
+          "text": "\\( \\left[ \\begin{array}{c}3 \\times 3,256 \\\\ 3 \\times 3,256 \\end{array} \\right] \\times 6 \\)"
+        }
+      ]
+    },
+    {
+      "key": "50_layer",
+      "entity": "conv4.x",
+      "value": "\\( \\left[ \\begin{array}{c}1 \\times 1,256 \\\\ 3 \\times 3,256 \\\\ 1 \\times 1,1024 \\end{array} \\right] \\times 6 \\)",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 20367,
+          "end": 20476,
+          "text": "\\( \\left[ \\begin{array}{c}1 \\times 1,256 \\\\ 3 \\times 3,256 \\\\ 1 \\times 1,1024 \\end{array} \\right] \\times 6 \\)"
+        }
+      ]
+    },
+    {
+      "key": "101_layer",
+      "entity": "conv4.x",
+      "value": "\\( \\left[ \\begin{array}{c}1 \\times 1,256 \\\\ 3 \\times 3,256 \\\\ 1 \\times 1,1024 \\end{array} \\right] \\times 23 \\)",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 20479,
+          "end": 20589,
+          "text": "\\( \\left[ \\begin{array}{c}1 \\times 1,256 \\\\ 3 \\times 3,256 \\\\ 1 \\times 1,1024 \\end{array} \\right] \\times 23 \\)"
+        }
+      ]
+    },
+    {
+      "key": "152_layer",
+      "entity": "conv4.x",
+      "value": "\\( \\left[ \\begin{array}{c}1 \\times 1,256 \\\\ 3 \\times 3,256 \\\\ 1 \\times 1,1024 \\end{array} \\right] \\times 36 \\)",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 20592,
+          "end": 20702,
+          "text": "\\( \\left[ \\begin{array}{c}1 \\times 1,256 \\\\ 3 \\times 3,256 \\\\ 1 \\times 1,1024 \\end{array} \\right] \\times 36 \\)"
+        }
+      ]
+    },
+    {
+      "key": "layer_name",
+      "entity": "",
+      "value": "conv5.x",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 20709,
+          "end": 20716,
+          "text": "conv5.x"
+        }
+      ]
+    },
+    {
+      "key": "output_size",
+      "entity": "conv5.x",
+      "value": "\\( 7 \\times 7 \\)",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 20719,
+          "end": 20735,
+          "text": "\\( 7 \\times 7 \\)"
+        }
+      ]
+    },
+    {
+      "key": "18_layer",
+      "entity": "conv5.x",
+      "value": "\\( \\left[ \\begin{array}{c}3 \\times 3,512 \\\\ 3 \\times 3,512 \\end{array} \\right] \\times 2 \\)",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 20738,
+          "end": 20828,
+          "text": "\\( \\left[ \\begin{array}{c}3 \\times 3,512 \\\\ 3 \\times 3,512 \\end{array} \\right] \\times 2 \\)"
+        }
+      ]
+    },
+    {
+      "key": "34_layer",
+      "entity": "conv5.x",
+      "value": "\\( \\left[ \\begin{array}{c}3 \\times 3,512 \\\\ 3 \\times 3,512 \\end{array} \\right] \\times 3 \\)",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 20831,
+          "end": 20921,
+          "text": "\\( \\left[ \\begin{array}{c}3 \\times 3,512 \\\\ 3 \\times 3,512 \\end{array} \\right] \\times 3 \\)"
+        }
+      ]
+    },
+    {
+      "key": "50_layer",
+      "entity": "conv5.x",
+      "value": "\\( \\left[ \\begin{array}{c}1 \\times 1,512 \\\\ 3 \\times 3,512 \\\\ 1 \\times 1,2048 \\end{array} \\right] \\times 3 \\)",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 20924,
+          "end": 21033,
+          "text": "\\( \\left[ \\begin{array}{c}1 \\times 1,512 \\\\ 3 \\times 3,512 \\\\ 1 \\times 1,2048 \\end{array} \\right] \\times 3 \\)"
+        }
+      ]
+    },
+    {
+      "key": "101_layer",
+      "entity": "conv5.x",
+      "value": "\\( \\left[ \\begin{array}{c}1 \\times 1,512 \\\\ 3 \\times 3,512 \\\\ 1 \\times 1,2048 \\end{array} \\right] \\times 3 \\)",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 21036,
+          "end": 21145,
+          "text": "\\( \\left[ \\begin{array}{c}1 \\times 1,512 \\\\ 3 \\times 3,512 \\\\ 1 \\times 1,2048 \\end{array} \\right] \\times 3 \\)"
+        }
+      ]
+    },
+    {
+      "key": "152_layer",
+      "entity": "conv5.x",
+      "value": "\\( \\left[ \\begin{array}{c}1 \\times 1,512 \\\\ 3 \\times 3,512 \\\\ 1 \\times 1,2048 \\end{array} \\right] \\times 3 \\)",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 21148,
+          "end": 21257,
+          "text": "\\( \\left[ \\begin{array}{c}1 \\times 1,512 \\\\ 3 \\times 3,512 \\\\ 1 \\times 1,2048 \\end{array} \\right] \\times 3 \\)"
+        }
+      ]
+    },
+    {
+      "key": "output_size",
+      "entity": "",
+      "value": "\\( 1 \\times 1 \\)",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 21267,
+          "end": 21283,
+          "text": "\\( 1 \\times 1 \\)"
+        }
+      ]
+    },
+    {
+      "key": "18_layer",
+      "entity": "",
+      "value": "average pool, 1000-d fc, softmax",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 21286,
+          "end": 21318,
+          "text": "average pool, 1000-d fc, softmax"
+        }
+      ]
+    },
+    {
+      "key": "layer_name",
+      "entity": "",
+      "value": "FLOPs",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 21341,
+          "end": 21346,
+          "text": "FLOPs"
+        }
+      ]
+    },
+    {
+      "key": "18_layer",
+      "entity": "FLOPs",
+      "value": "\\( 1.8 \\times 10^{9} \\)",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 21353,
+          "end": 21376,
+          "text": "\\( 1.8 \\times 10^{9} \\)"
+        }
+      ]
+    },
+    {
+      "key": "34_layer",
+      "entity": "FLOPs",
+      "value": "\\( 3.6 \\times 10^{9} \\)",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 21379,
+          "end": 21402,
+          "text": "\\( 3.6 \\times 10^{9} \\)"
+        }
+      ]
+    },
+    {
+      "key": "50_layer",
+      "entity": "FLOPs",
+      "value": "\\( 3.8 \\times 10^{9} \\)",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 21405,
+          "end": 21428,
+          "text": "\\( 3.8 \\times 10^{9} \\)"
+        }
+      ]
+    },
+    {
+      "key": "101_layer",
+      "entity": "FLOPs",
+      "value": "\\( 7.6 \\times 10^{9} \\)",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 21431,
+          "end": 21454,
+          "text": "\\( 7.6 \\times 10^{9} \\)"
+        }
+      ]
+    },
+    {
+      "key": "152_layer",
+      "entity": "FLOPs",
+      "value": "\\( 11.3 \\times 10^{9} \\)",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 21457,
+          "end": 21481,
+          "text": "\\( 11.3 \\times 10^{9} \\)"
+        }
+      ]
+    },
+    {
+      "key": "plain",
+      "entity": "18 layers",
+      "value": "27.94",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 22114,
+          "end": 22119,
+          "text": "27.94"
+        }
+      ]
+    },
+    {
+      "key": "resnet",
+      "entity": "18 layers",
+      "value": "27.88",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 22122,
+          "end": 22127,
+          "text": "27.88"
+        }
+      ]
+    },
+    {
+      "key": "plain",
+      "entity": "34 layers",
+      "value": "28.54",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 22146,
+          "end": 22151,
+          "text": "28.54"
+        }
+      ]
+    },
+    {
+      "key": "resnet",
+      "entity": "34 layers",
+      "value": "25.03",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 22154,
+          "end": 22159,
+          "text": "25.03"
+        }
+      ]
+    },
+    {
+      "key": "model",
+      "entity": "",
+      "value": "VGG-16 [41]",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 24502,
+          "end": 24513,
+          "text": "VGG-16 [41]"
+        }
+      ]
+    },
+    {
+      "key": "top_1_err",
+      "entity": "VGG-16 [41]",
+      "value": "28.07",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 24516,
+          "end": 24521,
+          "text": "28.07"
+        }
+      ]
+    },
+    {
+      "key": "top_5_err",
+      "entity": "VGG-16 [41]",
+      "value": "9.33",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 24524,
+          "end": 24528,
+          "text": "9.33"
+        }
+      ]
+    },
+    {
+      "key": "model",
+      "entity": "",
+      "value": "GoogLeNet [44]",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 24535,
+          "end": 24549,
+          "text": "GoogLeNet [44]"
+        }
+      ]
+    },
+    {
+      "key": "top_5_err",
+      "entity": "GoogLeNet [44]",
+      "value": "9.15",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 24556,
+          "end": 24560,
+          "text": "9.15"
+        }
+      ]
+    },
+    {
+      "key": "model",
+      "entity": "",
+      "value": "PReLU-net [13]",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 24567,
+          "end": 24581,
+          "text": "PReLU-net [13]"
+        }
+      ]
+    },
+    {
+      "key": "top_1_err",
+      "entity": "PReLU-net [13]",
+      "value": "24.27",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 24584,
+          "end": 24589,
+          "text": "24.27"
+        }
+      ]
+    },
+    {
+      "key": "top_5_err",
+      "entity": "PReLU-net [13]",
+      "value": "7.38",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 24592,
+          "end": 24596,
+          "text": "7.38"
+        }
+      ]
+    },
+    {
+      "key": "model",
+      "entity": "",
+      "value": "plain-34",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 24603,
+          "end": 24611,
+          "text": "plain-34"
+        }
+      ]
+    },
+    {
+      "key": "top_1_err",
+      "entity": "plain-34",
+      "value": "28.54",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 24614,
+          "end": 24619,
+          "text": "28.54"
+        }
+      ]
+    },
+    {
+      "key": "top_5_err",
+      "entity": "plain-34",
+      "value": "10.02",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 24622,
+          "end": 24627,
+          "text": "10.02"
+        }
+      ]
+    },
+    {
+      "key": "model",
+      "entity": "",
+      "value": "ResNet-34 A",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 24634,
+          "end": 24645,
+          "text": "ResNet-34 A"
+        }
+      ]
+    },
+    {
+      "key": "top_1_err",
+      "entity": "ResNet-34 A",
+      "value": "25.03",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 24648,
+          "end": 24653,
+          "text": "25.03"
+        }
+      ]
+    },
+    {
+      "key": "top_5_err",
+      "entity": "ResNet-34 A",
+      "value": "7.76",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 24656,
+          "end": 24660,
+          "text": "7.76"
+        }
+      ]
+    },
+    {
+      "key": "model",
+      "entity": "",
+      "value": "ResNet-34 B",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 24667,
+          "end": 24678,
+          "text": "ResNet-34 B"
+        }
+      ]
+    },
+    {
+      "key": "top_1_err",
+      "entity": "ResNet-34 B",
+      "value": "24.52",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 24681,
+          "end": 24686,
+          "text": "24.52"
+        }
+      ]
+    },
+    {
+      "key": "top_5_err",
+      "entity": "ResNet-34 B",
+      "value": "7.46",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 24689,
+          "end": 24693,
+          "text": "7.46"
+        }
+      ]
+    },
+    {
+      "key": "model",
+      "entity": "",
+      "value": "ResNet-34 C",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 24700,
+          "end": 24711,
+          "text": "ResNet-34 C"
+        }
+      ]
+    },
+    {
+      "key": "top_1_err",
+      "entity": "ResNet-34 C",
+      "value": "24.19",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 24714,
+          "end": 24719,
+          "text": "24.19"
+        }
+      ]
+    },
+    {
+      "key": "top_5_err",
+      "entity": "ResNet-34 C",
+      "value": "7.40",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 24722,
+          "end": 24726,
+          "text": "7.40"
+        }
+      ]
+    },
+    {
+      "key": "model",
+      "entity": "",
+      "value": "ResNet-50",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 24733,
+          "end": 24742,
+          "text": "ResNet-50"
+        }
+      ]
+    },
+    {
+      "key": "top_1_err",
+      "entity": "ResNet-50",
+      "value": "22.85",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 24745,
+          "end": 24750,
+          "text": "22.85"
+        }
+      ]
+    },
+    {
+      "key": "top_5_err",
+      "entity": "ResNet-50",
+      "value": "6.71",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 24753,
+          "end": 24757,
+          "text": "6.71"
+        }
+      ]
+    },
+    {
+      "key": "model",
+      "entity": "",
+      "value": "ResNet-101",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 24764,
+          "end": 24774,
+          "text": "ResNet-101"
+        }
+      ]
+    },
+    {
+      "key": "top_1_err",
+      "entity": "ResNet-101",
+      "value": "21.75",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 24777,
+          "end": 24782,
+          "text": "21.75"
+        }
+      ]
+    },
+    {
+      "key": "top_5_err",
+      "entity": "ResNet-101",
+      "value": "6.05",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 24785,
+          "end": 24789,
+          "text": "6.05"
+        }
+      ]
+    },
+    {
+      "key": "model",
+      "entity": "",
+      "value": "ResNet-152",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 24796,
+          "end": 24806,
+          "text": "ResNet-152"
+        }
+      ]
+    },
+    {
+      "key": "top_1_err",
+      "entity": "ResNet-152",
+      "value": "21.43",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 24809,
+          "end": 24814,
+          "text": "21.43"
+        }
+      ]
+    },
+    {
+      "key": "top_5_err",
+      "entity": "ResNet-152",
+      "value": "5.71",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 24817,
+          "end": 24821,
+          "text": "5.71"
+        }
+      ]
+    },
+    {
+      "key": "method",
+      "entity": "",
+      "value": "VGG [41] (ILSVRC'14)",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 25072,
+          "end": 25092,
+          "text": "VGG [41] (ILSVRC'14)"
+        }
+      ]
+    },
+    {
+      "key": "top_5_err",
+      "entity": "VGG [41] (ILSVRC'14)",
+      "value": "8.43^{1}",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 25099,
+          "end": 25107,
+          "text": "8.43^{1}"
+        }
+      ]
+    },
+    {
+      "key": "method",
+      "entity": "",
+      "value": "GoogLeNet [44] (ILSVRC'14)",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 25114,
+          "end": 25140,
+          "text": "GoogLeNet [44] (ILSVRC'14)"
+        }
+      ]
+    },
+    {
+      "key": "top_5_err",
+      "entity": "GoogLeNet [44] (ILSVRC'14)",
+      "value": "7.89",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 25147,
+          "end": 25151,
+          "text": "7.89"
+        }
+      ]
+    },
+    {
+      "key": "method",
+      "entity": "",
+      "value": "VGG [41] (v5)",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 25158,
+          "end": 25171,
+          "text": "VGG [41] (v5)"
+        }
+      ]
+    },
+    {
+      "key": "top_1_err",
+      "entity": "VGG [41] (v5)",
+      "value": "24.4",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 25174,
+          "end": 25178,
+          "text": "24.4"
+        }
+      ]
+    },
+    {
+      "key": "top_5_err",
+      "entity": "VGG [41] (v5)",
+      "value": "7.1",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 25181,
+          "end": 25184,
+          "text": "7.1"
+        }
+      ]
+    },
+    {
+      "key": "method",
+      "entity": "",
+      "value": "PReLU-net [13]",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 25191,
+          "end": 25205,
+          "text": "PReLU-net [13]"
+        }
+      ]
+    },
+    {
+      "key": "top_1_err",
+      "entity": "PReLU-net [13]",
+      "value": "21.59",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 25208,
+          "end": 25213,
+          "text": "21.59"
+        }
+      ]
+    },
+    {
+      "key": "top_5_err",
+      "entity": "PReLU-net [13]",
+      "value": "5.71",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 25216,
+          "end": 25220,
+          "text": "5.71"
+        }
+      ]
+    },
+    {
+      "key": "method",
+      "entity": "",
+      "value": "BN-inception [16]",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 25227,
+          "end": 25244,
+          "text": "BN-inception [16]"
+        }
+      ]
+    },
+    {
+      "key": "top_1_err",
+      "entity": "BN-inception [16]",
+      "value": "21.99",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 25247,
+          "end": 25252,
+          "text": "21.99"
+        }
+      ]
+    },
+    {
+      "key": "top_5_err",
+      "entity": "BN-inception [16]",
+      "value": "5.81",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 25255,
+          "end": 25259,
+          "text": "5.81"
+        }
+      ]
+    },
+    {
+      "key": "method",
+      "entity": "",
+      "value": "ResNet-34 B",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 25266,
+          "end": 25277,
+          "text": "ResNet-34 B"
+        }
+      ]
+    },
+    {
+      "key": "top_1_err",
+      "entity": "ResNet-34 B",
+      "value": "21.84",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 25280,
+          "end": 25285,
+          "text": "21.84"
+        }
+      ]
+    },
+    {
+      "key": "top_5_err",
+      "entity": "ResNet-34 B",
+      "value": "5.71",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 25288,
+          "end": 25292,
+          "text": "5.71"
+        }
+      ]
+    },
+    {
+      "key": "method",
+      "entity": "",
+      "value": "ResNet-34 C",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 25299,
+          "end": 25310,
+          "text": "ResNet-34 C"
+        }
+      ]
+    },
+    {
+      "key": "top_1_err",
+      "entity": "ResNet-34 C",
+      "value": "21.53",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 25313,
+          "end": 25318,
+          "text": "21.53"
+        }
+      ]
+    },
+    {
+      "key": "top_5_err",
+      "entity": "ResNet-34 C",
+      "value": "5.60",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 25321,
+          "end": 25325,
+          "text": "5.60"
+        }
+      ]
+    },
+    {
+      "key": "method",
+      "entity": "",
+      "value": "ResNet-50",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 25332,
+          "end": 25341,
+          "text": "ResNet-50"
+        }
+      ]
+    },
+    {
+      "key": "top_1_err",
+      "entity": "ResNet-50",
+      "value": "20.74",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 25344,
+          "end": 25349,
+          "text": "20.74"
+        }
+      ]
+    },
+    {
+      "key": "top_5_err",
+      "entity": "ResNet-50",
+      "value": "5.25",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 25352,
+          "end": 25356,
+          "text": "5.25"
+        }
+      ]
+    },
+    {
+      "key": "method",
+      "entity": "",
+      "value": "ResNet-101",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 25363,
+          "end": 25373,
+          "text": "ResNet-101"
+        }
+      ]
+    },
+    {
+      "key": "top_1_err",
+      "entity": "ResNet-101",
+      "value": "19.87",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 25376,
+          "end": 25381,
+          "text": "19.87"
+        }
+      ]
+    },
+    {
+      "key": "top_5_err",
+      "entity": "ResNet-101",
+      "value": "4.60",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 25384,
+          "end": 25388,
+          "text": "4.60"
+        }
+      ]
+    },
+    {
+      "key": "method",
+      "entity": "",
+      "value": "ResNet-152",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 25395,
+          "end": 25405,
+          "text": "ResNet-152"
+        }
+      ]
+    },
+    {
+      "key": "top_1_err",
+      "entity": "ResNet-152",
+      "value": "19.38",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 25408,
+          "end": 25413,
+          "text": "19.38"
+        }
+      ]
+    },
+    {
+      "key": "top_5_err",
+      "entity": "ResNet-152",
+      "value": "4.49",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 25416,
+          "end": 25420,
+          "text": "4.49"
+        }
+      ]
+    },
+    {
+      "key": "method",
+      "entity": "",
+      "value": "VGG [41] (ILSVRC'14)",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 25598,
+          "end": 25618,
+          "text": "VGG [41] (ILSVRC'14)"
+        }
+      ]
+    },
+    {
+      "key": "top_5_err_test",
+      "entity": "VGG [41] (ILSVRC'14)",
+      "value": "7.32",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 25621,
+          "end": 25625,
+          "text": "7.32"
+        }
+      ]
+    },
+    {
+      "key": "method",
+      "entity": "",
+      "value": "GoogLeNet [44] (ILSVRC'14)",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 25632,
+          "end": 25658,
+          "text": "GoogLeNet [44] (ILSVRC'14)"
+        }
+      ]
+    },
+    {
+      "key": "top_5_err_test",
+      "entity": "GoogLeNet [44] (ILSVRC'14)",
+      "value": "6.66",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 25661,
+          "end": 25665,
+          "text": "6.66"
+        }
+      ]
+    },
+    {
+      "key": "method",
+      "entity": "",
+      "value": "VGG [41] (v5)",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 25672,
+          "end": 25685,
+          "text": "VGG [41] (v5)"
+        }
+      ]
+    },
+    {
+      "key": "top_5_err_test",
+      "entity": "VGG [41] (v5)",
+      "value": "6.8",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 25688,
+          "end": 25691,
+          "text": "6.8"
+        }
+      ]
+    },
+    {
+      "key": "method",
+      "entity": "",
+      "value": "PReLU-net [13]",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 25698,
+          "end": 25712,
+          "text": "PReLU-net [13]"
+        }
+      ]
+    },
+    {
+      "key": "top_5_err_test",
+      "entity": "PReLU-net [13]",
+      "value": "4.94",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 25715,
+          "end": 25719,
+          "text": "4.94"
+        }
+      ]
+    },
+    {
+      "key": "method",
+      "entity": "",
+      "value": "BN-inception [16]",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 25726,
+          "end": 25743,
+          "text": "BN-inception [16]"
+        }
+      ]
+    },
+    {
+      "key": "top_5_err_test",
+      "entity": "BN-inception [16]",
+      "value": "4.82",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 25746,
+          "end": 25750,
+          "text": "4.82"
+        }
+      ]
+    },
+    {
+      "key": "method",
+      "entity": "",
+      "value": "ResNet (ILSVRC'15)",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 25757,
+          "end": 25775,
+          "text": "ResNet (ILSVRC'15)"
+        }
+      ]
+    },
+    {
+      "key": "top_5_err_test",
+      "entity": "ResNet (ILSVRC'15)",
+      "value": "3.57",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 25778,
+          "end": 25782,
+          "text": "3.57"
+        }
+      ]
+    },
+    {
+      "key": "output_map_size",
+      "entity": "",
+      "value": "# layers",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 31796,
+          "end": 31804,
+          "text": "# layers"
+        }
+      ]
+    },
+    {
+      "key": "32_32",
+      "entity": "# layers",
+      "value": "1+2n",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 31807,
+          "end": 31811,
+          "text": "1+2n"
+        }
+      ]
+    },
+    {
+      "key": "16_16",
+      "entity": "# layers",
+      "value": "2n",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 31814,
+          "end": 31816,
+          "text": "2n"
+        }
+      ]
+    },
+    {
+      "key": "8_8",
+      "entity": "# layers",
+      "value": "2n",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 31819,
+          "end": 31821,
+          "text": "2n"
+        }
+      ]
+    },
+    {
+      "key": "output_map_size",
+      "entity": "",
+      "value": "# filters",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 31828,
+          "end": 31837,
+          "text": "# filters"
+        }
+      ]
+    },
+    {
+      "key": "32_32",
+      "entity": "# filters",
+      "value": "16",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 31840,
+          "end": 31842,
+          "text": "16"
+        }
+      ]
+    },
+    {
+      "key": "16_16",
+      "entity": "# filters",
+      "value": "32",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 31845,
+          "end": 31847,
+          "text": "32"
+        }
+      ]
+    },
+    {
+      "key": "8_8",
+      "entity": "# filters",
+      "value": "64",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 31850,
+          "end": 31852,
+          "text": "64"
+        }
+      ]
+    },
+    {
+      "key": "method",
+      "entity": "",
+      "value": "Maxout [10]",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 32099,
+          "end": 32110,
+          "text": "Maxout [10]"
+        }
+      ]
+    },
+    {
+      "key": "error",
+      "entity": "Maxout [10]",
+      "value": "9.38",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 32121,
+          "end": 32125,
+          "text": "9.38"
+        }
+      ]
+    },
+    {
+      "key": "method",
+      "entity": "",
+      "value": "NIN [25]",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 32132,
+          "end": 32140,
+          "text": "NIN [25]"
+        }
+      ]
+    },
+    {
+      "key": "error",
+      "entity": "NIN [25]",
+      "value": "8.81",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 32151,
+          "end": 32155,
+          "text": "8.81"
+        }
+      ]
+    },
+    {
+      "key": "method",
+      "entity": "",
+      "value": "DSN [24]",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 32162,
+          "end": 32170,
+          "text": "DSN [24]"
+        }
+      ]
+    },
+    {
+      "key": "error",
+      "entity": "DSN [24]",
+      "value": "8.22",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 32181,
+          "end": 32185,
+          "text": "8.22"
+        }
+      ]
+    },
+    {
+      "key": "method",
+      "entity": "",
+      "value": "FitNet [35]",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 32224,
+          "end": 32235,
+          "text": "FitNet [35]"
+        }
+      ]
+    },
+    {
+      "key": "error",
+      "entity": "FitNet [35]",
+      "value": "8.39",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 32250,
+          "end": 32254,
+          "text": "8.39"
+        }
+      ]
+    },
+    {
+      "key": "method",
+      "entity": "",
+      "value": "Highway [42, 43]",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 32261,
+          "end": 32277,
+          "text": "Highway [42, 43]"
+        }
+      ]
+    },
+    {
+      "key": "error",
+      "entity": "Highway [42, 43]",
+      "value": "7.54 (7.72±0.16)",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 32292,
+          "end": 32308,
+          "text": "7.54 (7.72±0.16)"
+        }
+      ]
+    },
+    {
+      "key": "method",
+      "entity": "",
+      "value": "Highway [42, 43]",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 32315,
+          "end": 32331,
+          "text": "Highway [42, 43]"
+        }
+      ]
+    },
+    {
+      "key": "error",
+      "entity": "Highway [42, 43]",
+      "value": "8.80",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 32347,
+          "end": 32351,
+          "text": "8.80"
+        }
+      ]
+    },
+    {
+      "key": "method",
+      "entity": "",
+      "value": "ResNet",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 32358,
+          "end": 32364,
+          "text": "ResNet"
+        }
+      ]
+    },
+    {
+      "key": "error",
+      "entity": "ResNet",
+      "value": "8.75",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 32380,
+          "end": 32384,
+          "text": "8.75"
+        }
+      ]
+    },
+    {
+      "key": "method",
+      "entity": "",
+      "value": "ResNet",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 32391,
+          "end": 32397,
+          "text": "ResNet"
+        }
+      ]
+    },
+    {
+      "key": "error",
+      "entity": "ResNet",
+      "value": "7.51",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 32413,
+          "end": 32417,
+          "text": "7.51"
+        }
+      ]
+    },
+    {
+      "key": "method",
+      "entity": "",
+      "value": "ResNet",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 32424,
+          "end": 32430,
+          "text": "ResNet"
+        }
+      ]
+    },
+    {
+      "key": "error",
+      "entity": "ResNet",
+      "value": "7.17",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 32446,
+          "end": 32450,
+          "text": "7.17"
+        }
+      ]
+    },
+    {
+      "key": "method",
+      "entity": "",
+      "value": "ResNet",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 32457,
+          "end": 32463,
+          "text": "ResNet"
+        }
+      ]
+    },
+    {
+      "key": "error",
+      "entity": "ResNet",
+      "value": "6.97",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 32479,
+          "end": 32483,
+          "text": "6.97"
+        }
+      ]
+    },
+    {
+      "key": "method",
+      "entity": "",
+      "value": "ResNet",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 32490,
+          "end": 32496,
+          "text": "ResNet"
+        }
+      ]
+    },
+    {
+      "key": "error",
+      "entity": "ResNet",
+      "value": "6.43 (6.61±0.16)",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 32512,
+          "end": 32528,
+          "text": "6.43 (6.61±0.16)"
+        }
+      ]
+    },
+    {
+      "key": "method",
+      "entity": "",
+      "value": "ResNet",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 32535,
+          "end": 32541,
+          "text": "ResNet"
+        }
+      ]
+    },
+    {
+      "key": "error",
+      "entity": "ResNet",
+      "value": "7.93",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 32559,
+          "end": 32563,
+          "text": "7.93"
+        }
+      ]
+    },
+    {
+      "key": "training_data",
+      "entity": "",
+      "value": "test data",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 36820,
+          "end": 36829,
+          "text": "test data"
+        }
+      ]
+    },
+    {
+      "key": "07_12",
+      "entity": "test data",
+      "value": "VOC 07 test",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 36832,
+          "end": 36843,
+          "text": "VOC 07 test"
+        }
+      ]
+    },
+    {
+      "key": "07_12",
+      "entity": "test data",
+      "value": "VOC 12 test",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 36846,
+          "end": 36857,
+          "text": "VOC 12 test"
+        }
+      ]
+    },
+    {
+      "key": "training_data",
+      "entity": "",
+      "value": "VGG-16",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 36864,
+          "end": 36870,
+          "text": "VGG-16"
+        }
+      ]
+    },
+    {
+      "key": "07_12",
+      "entity": "VGG-16",
+      "value": "73.2",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 36873,
+          "end": 36877,
+          "text": "73.2"
+        }
+      ]
+    },
+    {
+      "key": "07_12",
+      "entity": "VGG-16",
+      "value": "70.4",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 36880,
+          "end": 36884,
+          "text": "70.4"
+        }
+      ]
+    },
+    {
+      "key": "training_data",
+      "entity": "",
+      "value": "ResNet-101",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 36891,
+          "end": 36901,
+          "text": "ResNet-101"
+        }
+      ]
+    },
+    {
+      "key": "07_12",
+      "entity": "ResNet-101",
+      "value": "76.4",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 36904,
+          "end": 36908,
+          "text": "76.4"
+        }
+      ]
+    },
+    {
+      "key": "07_12",
+      "entity": "ResNet-101",
+      "value": "73.8",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 36911,
+          "end": 36915,
+          "text": "73.8"
+        }
+      ]
+    },
+    {
+      "key": "metric",
+      "entity": "",
+      "value": "VGG-16",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 37128,
+          "end": 37134,
+          "text": "VGG-16"
+        }
+      ]
+    },
+    {
+      "key": "map_5",
+      "entity": "VGG-16",
+      "value": "41.5",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 37137,
+          "end": 37141,
+          "text": "41.5"
+        }
+      ]
+    },
+    {
+      "key": "map_5_95",
+      "entity": "VGG-16",
+      "value": "21.2",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 37144,
+          "end": 37148,
+          "text": "21.2"
+        }
+      ]
+    },
+    {
+      "key": "metric",
+      "entity": "",
+      "value": "ResNet-101",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 37155,
+          "end": 37165,
+          "text": "ResNet-101"
+        }
+      ]
+    },
+    {
+      "key": "map_5",
+      "entity": "ResNet-101",
+      "value": "48.4",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 37168,
+          "end": 37172,
+          "text": "48.4"
+        }
+      ]
+    },
+    {
+      "key": "map_5_95",
+      "entity": "ResNet-101",
+      "value": "27.2",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 37175,
+          "end": 37179,
+          "text": "27.2"
+        }
+      ]
+    },
+    {
+      "key": "training_data",
+      "entity": "",
+      "value": "test data",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 50838,
+          "end": 50847,
+          "text": "test data"
+        }
+      ]
+    },
+    {
+      "key": "coco_train",
+      "entity": "test data",
+      "value": "COCO val",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 50850,
+          "end": 50858,
+          "text": "COCO val"
+        }
+      ]
+    },
+    {
+      "key": "coco_trainval",
+      "entity": "test data",
+      "value": "COCO test-dev",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 50865,
+          "end": 50878,
+          "text": "COCO test-dev"
+        }
+      ]
+    },
+    {
+      "key": "training_data",
+      "entity": "",
+      "value": "mAP",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 50889,
+          "end": 50892,
+          "text": "mAP"
+        }
+      ]
+    },
+    {
+      "key": "coco_train",
+      "entity": "mAP",
+      "value": "@.5",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 50895,
+          "end": 50898,
+          "text": "@.5"
+        }
+      ]
+    },
+    {
+      "key": "coco_trainval",
+      "entity": "mAP",
+      "value": "@.5",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 50914,
+          "end": 50917,
+          "text": "@.5"
+        }
+      ]
+    },
+    {
+      "key": "training_data",
+      "entity": "",
+      "value": "baseline Faster R-CNN (VGG-16)",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 50937,
+          "end": 50967,
+          "text": "baseline Faster R-CNN (VGG-16)"
+        }
+      ]
+    },
+    {
+      "key": "coco_train",
+      "entity": "baseline Faster R-CNN (VGG-16)",
+      "value": "41.5",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 50970,
+          "end": 50974,
+          "text": "41.5"
+        }
+      ]
+    },
+    {
+      "key": "training_data",
+      "entity": "",
+      "value": "baseline Faster R-CNN (ResNet-101)",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 50994,
+          "end": 51028,
+          "text": "baseline Faster R-CNN (ResNet-101)"
+        }
+      ]
+    },
+    {
+      "key": "coco_train",
+      "entity": "baseline Faster R-CNN (ResNet-101)",
+      "value": "48.4",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51031,
+          "end": 51035,
+          "text": "48.4"
+        }
+      ]
+    },
+    {
+      "key": "training_data",
+      "entity": "",
+      "value": "+box refinement",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51055,
+          "end": 51070,
+          "text": "+box refinement"
+        }
+      ]
+    },
+    {
+      "key": "coco_train",
+      "entity": "+box refinement",
+      "value": "49.9",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51073,
+          "end": 51077,
+          "text": "49.9"
+        }
+      ]
+    },
+    {
+      "key": "training_data",
+      "entity": "",
+      "value": "+context",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51097,
+          "end": 51105,
+          "text": "+context"
+        }
+      ]
+    },
+    {
+      "key": "coco_train",
+      "entity": "+context",
+      "value": "51.1",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51108,
+          "end": 51112,
+          "text": "51.1"
+        }
+      ]
+    },
+    {
+      "key": "coco_trainval",
+      "entity": "+context",
+      "value": "53.3",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51122,
+          "end": 51126,
+          "text": "53.3"
+        }
+      ]
+    },
+    {
+      "key": "training_data",
+      "entity": "",
+      "value": "+multi-scale testing",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51140,
+          "end": 51160,
+          "text": "+multi-scale testing"
+        }
+      ]
+    },
+    {
+      "key": "coco_train",
+      "entity": "+multi-scale testing",
+      "value": "53.8",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51163,
+          "end": 51167,
+          "text": "53.8"
+        }
+      ]
+    },
+    {
+      "key": "coco_trainval",
+      "entity": "+multi-scale testing",
+      "value": "55.7",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51177,
+          "end": 51181,
+          "text": "55.7"
+        }
+      ]
+    },
+    {
+      "key": "training_data",
+      "entity": "",
+      "value": "ensemble",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51195,
+          "end": 51203,
+          "text": "ensemble"
+        }
+      ]
+    },
+    {
+      "key": "coco_trainval",
+      "entity": "ensemble",
+      "value": "59.0",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51212,
+          "end": 51216,
+          "text": "59.0"
+        }
+      ]
+    },
+    {
+      "key": "system",
+      "entity": "",
+      "value": "baseline",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51638,
+          "end": 51646,
+          "text": "baseline"
+        }
+      ]
+    },
+    {
+      "key": "net",
+      "entity": "baseline",
+      "value": "VGG-16",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51649,
+          "end": 51655,
+          "text": "VGG-16"
+        }
+      ]
+    },
+    {
+      "key": "data",
+      "entity": "baseline",
+      "value": "07+12",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51658,
+          "end": 51663,
+          "text": "07+12"
+        }
+      ]
+    },
+    {
+      "key": "map",
+      "entity": "baseline",
+      "value": "73.2",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51666,
+          "end": 51670,
+          "text": "73.2"
+        }
+      ]
+    },
+    {
+      "key": "aeo",
+      "entity": "baseline",
+      "value": "76.5",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51673,
+          "end": 51677,
+          "text": "76.5"
+        }
+      ]
+    },
+    {
+      "key": "bike",
+      "entity": "baseline",
+      "value": "79.0",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51680,
+          "end": 51684,
+          "text": "79.0"
+        }
+      ]
+    },
+    {
+      "key": "bird",
+      "entity": "baseline",
+      "value": "70.9",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51687,
+          "end": 51691,
+          "text": "70.9"
+        }
+      ]
+    },
+    {
+      "key": "boat",
+      "entity": "baseline",
+      "value": "65.5",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51694,
+          "end": 51698,
+          "text": "65.5"
+        }
+      ]
+    },
+    {
+      "key": "bottle",
+      "entity": "baseline",
+      "value": "52.1",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51701,
+          "end": 51705,
+          "text": "52.1"
+        }
+      ]
+    },
+    {
+      "key": "bus",
+      "entity": "baseline",
+      "value": "83.1",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51708,
+          "end": 51712,
+          "text": "83.1"
+        }
+      ]
+    },
+    {
+      "key": "car",
+      "entity": "baseline",
+      "value": "84.7",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51715,
+          "end": 51719,
+          "text": "84.7"
+        }
+      ]
+    },
+    {
+      "key": "cat",
+      "entity": "baseline",
+      "value": "86.4",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51722,
+          "end": 51726,
+          "text": "86.4"
+        }
+      ]
+    },
+    {
+      "key": "chair",
+      "entity": "baseline",
+      "value": "52.0",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51729,
+          "end": 51733,
+          "text": "52.0"
+        }
+      ]
+    },
+    {
+      "key": "cow",
+      "entity": "baseline",
+      "value": "81.9",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51736,
+          "end": 51740,
+          "text": "81.9"
+        }
+      ]
+    },
+    {
+      "key": "table",
+      "entity": "baseline",
+      "value": "65.7",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51743,
+          "end": 51747,
+          "text": "65.7"
+        }
+      ]
+    },
+    {
+      "key": "dog",
+      "entity": "baseline",
+      "value": "84.8",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51750,
+          "end": 51754,
+          "text": "84.8"
+        }
+      ]
+    },
+    {
+      "key": "horse",
+      "entity": "baseline",
+      "value": "84.6",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51757,
+          "end": 51761,
+          "text": "84.6"
+        }
+      ]
+    },
+    {
+      "key": "mbike",
+      "entity": "baseline",
+      "value": "77.5",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51764,
+          "end": 51768,
+          "text": "77.5"
+        }
+      ]
+    },
+    {
+      "key": "person",
+      "entity": "baseline",
+      "value": "76.7",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51771,
+          "end": 51775,
+          "text": "76.7"
+        }
+      ]
+    },
+    {
+      "key": "plant",
+      "entity": "baseline",
+      "value": "38.8",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51778,
+          "end": 51782,
+          "text": "38.8"
+        }
+      ]
+    },
+    {
+      "key": "sheep",
+      "entity": "baseline",
+      "value": "73.6",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51785,
+          "end": 51789,
+          "text": "73.6"
+        }
+      ]
+    },
+    {
+      "key": "sofa",
+      "entity": "baseline",
+      "value": "73.9",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51792,
+          "end": 51796,
+          "text": "73.9"
+        }
+      ]
+    },
+    {
+      "key": "train",
+      "entity": "baseline",
+      "value": "83.0",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51799,
+          "end": 51803,
+          "text": "83.0"
+        }
+      ]
+    },
+    {
+      "key": "tv",
+      "entity": "baseline",
+      "value": "72.6",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51806,
+          "end": 51810,
+          "text": "72.6"
+        }
+      ]
+    },
+    {
+      "key": "system",
+      "entity": "",
+      "value": "baseline",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51817,
+          "end": 51825,
+          "text": "baseline"
+        }
+      ]
+    },
+    {
+      "key": "net",
+      "entity": "baseline",
+      "value": "ResNet-101",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51828,
+          "end": 51838,
+          "text": "ResNet-101"
+        }
+      ]
+    },
+    {
+      "key": "data",
+      "entity": "baseline",
+      "value": "07+12",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51841,
+          "end": 51846,
+          "text": "07+12"
+        }
+      ]
+    },
+    {
+      "key": "map",
+      "entity": "baseline",
+      "value": "76.4",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51849,
+          "end": 51853,
+          "text": "76.4"
+        }
+      ]
+    },
+    {
+      "key": "aeo",
+      "entity": "baseline",
+      "value": "79.8",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51856,
+          "end": 51860,
+          "text": "79.8"
+        }
+      ]
+    },
+    {
+      "key": "bike",
+      "entity": "baseline",
+      "value": "80.7",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51863,
+          "end": 51867,
+          "text": "80.7"
+        }
+      ]
+    },
+    {
+      "key": "bird",
+      "entity": "baseline",
+      "value": "76.2",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51870,
+          "end": 51874,
+          "text": "76.2"
+        }
+      ]
+    },
+    {
+      "key": "boat",
+      "entity": "baseline",
+      "value": "68.3",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51877,
+          "end": 51881,
+          "text": "68.3"
+        }
+      ]
+    },
+    {
+      "key": "bottle",
+      "entity": "baseline",
+      "value": "55.9",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51884,
+          "end": 51888,
+          "text": "55.9"
+        }
+      ]
+    },
+    {
+      "key": "bus",
+      "entity": "baseline",
+      "value": "85.1",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51891,
+          "end": 51895,
+          "text": "85.1"
+        }
+      ]
+    },
+    {
+      "key": "car",
+      "entity": "baseline",
+      "value": "85.3",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51898,
+          "end": 51902,
+          "text": "85.3"
+        }
+      ]
+    },
+    {
+      "key": "cat",
+      "entity": "baseline",
+      "value": "89.8",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51905,
+          "end": 51909,
+          "text": "89.8"
+        }
+      ]
+    },
+    {
+      "key": "chair",
+      "entity": "baseline",
+      "value": "56.7",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51912,
+          "end": 51916,
+          "text": "56.7"
+        }
+      ]
+    },
+    {
+      "key": "cow",
+      "entity": "baseline",
+      "value": "87.8",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51919,
+          "end": 51923,
+          "text": "87.8"
+        }
+      ]
+    },
+    {
+      "key": "table",
+      "entity": "baseline",
+      "value": "69.4",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51926,
+          "end": 51930,
+          "text": "69.4"
+        }
+      ]
+    },
+    {
+      "key": "dog",
+      "entity": "baseline",
+      "value": "88.3",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51933,
+          "end": 51937,
+          "text": "88.3"
+        }
+      ]
+    },
+    {
+      "key": "horse",
+      "entity": "baseline",
+      "value": "88.9",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51940,
+          "end": 51944,
+          "text": "88.9"
+        }
+      ]
+    },
+    {
+      "key": "mbike",
+      "entity": "baseline",
+      "value": "80.9",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51947,
+          "end": 51951,
+          "text": "80.9"
+        }
+      ]
+    },
+    {
+      "key": "person",
+      "entity": "baseline",
+      "value": "78.4",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51954,
+          "end": 51958,
+          "text": "78.4"
+        }
+      ]
+    },
+    {
+      "key": "plant",
+      "entity": "baseline",
+      "value": "41.7",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51961,
+          "end": 51965,
+          "text": "41.7"
+        }
+      ]
+    },
+    {
+      "key": "sheep",
+      "entity": "baseline",
+      "value": "78.6",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51968,
+          "end": 51972,
+          "text": "78.6"
+        }
+      ]
+    },
+    {
+      "key": "sofa",
+      "entity": "baseline",
+      "value": "79.8",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51975,
+          "end": 51979,
+          "text": "79.8"
+        }
+      ]
+    },
+    {
+      "key": "train",
+      "entity": "baseline",
+      "value": "85.3",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51982,
+          "end": 51986,
+          "text": "85.3"
+        }
+      ]
+    },
+    {
+      "key": "tv",
+      "entity": "baseline",
+      "value": "72.0",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 51989,
+          "end": 51993,
+          "text": "72.0"
+        }
+      ]
+    },
+    {
+      "key": "system",
+      "entity": "",
+      "value": "baseline+++",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52000,
+          "end": 52011,
+          "text": "baseline+++"
+        }
+      ]
+    },
+    {
+      "key": "net",
+      "entity": "baseline+++",
+      "value": "ResNet-101",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52014,
+          "end": 52024,
+          "text": "ResNet-101"
+        }
+      ]
+    },
+    {
+      "key": "data",
+      "entity": "baseline+++",
+      "value": "COCO+07+12",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52027,
+          "end": 52037,
+          "text": "COCO+07+12"
+        }
+      ]
+    },
+    {
+      "key": "map",
+      "entity": "baseline+++",
+      "value": "85.6",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52040,
+          "end": 52044,
+          "text": "85.6"
+        }
+      ]
+    },
+    {
+      "key": "aeo",
+      "entity": "baseline+++",
+      "value": "90.0",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52047,
+          "end": 52051,
+          "text": "90.0"
+        }
+      ]
+    },
+    {
+      "key": "bike",
+      "entity": "baseline+++",
+      "value": "89.6",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52054,
+          "end": 52058,
+          "text": "89.6"
+        }
+      ]
+    },
+    {
+      "key": "bird",
+      "entity": "baseline+++",
+      "value": "87.8",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52061,
+          "end": 52065,
+          "text": "87.8"
+        }
+      ]
+    },
+    {
+      "key": "boat",
+      "entity": "baseline+++",
+      "value": "80.8",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52068,
+          "end": 52072,
+          "text": "80.8"
+        }
+      ]
+    },
+    {
+      "key": "bottle",
+      "entity": "baseline+++",
+      "value": "76.1",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52075,
+          "end": 52079,
+          "text": "76.1"
+        }
+      ]
+    },
+    {
+      "key": "bus",
+      "entity": "baseline+++",
+      "value": "89.9",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52082,
+          "end": 52086,
+          "text": "89.9"
+        }
+      ]
+    },
+    {
+      "key": "car",
+      "entity": "baseline+++",
+      "value": "89.9",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52089,
+          "end": 52093,
+          "text": "89.9"
+        }
+      ]
+    },
+    {
+      "key": "cat",
+      "entity": "baseline+++",
+      "value": "89.6",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52096,
+          "end": 52100,
+          "text": "89.6"
+        }
+      ]
+    },
+    {
+      "key": "chair",
+      "entity": "baseline+++",
+      "value": "75.5",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52103,
+          "end": 52107,
+          "text": "75.5"
+        }
+      ]
+    },
+    {
+      "key": "cow",
+      "entity": "baseline+++",
+      "value": "90.0",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52110,
+          "end": 52114,
+          "text": "90.0"
+        }
+      ]
+    },
+    {
+      "key": "table",
+      "entity": "baseline+++",
+      "value": "80.7",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52117,
+          "end": 52121,
+          "text": "80.7"
+        }
+      ]
+    },
+    {
+      "key": "dog",
+      "entity": "baseline+++",
+      "value": "89.6",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52124,
+          "end": 52128,
+          "text": "89.6"
+        }
+      ]
+    },
+    {
+      "key": "horse",
+      "entity": "baseline+++",
+      "value": "90.3",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52131,
+          "end": 52135,
+          "text": "90.3"
+        }
+      ]
+    },
+    {
+      "key": "mbike",
+      "entity": "baseline+++",
+      "value": "89.1",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52138,
+          "end": 52142,
+          "text": "89.1"
+        }
+      ]
+    },
+    {
+      "key": "person",
+      "entity": "baseline+++",
+      "value": "88.7",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52145,
+          "end": 52149,
+          "text": "88.7"
+        }
+      ]
+    },
+    {
+      "key": "plant",
+      "entity": "baseline+++",
+      "value": "65.4",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52152,
+          "end": 52156,
+          "text": "65.4"
+        }
+      ]
+    },
+    {
+      "key": "sheep",
+      "entity": "baseline+++",
+      "value": "88.1",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52159,
+          "end": 52163,
+          "text": "88.1"
+        }
+      ]
+    },
+    {
+      "key": "sofa",
+      "entity": "baseline+++",
+      "value": "85.6",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52166,
+          "end": 52170,
+          "text": "85.6"
+        }
+      ]
+    },
+    {
+      "key": "train",
+      "entity": "baseline+++",
+      "value": "89.0",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52173,
+          "end": 52177,
+          "text": "89.0"
+        }
+      ]
+    },
+    {
+      "key": "tv",
+      "entity": "baseline+++",
+      "value": "86.8",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52180,
+          "end": 52184,
+          "text": "86.8"
+        }
+      ]
+    },
+    {
+      "key": "system",
+      "entity": "",
+      "value": "baseline",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52710,
+          "end": 52718,
+          "text": "baseline"
+        }
+      ]
+    },
+    {
+      "key": "net",
+      "entity": "baseline",
+      "value": "VGG-16",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52721,
+          "end": 52727,
+          "text": "VGG-16"
+        }
+      ]
+    },
+    {
+      "key": "data",
+      "entity": "baseline",
+      "value": "07++12",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52730,
+          "end": 52736,
+          "text": "07++12"
+        }
+      ]
+    },
+    {
+      "key": "map",
+      "entity": "baseline",
+      "value": "70.4",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52739,
+          "end": 52743,
+          "text": "70.4"
+        }
+      ]
+    },
+    {
+      "key": "aeo",
+      "entity": "baseline",
+      "value": "84.9",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52746,
+          "end": 52750,
+          "text": "84.9"
+        }
+      ]
+    },
+    {
+      "key": "bike",
+      "entity": "baseline",
+      "value": "79.8",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52753,
+          "end": 52757,
+          "text": "79.8"
+        }
+      ]
+    },
+    {
+      "key": "bird",
+      "entity": "baseline",
+      "value": "74.3",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52760,
+          "end": 52764,
+          "text": "74.3"
+        }
+      ]
+    },
+    {
+      "key": "boat",
+      "entity": "baseline",
+      "value": "53.9",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52767,
+          "end": 52771,
+          "text": "53.9"
+        }
+      ]
+    },
+    {
+      "key": "bottle",
+      "entity": "baseline",
+      "value": "49.8",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52774,
+          "end": 52778,
+          "text": "49.8"
+        }
+      ]
+    },
+    {
+      "key": "bus",
+      "entity": "baseline",
+      "value": "77.5",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52781,
+          "end": 52785,
+          "text": "77.5"
+        }
+      ]
+    },
+    {
+      "key": "car",
+      "entity": "baseline",
+      "value": "75.9",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52788,
+          "end": 52792,
+          "text": "75.9"
+        }
+      ]
+    },
+    {
+      "key": "cat",
+      "entity": "baseline",
+      "value": "88.5",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52795,
+          "end": 52799,
+          "text": "88.5"
+        }
+      ]
+    },
+    {
+      "key": "chair",
+      "entity": "baseline",
+      "value": "45.6",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52802,
+          "end": 52806,
+          "text": "45.6"
+        }
+      ]
+    },
+    {
+      "key": "cow",
+      "entity": "baseline",
+      "value": "77.1",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52809,
+          "end": 52813,
+          "text": "77.1"
+        }
+      ]
+    },
+    {
+      "key": "table",
+      "entity": "baseline",
+      "value": "55.3",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52816,
+          "end": 52820,
+          "text": "55.3"
+        }
+      ]
+    },
+    {
+      "key": "dog",
+      "entity": "baseline",
+      "value": "86.9",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52823,
+          "end": 52827,
+          "text": "86.9"
+        }
+      ]
+    },
+    {
+      "key": "horse",
+      "entity": "baseline",
+      "value": "81.7",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52830,
+          "end": 52834,
+          "text": "81.7"
+        }
+      ]
+    },
+    {
+      "key": "mbike",
+      "entity": "baseline",
+      "value": "80.9",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52837,
+          "end": 52841,
+          "text": "80.9"
+        }
+      ]
+    },
+    {
+      "key": "person",
+      "entity": "baseline",
+      "value": "79.6",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52844,
+          "end": 52848,
+          "text": "79.6"
+        }
+      ]
+    },
+    {
+      "key": "plant",
+      "entity": "baseline",
+      "value": "40.1",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52851,
+          "end": 52855,
+          "text": "40.1"
+        }
+      ]
+    },
+    {
+      "key": "sheep",
+      "entity": "baseline",
+      "value": "72.6",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52858,
+          "end": 52862,
+          "text": "72.6"
+        }
+      ]
+    },
+    {
+      "key": "sofa",
+      "entity": "baseline",
+      "value": "60.9",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52865,
+          "end": 52869,
+          "text": "60.9"
+        }
+      ]
+    },
+    {
+      "key": "train",
+      "entity": "baseline",
+      "value": "81.2",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52872,
+          "end": 52876,
+          "text": "81.2"
+        }
+      ]
+    },
+    {
+      "key": "tv",
+      "entity": "baseline",
+      "value": "61.5",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52879,
+          "end": 52883,
+          "text": "61.5"
+        }
+      ]
+    },
+    {
+      "key": "system",
+      "entity": "",
+      "value": "baseline",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52890,
+          "end": 52898,
+          "text": "baseline"
+        }
+      ]
+    },
+    {
+      "key": "net",
+      "entity": "baseline",
+      "value": "ResNet-101",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52901,
+          "end": 52911,
+          "text": "ResNet-101"
+        }
+      ]
+    },
+    {
+      "key": "data",
+      "entity": "baseline",
+      "value": "07++12",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52914,
+          "end": 52920,
+          "text": "07++12"
+        }
+      ]
+    },
+    {
+      "key": "map",
+      "entity": "baseline",
+      "value": "73.8",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52923,
+          "end": 52927,
+          "text": "73.8"
+        }
+      ]
+    },
+    {
+      "key": "aeo",
+      "entity": "baseline",
+      "value": "86.5",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52930,
+          "end": 52934,
+          "text": "86.5"
+        }
+      ]
+    },
+    {
+      "key": "bike",
+      "entity": "baseline",
+      "value": "81.6",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52937,
+          "end": 52941,
+          "text": "81.6"
+        }
+      ]
+    },
+    {
+      "key": "bird",
+      "entity": "baseline",
+      "value": "77.2",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52944,
+          "end": 52948,
+          "text": "77.2"
+        }
+      ]
+    },
+    {
+      "key": "boat",
+      "entity": "baseline",
+      "value": "58.0",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52951,
+          "end": 52955,
+          "text": "58.0"
+        }
+      ]
+    },
+    {
+      "key": "bottle",
+      "entity": "baseline",
+      "value": "51.0",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52958,
+          "end": 52962,
+          "text": "51.0"
+        }
+      ]
+    },
+    {
+      "key": "bus",
+      "entity": "baseline",
+      "value": "78.6",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52965,
+          "end": 52969,
+          "text": "78.6"
+        }
+      ]
+    },
+    {
+      "key": "car",
+      "entity": "baseline",
+      "value": "76.6",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52972,
+          "end": 52976,
+          "text": "76.6"
+        }
+      ]
+    },
+    {
+      "key": "cat",
+      "entity": "baseline",
+      "value": "93.2",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52979,
+          "end": 52983,
+          "text": "93.2"
+        }
+      ]
+    },
+    {
+      "key": "chair",
+      "entity": "baseline",
+      "value": "48.6",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52986,
+          "end": 52990,
+          "text": "48.6"
+        }
+      ]
+    },
+    {
+      "key": "cow",
+      "entity": "baseline",
+      "value": "80.4",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 52993,
+          "end": 52997,
+          "text": "80.4"
+        }
+      ]
+    },
+    {
+      "key": "table",
+      "entity": "baseline",
+      "value": "59.0",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 53000,
+          "end": 53004,
+          "text": "59.0"
+        }
+      ]
+    },
+    {
+      "key": "dog",
+      "entity": "baseline",
+      "value": "92.1",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 53007,
+          "end": 53011,
+          "text": "92.1"
+        }
+      ]
+    },
+    {
+      "key": "horse",
+      "entity": "baseline",
+      "value": "85.3",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 53014,
+          "end": 53018,
+          "text": "85.3"
+        }
+      ]
+    },
+    {
+      "key": "mbike",
+      "entity": "baseline",
+      "value": "84.8",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 53021,
+          "end": 53025,
+          "text": "84.8"
+        }
+      ]
+    },
+    {
+      "key": "person",
+      "entity": "baseline",
+      "value": "80.7",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 53028,
+          "end": 53032,
+          "text": "80.7"
+        }
+      ]
+    },
+    {
+      "key": "plant",
+      "entity": "baseline",
+      "value": "48.1",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 53035,
+          "end": 53039,
+          "text": "48.1"
+        }
+      ]
+    },
+    {
+      "key": "sheep",
+      "entity": "baseline",
+      "value": "77.3",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 53042,
+          "end": 53046,
+          "text": "77.3"
+        }
+      ]
+    },
+    {
+      "key": "sofa",
+      "entity": "baseline",
+      "value": "66.5",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 53049,
+          "end": 53053,
+          "text": "66.5"
+        }
+      ]
+    },
+    {
+      "key": "train",
+      "entity": "baseline",
+      "value": "84.7",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 53056,
+          "end": 53060,
+          "text": "84.7"
+        }
+      ]
+    },
+    {
+      "key": "tv",
+      "entity": "baseline",
+      "value": "65.6",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 53063,
+          "end": 53067,
+          "text": "65.6"
+        }
+      ]
+    },
+    {
+      "key": "system",
+      "entity": "",
+      "value": "baseline+++",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 53074,
+          "end": 53085,
+          "text": "baseline+++"
+        }
+      ]
+    },
+    {
+      "key": "net",
+      "entity": "baseline+++",
+      "value": "ResNet-101",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 53088,
+          "end": 53098,
+          "text": "ResNet-101"
+        }
+      ]
+    },
+    {
+      "key": "data",
+      "entity": "baseline+++",
+      "value": "COCO+07++12",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 53101,
+          "end": 53112,
+          "text": "COCO+07++12"
+        }
+      ]
+    },
+    {
+      "key": "map",
+      "entity": "baseline+++",
+      "value": "83.8",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 53115,
+          "end": 53119,
+          "text": "83.8"
+        }
+      ]
+    },
+    {
+      "key": "aeo",
+      "entity": "baseline+++",
+      "value": "92.1",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 53122,
+          "end": 53126,
+          "text": "92.1"
+        }
+      ]
+    },
+    {
+      "key": "bike",
+      "entity": "baseline+++",
+      "value": "88.4",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 53129,
+          "end": 53133,
+          "text": "88.4"
+        }
+      ]
+    },
+    {
+      "key": "bird",
+      "entity": "baseline+++",
+      "value": "84.8",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 53136,
+          "end": 53140,
+          "text": "84.8"
+        }
+      ]
+    },
+    {
+      "key": "boat",
+      "entity": "baseline+++",
+      "value": "75.9",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 53143,
+          "end": 53147,
+          "text": "75.9"
+        }
+      ]
+    },
+    {
+      "key": "bottle",
+      "entity": "baseline+++",
+      "value": "71.4",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 53150,
+          "end": 53154,
+          "text": "71.4"
+        }
+      ]
+    },
+    {
+      "key": "bus",
+      "entity": "baseline+++",
+      "value": "86.3",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 53157,
+          "end": 53161,
+          "text": "86.3"
+        }
+      ]
+    },
+    {
+      "key": "car",
+      "entity": "baseline+++",
+      "value": "87.8",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 53164,
+          "end": 53168,
+          "text": "87.8"
+        }
+      ]
+    },
+    {
+      "key": "cat",
+      "entity": "baseline+++",
+      "value": "94.2",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 53171,
+          "end": 53175,
+          "text": "94.2"
+        }
+      ]
+    },
+    {
+      "key": "chair",
+      "entity": "baseline+++",
+      "value": "66.8",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 53178,
+          "end": 53182,
+          "text": "66.8"
+        }
+      ]
+    },
+    {
+      "key": "cow",
+      "entity": "baseline+++",
+      "value": "89.4",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 53185,
+          "end": 53189,
+          "text": "89.4"
+        }
+      ]
+    },
+    {
+      "key": "table",
+      "entity": "baseline+++",
+      "value": "69.2",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 53192,
+          "end": 53196,
+          "text": "69.2"
+        }
+      ]
+    },
+    {
+      "key": "dog",
+      "entity": "baseline+++",
+      "value": "93.9",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 53199,
+          "end": 53203,
+          "text": "93.9"
+        }
+      ]
+    },
+    {
+      "key": "horse",
+      "entity": "baseline+++",
+      "value": "91.9",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 53206,
+          "end": 53210,
+          "text": "91.9"
+        }
+      ]
+    },
+    {
+      "key": "mbike",
+      "entity": "baseline+++",
+      "value": "90.9",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 53213,
+          "end": 53217,
+          "text": "90.9"
+        }
+      ]
+    },
+    {
+      "key": "person",
+      "entity": "baseline+++",
+      "value": "89.6",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 53220,
+          "end": 53224,
+          "text": "89.6"
+        }
+      ]
+    },
+    {
+      "key": "plant",
+      "entity": "baseline+++",
+      "value": "67.9",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 53227,
+          "end": 53231,
+          "text": "67.9"
+        }
+      ]
+    },
+    {
+      "key": "sheep",
+      "entity": "baseline+++",
+      "value": "88.2",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 53234,
+          "end": 53238,
+          "text": "88.2"
+        }
+      ]
+    },
+    {
+      "key": "sofa",
+      "entity": "baseline+++",
+      "value": "76.8",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 53241,
+          "end": 53245,
+          "text": "76.8"
+        }
+      ]
+    },
+    {
+      "key": "train",
+      "entity": "baseline+++",
+      "value": "90.3",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 53248,
+          "end": 53252,
+          "text": "90.3"
+        }
+      ]
+    },
+    {
+      "key": "tv",
+      "entity": "baseline+++",
+      "value": "80.0",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 53255,
+          "end": 53259,
+          "text": "80.0"
+        }
+      ]
+    },
+    {
+      "key": "test",
+      "entity": "GoogLeNet [44] (ILSVRC'14)",
+      "value": "43.9",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 54989,
+          "end": 54993,
+          "text": "43.9"
+        }
+      ]
+    },
+    {
+      "key": "val2",
+      "entity": "our single model (ILSVRC'15)",
+      "value": "60.5",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 55031,
+          "end": 55035,
+          "text": "60.5"
+        }
+      ]
+    },
+    {
+      "key": "test",
+      "entity": "our single model (ILSVRC'15)",
+      "value": "58.8",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 55038,
+          "end": 55042,
+          "text": "58.8"
+        }
+      ]
+    },
+    {
+      "key": "val2",
+      "entity": "our ensemble (ILSVRC'15)",
+      "value": "63.6",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 55076,
+          "end": 55080,
+          "text": "63.6"
+        }
+      ]
+    },
+    {
+      "key": "test",
+      "entity": "our ensemble (ILSVRC'15)",
+      "value": "62.1",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 55083,
+          "end": 55087,
+          "text": "62.1"
+        }
+      ]
+    },
+    {
+      "key": "loc_method",
+      "entity": "",
+      "value": "VGG's [41]",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 56287,
+          "end": 56297,
+          "text": "VGG's [41]"
+        }
+      ]
+    },
+    {
+      "key": "loc_network",
+      "entity": "VGG's [41]",
+      "value": "VGG-16",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 56300,
+          "end": 56306,
+          "text": "VGG-16"
+        }
+      ]
+    },
+    {
+      "key": "testing",
+      "entity": "VGG's [41]",
+      "value": "1-crop",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 56309,
+          "end": 56315,
+          "text": "1-crop"
+        }
+      ]
+    },
+    {
+      "key": "loc_error_on_gt_cls",
+      "entity": "VGG's [41]",
+      "value": "33.1 [41]",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 56318,
+          "end": 56327,
+          "text": "33.1 [41]"
+        }
+      ]
+    },
+    {
+      "key": "loc_method",
+      "entity": "",
+      "value": "RPN",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 56340,
+          "end": 56343,
+          "text": "RPN"
+        }
+      ]
+    },
+    {
+      "key": "loc_network",
+      "entity": "RPN",
+      "value": "ResNet-101",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 56346,
+          "end": 56356,
+          "text": "ResNet-101"
+        }
+      ]
+    },
+    {
+      "key": "testing",
+      "entity": "RPN",
+      "value": "1-crop",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 56359,
+          "end": 56365,
+          "text": "1-crop"
+        }
+      ]
+    },
+    {
+      "key": "loc_error_on_gt_cls",
+      "entity": "RPN",
+      "value": "13.3",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 56368,
+          "end": 56372,
+          "text": "13.3"
+        }
+      ]
+    },
+    {
+      "key": "loc_method",
+      "entity": "",
+      "value": "RPN",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 56385,
+          "end": 56388,
+          "text": "RPN"
+        }
+      ]
+    },
+    {
+      "key": "loc_network",
+      "entity": "RPN",
+      "value": "ResNet-101",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 56391,
+          "end": 56401,
+          "text": "ResNet-101"
+        }
+      ]
+    },
+    {
+      "key": "testing",
+      "entity": "RPN",
+      "value": "dense",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 56404,
+          "end": 56409,
+          "text": "dense"
+        }
+      ]
+    },
+    {
+      "key": "loc_error_on_gt_cls",
+      "entity": "RPN",
+      "value": "11.7",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 56412,
+          "end": 56416,
+          "text": "11.7"
+        }
+      ]
+    },
+    {
+      "key": "loc_method",
+      "entity": "",
+      "value": "RPN",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 56429,
+          "end": 56432,
+          "text": "RPN"
+        }
+      ]
+    },
+    {
+      "key": "loc_network",
+      "entity": "RPN",
+      "value": "ResNet-101",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 56435,
+          "end": 56445,
+          "text": "ResNet-101"
+        }
+      ]
+    },
+    {
+      "key": "testing",
+      "entity": "RPN",
+      "value": "dense",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 56448,
+          "end": 56453,
+          "text": "dense"
+        }
+      ]
+    },
+    {
+      "key": "classification_network",
+      "entity": "RPN",
+      "value": "ResNet-101",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 56459,
+          "end": 56469,
+          "text": "ResNet-101"
+        }
+      ]
+    },
+    {
+      "key": "top_5_loc_error_on_predicted_cls",
+      "entity": "RPN",
+      "value": "14.4",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 56472,
+          "end": 56476,
+          "text": "14.4"
+        }
+      ]
+    },
+    {
+      "key": "loc_method",
+      "entity": "",
+      "value": "RPN+RCNN",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 56483,
+          "end": 56491,
+          "text": "RPN+RCNN"
+        }
+      ]
+    },
+    {
+      "key": "loc_network",
+      "entity": "RPN+RCNN",
+      "value": "ResNet-101",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 56494,
+          "end": 56504,
+          "text": "ResNet-101"
+        }
+      ]
+    },
+    {
+      "key": "testing",
+      "entity": "RPN+RCNN",
+      "value": "dense",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 56507,
+          "end": 56512,
+          "text": "dense"
+        }
+      ]
+    },
+    {
+      "key": "classification_network",
+      "entity": "RPN+RCNN",
+      "value": "ResNet-101",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 56518,
+          "end": 56528,
+          "text": "ResNet-101"
+        }
+      ]
+    },
+    {
+      "key": "top_5_loc_error_on_predicted_cls",
+      "entity": "RPN+RCNN",
+      "value": "10.6",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 56531,
+          "end": 56535,
+          "text": "10.6"
+        }
+      ]
+    },
+    {
+      "key": "loc_method",
+      "entity": "",
+      "value": "RPN+RCNN",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 56542,
+          "end": 56550,
+          "text": "RPN+RCNN"
+        }
+      ]
+    },
+    {
+      "key": "loc_network",
+      "entity": "RPN+RCNN",
+      "value": "ensemble",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 56553,
+          "end": 56561,
+          "text": "ensemble"
+        }
+      ]
+    },
+    {
+      "key": "testing",
+      "entity": "RPN+RCNN",
+      "value": "dense",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 56564,
+          "end": 56569,
+          "text": "dense"
+        }
+      ]
+    },
+    {
+      "key": "classification_network",
+      "entity": "RPN+RCNN",
+      "value": "ensemble",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 56575,
+          "end": 56583,
+          "text": "ensemble"
+        }
+      ]
+    },
+    {
+      "key": "top_5_loc_error_on_predicted_cls",
+      "entity": "RPN+RCNN",
+      "value": "8.9",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 56586,
+          "end": 56589,
+          "text": "8.9"
+        }
+      ]
+    },
+    {
+      "key": "top_5_localization_err",
+      "entity": "",
+      "value": "val",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 59145,
+          "end": 59148,
+          "text": "val"
+        }
+      ]
+    },
+    {
+      "key": "method",
+      "entity": "",
+      "value": "OverFeat [40] (ILSVRC'13)",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 59162,
+          "end": 59187,
+          "text": "OverFeat [40] (ILSVRC'13)"
+        }
+      ]
+    },
+    {
+      "key": "top_5_localization_err",
+      "entity": "OverFeat [40] (ILSVRC'13)",
+      "value": "30.0",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 59190,
+          "end": 59194,
+          "text": "30.0"
+        }
+      ]
+    },
+    {
+      "key": "method",
+      "entity": "",
+      "value": "GoogLeNet [44] (ILSVRC'14)",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 59208,
+          "end": 59234,
+          "text": "GoogLeNet [44] (ILSVRC'14)"
+        }
+      ]
+    },
+    {
+      "key": "method",
+      "entity": "",
+      "value": "VGG [41] (ILSVRC'14)",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 59252,
+          "end": 59272,
+          "text": "VGG [41] (ILSVRC'14)"
+        }
+      ]
+    },
+    {
+      "key": "top_5_localization_err",
+      "entity": "VGG [41] (ILSVRC'14)",
+      "value": "26.9",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 59275,
+          "end": 59279,
+          "text": "26.9"
+        }
+      ]
+    },
+    {
+      "key": "method",
+      "entity": "",
+      "value": "ours (ILSVRC'15)",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 59293,
+          "end": 59309,
+          "text": "ours (ILSVRC'15)"
+        }
+      ]
+    },
+    {
+      "key": "top_5_localization_err",
+      "entity": "ours (ILSVRC'15)",
+      "value": "8.9",
+      "extractor": "table",
+      "spans": [
+        {
+          "start": 59312,
+          "end": 59315,
+          "text": "8.9"
+        }
+      ]
+    }
+  ]
+}

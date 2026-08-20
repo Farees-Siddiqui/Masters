@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='utf-8'?>
+<document title="doc04_horizontal_table" pages="1" blocks="2">
+  <page number="0">
+    <paragraph id="0" bbox="802.0,141.0,1398.0,179.0" status="extracted" label="figure_title">Placement Term — Record Extract</paragraph>
+    <table format="markdown" rows="2" columns="6" id="1" bbox="587.0,240.0,1612.0,335.0" status="completed" label="table">| Surname | Given Name | Street Address | City | Score | Standing |
+|---|---|---|---|---|---|
+| Kaur | Simran | 47Hillcrest Drive | Brampton | 82 | Satisfactory |</table>
+  </page>
+</document>

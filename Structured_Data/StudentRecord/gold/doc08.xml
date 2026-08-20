@@ -1,0 +1,8 @@
+<student-record>
+  <name lastname="Abebe" firstname="Selam"/>
+  <address>
+    <street>1180 Fanshawe Park Road</street>
+    <city>London</city>
+  </address>
+  <evaluation grade="85">Satisfactory</evaluation>
+</student-record>

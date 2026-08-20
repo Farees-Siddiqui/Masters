@@ -1,0 +1,229 @@
+{
+  "config": {
+    "beta": 1.3,
+    "theta_v": 0.9,
+    "min_gap_px": 1.0,
+    "overlap_threshold": 0.3,
+    "mask_titles": false,
+    "mask_vision": true,
+    "mask_marginal": true,
+    "enable_cross_mask": false
+  },
+  "n_pages": 1,
+  "pages": [
+    {
+      "source": "doc03_vertical_table.pdf",
+      "page_index": 0,
+      "width": 1700,
+      "height": 2200,
+      "n_blocks": 3,
+      "blocks": [
+        {
+          "order": 0,
+          "label": "figure_title",
+          "bbox": [
+            718.0,
+            252.0,
+            982.0,
+            288.0
+          ],
+          "score": 0.6354,
+          "synthetic": false,
+          "text": "Student Record",
+          "lines": [
+            {
+              "text": "Student Record",
+              "bbox": [
+                720.0,
+                252.0,
+                979.0,
+                283.0
+              ],
+              "score": 0.9693
+            }
+          ]
+        },
+        {
+          "order": 1,
+          "label": "table",
+          "bbox": [
+            612.0,
+            333.0,
+            1087.0,
+            625.0
+          ],
+          "score": 0.9526,
+          "synthetic": false,
+          "text": "Field\nEntry\nLast Name\nOkonkwo\nFirst Name\nChidi\nStreet\n2201 Lakeshore Road\nCity\nBurlington\nGrade\n94\nEvaluation\nExcellent",
+          "lines": [
+            {
+              "text": "Field",
+              "bbox": [
+                610.0,
+                341.0,
+                699.0,
+                377.0
+              ],
+              "score": 0.9991
+            },
+            {
+              "text": "Entry",
+              "bbox": [
+                791.0,
+                338.0,
+                894.0,
+                382.0
+              ],
+              "score": 0.9993
+            },
+            {
+              "text": "Last Name",
+              "bbox": [
+                611.0,
+                392.0,
+                765.0,
+                427.0
+              ],
+              "score": 0.994
+            },
+            {
+              "text": "Okonkwo",
+              "bbox": [
+                795.0,
+                393.0,
+                926.0,
+                428.0
+              ],
+              "score": 0.9992
+            },
+            {
+              "text": "First Name",
+              "bbox": [
+                611.0,
+                431.0,
+                771.0,
+                465.0
+              ],
+              "score": 0.9817
+            },
+            {
+              "text": "Chidi",
+              "bbox": [
+                794.0,
+                430.0,
+                878.0,
+                466.0
+              ],
+              "score": 0.9997
+            },
+            {
+              "text": "Street",
+              "bbox": [
+                611.0,
+                470.0,
+                700.0,
+                503.0
+              ],
+              "score": 0.9997
+            },
+            {
+              "text": "2201 Lakeshore Road",
+              "bbox": [
+                796.0,
+                471.0,
+                1085.0,
+                501.0
+              ],
+              "score": 0.9953
+            },
+            {
+              "text": "City",
+              "bbox": [
+                608.0,
+                502.0,
+                681.0,
+                547.0
+              ],
+              "score": 0.9988
+            },
+            {
+              "text": "Burlington",
+              "bbox": [
+                794.0,
+                506.0,
+                946.0,
+                544.0
+              ],
+              "score": 0.9999
+            },
+            {
+              "text": "Grade",
+              "bbox": [
+                612.0,
+                545.0,
+                702.0,
+                578.0
+              ],
+              "score": 0.9996
+            },
+            {
+              "text": "94",
+              "bbox": [
+                793.0,
+                544.0,
+                837.0,
+                579.0
+              ],
+              "score": 0.9998
+            },
+            {
+              "text": "Evaluation",
+              "bbox": [
+                612.0,
+                584.0,
+                762.0,
+                616.0
+              ],
+              "score": 0.9999
+            },
+            {
+              "text": "Excellent",
+              "bbox": [
+                794.0,
+                583.0,
+                924.0,
+                617.0
+              ],
+              "score": 0.9999
+            }
+          ]
+        },
+        {
+          "order": 2,
+          "label": "text",
+          "bbox": [
+            245.0,
+            706.0,
+            1209.0,
+            739.0
+          ],
+          "score": 0.7492,
+          "synthetic": false,
+          "text": "Generated from the student information system. Entries are shown exactly as stored.",
+          "lines": [
+            {
+              "text": "Generated from the student information system. Entries are shown exactly as stored.",
+              "bbox": [
+                249.0,
+                707.0,
+                1205.0,
+                733.0
+              ],
+              "score": 0.9895
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

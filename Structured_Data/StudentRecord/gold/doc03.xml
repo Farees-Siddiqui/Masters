@@ -1,0 +1,8 @@
+<student-record>
+  <name lastname="Okonkwo" firstname="Chidi"/>
+  <address>
+    <street>2201 Lakeshore Road</street>
+    <city>Burlington</city>
+  </address>
+  <evaluation grade="94">Excellent</evaluation>
+</student-record>

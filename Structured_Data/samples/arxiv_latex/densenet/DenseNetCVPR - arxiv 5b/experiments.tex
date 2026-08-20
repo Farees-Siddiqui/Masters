@@ -1,0 +1,171 @@
+%!TEX root=main.tex
+%\vspace{-1 ex}
+\section{Experiments}
+%\vspace{-1 ex}
+\input{result/caption}
+\input{result/table}
+
+\label{sec:results}
+\label{sec:experiment-results}
+  We empirically demonstrate \methodnameshort{}'s effectiveness on several benchmark datasets
+  %\footnote{We will update the paper with results on ImageNet dataset}
+  and compare with state-of-the-art architectures, especially with ResNet and its variants.
+  %Code is available at \url{https://github.com/liuzhuang13/DenseNet}.
+
+\subsection{Datasets}
+%\vspace{-1 ex}
+\paragraph{CIFAR.}
+      The two CIFAR datasets \cite{cifar} consist of colored natural images with 32$\times$32 pixels. CIFAR-10 (C10) consists of images drawn from 10 and CIFAR-100 (C100) from 100 classes. The training and test sets contain 50,000 and 10,000 images respectively, and we hold out 5,000 training images as a validation set.
+      We adopt a standard data augmentation scheme (mirroring/shifting) that is widely used for these two datasets \cite{resnet, stochastic, fractalnet, netinnet, fitnet, dsn, allcnn, highway}. We denote this data augmentation scheme by a ``+'' mark at the end of the dataset name (\emph{e.g.}, C10+). For preprocessing, we normalize the data using the channel means and standard deviations. For the final run we use all 50,000 training images and report the final test error at the end of training.
+
+\vspace{-2 ex}
+\paragraph{SVHN.}
+    The Street View House Numbers (SVHN) dataset \cite{svhn} contains 32$\times$32 colored digit images. There are 73,257 images in the training set, 26,032 images in the test set, and 531,131 images for additional training. Following common practice~\cite{maxout, stochastic, dsn, netinnet, sermanet2012convolutional} we use all the training data without any data augmentation, and a validation set with 6,000 images is split from the training set. We select the model with the lowest validation error during training and report the test error. We follow \cite{wide} and divide the pixel values by 255 so they are in the $[0, 1]$ range.
+%
+%\begin{figure*}[t]
+%      \centerline{\includegraphics[width=0.9\textwidth]{figures/imagenet_new.pdf}}
+%      \caption{Comparison of the DenseNet and ResNet top-1 (single model and single-crop) error rates on the ImageNet classification dataset as a function of learned parameters (\emph{left}) and flops during test-time (\emph{right}).}
+%      \label{fig:imagenet}
+%     \vspace{-1ex}
+%\end{figure*}
+
+%\begin{figure*}[t]
+%    \centering
+%%    \rule{6.4cm}{3.6cm}
+%%    \qquad
+%\footnotesize
+%\def\arraystretch{1.2}
+%\setlength{\tabcolsep}{2pt}
+%    \begin{tabular}[b]{c|c|c}\hline
+%      Model & top-1 & top-5 \\ \hline
+%      \methodnameshort-121 $(k=32)$& 25.02 & 7.71\\
+%      \methodnameshort-169 $(k=32)$& 23.80 & 6.85\\
+%      \methodnameshort-201 $(k=32)$& 22.58 & 6.34\\
+%      \methodnameshort-161 $(k=48)$& 22.33 & 6.15\\ \hline
+%    \end{tabular}
+%%    \captionlistentry[table]{A table beside a figure}
+%\includegraphics[width=0.63\textwidth]{figures/imagenet_new.pdf}
+%    \captionsetup{labelformat=andtable}
+%    \caption{Comparison of the DenseNet and ResNet top-1 (single model and single-crop) error rates on the ImageNet classification dataset as a function of learned parameters (\emph{left}) and flops during test-time (\emph{right}).}
+% \end{figure*}
+%
+
+ \begin{table*}[ht]
+     \vspace{-8pt}
+\begin{minipage}[b]{0.35\linewidth}
+\centering
+\footnotesize
+\def\arraystretch{1.8}
+\setlength{\tabcolsep}{2pt}
+    \begin{tabular}[b]{c|c|c}\hline
+      Model & top-1 & top-5 \\ \hline
+      \methodnameshort-121& 25.02 / 23.61 & 7.71 / 6.66\\
+      \methodnameshort-169& 23.80 / 22.08 & 6.85 / 5.92\\
+      \methodnameshort-201& 22.58 / 21.46 & 6.34 / 5.54\\
+      \methodnameshort-264& 22.15 / 20.80 & 6.12 / 5.29\\ \hline
+    \end{tabular}
+    \vspace{8pt}
+    \caption{The top-1 and top-5 error rates on the ImageNet validation set, with single-crop / 10-crop testing.}
+    \label{table:imagenet-numbers}
+\end{minipage}\hfill
+\begin{minipage}[b]{0.60\linewidth}
+\centering
+\includegraphics[width=1.0\textwidth]{figures/imagenet_new.pdf}
+\captionof{figure}{Comparison of the DenseNets and ResNets top-1 error rates (single-crop testing) on the ImageNet validation dataset as a function of learned parameters (\emph{left}) and FLOPs during test-time (\emph{right}).}
+\label{fig:imagenet}
+\end{minipage}
+\vspace{-2ex}
+\end{table*}
+
+\vspace{-2 ex}
+\paragraph{ImageNet.} The ILSVRC 2012 classification dataset \cite{deng2009imagenet} consists 1.2 million images for training, and 50,000 for validation, from $1,000$ classes. We adopt the same data augmentation scheme for training images as in \cite{blogresnet,resnet,identity-mappings}, and apply a single-crop or 10-crop with size 224$\times$224 at test time. Following \cite{resnet,identity-mappings,stochastic}, we report classification errors on the validation set.
+
+%  \subsection{Experimental Setup}
+    %feature-map size of each group are $32\times 32, 16\times16, 8\times8$ respectively.
+
+
+%    In \cite{wide} authors show that increasing the width of ResNets can increase the performance significantly, even using a shallower network. We also do experiments on a wider 100 layer \methodnameshort{}. The \stepsizename{}s used are 12 times of the normal \methodnameshort{}. We denote this model as W\methodnameshort{}-100-12.
+
+%\vspace{-2 ex}
+\subsection{Training}
+All the networks are trained using stochastic gradient descent (SGD). On CIFAR and SVHN we train using batch size 64 for 300 and 40 epochs, respectively. The initial learning rate is set to 0.1, and is divided by 10 at 50\% and 75\% of the total number of training epochs. On ImageNet, we train models for 90 epochs with a batch size of 256. The learning rate is set to 0.1 initially, and is lowered by 10 times at epoch 30 and 60. Note that a naive implementation of DenseNet may contain memory inefficiencies. To reduce the memory consumption on GPUs, please refer to our technical report on the memory-efficient implementation of DenseNets \cite{pleiss2017memory}.
+
+%Due to GPU memory constraints, our largest model (DenseNet-161) is trained with a mini-batch size 128. To compensate for the smaller batch size, we train this model for 100 epochs, and divide the learning rate by 10 at epoch 90.
+
+Following \cite{blogresnet}, we use a weight decay of $10^{-4}$ and a Nesterov momentum \cite{nesterov} of 0.9 without dampening. We adopt the weight initialization introduced by \cite{init}. For the three datasets without data augmentation, \emph{i.e.}, C10, C100 and SVHN, we add a dropout layer \cite{dropout} after each convolutional layer (except the first one) and set the dropout rate to 0.2. The test errors were only evaluated once for each task and model setting.
+
+%Pre-activation as in \cite{identity-mappings} is also utilized, i.e., a typical transformation is ordered as BN-ReLU-Conv rather than the commonly used Conv-BN-ReLU.
+
+     %\zl{We hold out 5000 training samples as validation set, right now the validation error is shown in the result table.}
+
+
+
+\subsection{Classification Results on CIFAR and SVHN}
+
+We train \methodnameshort{}s with different depths, $L$, and \stepsizename{}s, $k$.
+The main results on CIFAR and SVHN are shown in Table~\ref{my-label}.
+To highlight general trends, we mark all results that outperform the existing state-of-the-art  in {\textbf{boldface}} and the overall best result in {\color{blue} \textbf{blue}}.
+
+\vspace{-2 ex}
+\paragraph{Accuracy.}
+Possibly the most noticeable trend may originate from the bottom row of Table~\ref{my-label}, which shows that \methodnameshort{}-BC with $L\!=\!190$ and $k\!=\!40$ outperforms the existing state-of-the-art consistently on \emph{all} the CIFAR datasets. Its error rates of 3.46\% on C10+ and 17.18\% on C100+ are significantly lower than the error rates achieved by wide ResNet architecture~\cite{wide}. Our best results on C10 and C100 (without data augmentation) are even more encouraging: both are close to 30\% lower than FractalNet with drop-path regularization \cite{fractalnet}. On SVHN, with dropout, the \methodnameshort{} with $L\!=\!100$ and $k\!=\!24$ also surpasses the current best result achieved by wide ResNet. However, the 250-layer DenseNet-BC doesn't further improve the performance over its shorter counterpart. This may be explained by that SVHN is a relatively easy task, and extremely deep models may overfit to the training set.
+
+%Even when the \stepsizename{} is lowered to $k\!=\!12$, which reduces the number of learned parameters to roughly 1/4, it still performs highly competitively. In fact, this architecture achieves the lowest error on C10, and outperforms all existing state-of-the-art results across the four CIFAR datasets.
+
+
+%    Our \methodnameshort{} with $L\!=\!100$ and $k\!=\!24$ achieves an error rate of 3.74\% on C10+ and 19.25\% on C100+. Without data augmentation, \methodnameshort{} with Dropout achieves an error rate of 5.77\% and 23.42\% on C10 and C100 respectively. Those are all the state-of-the-art results on these datasets.  Even a smaller \methodnameshort{}-100-12 outperforms all competing methods across CIFAR datasets.  %We notice that most methods perform similarly on SVHN, rendering this dataset a weak differentiator for network architectures.
+
+\vspace{-2 ex}
+\paragraph{Capacity.} Without compression or bottleneck layers, there is a general trend that \methodnameshorts{}  perform better as $L$ and $k$ increase. We attribute this primarily to the corresponding growth in model capacity. This is best demonstrated by the column of C10+ and C100+. On C10+,  the error drops from 5.24\% to 4.10\% and finally to 3.74\% as the number of parameters increases from 1.0M, over 7.0M to 27.2M. On C100+, we observe a similar trend. This suggests that \methodnameshorts{} can utilize the increased representational power of bigger and deeper models. It also indicates that they do not suffer from overfitting or the optimization difficulties of residual networks~\cite{resnet}.
+%In fact,  it is quite possible that a deeper \methodnameshort{} with more parameters achieves even better results.
+
+
+\vspace{-2 ex}
+\paragraph{Parameter Efficiency.}
+The results in Table~\ref{my-label} indicate that \methodnameshorts{} utilize parameters more efficiently than alternative architectures (in particular, ResNets). The \methodnameshort{}-BC with bottleneck structure and dimension reduction at transition layers is particularly parameter-efficient. For example, our 250-layer model only has 15.3M parameters, but it consistently outperforms other models such as FractalNet and Wide ResNets that have more than 30M parameters. We also highlight that \methodnameshort{}-BC with $L\!=\!100$ and $k\!=\!12$ achieves comparable performance  (\emph{e.g.}, 4.51\% vs 4.62\% error on C10+, 22.27\% vs 22.71\% error on C100+) as the 1001-layer pre-activation ResNet using 90\% fewer parameters.
+Figure~\ref{fig:params} (right panel) shows the training loss and test errors of these two networks on C10+. The 1001-layer deep ResNet converges to a lower training loss value but a similar test error. We analyze this effect in more detail below.
+
+
+\vspace{-2 ex}
+\paragraph{Overfitting.}  One positive side-effect of the more efficient use of parameters is a tendency of \methodnameshorts{} to be less prone to overfitting.
+%We did observe that typically Dropout is not necessary with \methodnameshort{} architectures, although we did use it for datasets without data augmentation (which are substantially smaller and where overfitting is more of a nuisance).
+We observe that on the datasets without data augmentation, the improvements of \methodnameshort{} architectures over prior work are particularly pronounced. On C10, the improvement denotes a 29\% relative reduction in error from 7.33\% to 5.19\%. On C100, the reduction is about 30\% from 28.20\% to 19.64\%.
+%Out of curiosity, we did evaluate \methodnameshort{} with $L=40$ and $k=12$ on C10, C100 without Dropout, and the resulting error rates are 8.85\% and 32.53\%, which are better than all previous methods except FractalNets with Dropout/Drop-path regularization.
+In our experiments, we observed potential overfitting in a single setting: on C10, a 4$\times$ growth of parameters produced by increasing $k\!=\!12$ to $k\!=\!24$ lead to a modest increase in error from 5.77\% to 5.83\%.
+The \methodnameshort{}-BC bottleneck and compression layers appear to be an effective way to counter this trend.
+%As this increase is within the range of natural fluctuations, it remains unclear if it is caused by overfitting.
+
+\begin{figure*}[!ht]
+\centerline{
+\resizebox{\textwidth}{!}{
+    \includegraphics[width=0.28\linewidth]{figures/Parameter_error_DenseNet.pdf}
+    \includegraphics[width=0.28\linewidth]{figures/Parameter_error_ResNet_arrow.pdf}
+    \includegraphics[width=0.38\textwidth]{figures/curve.pdf}}
+    }
+          \vspace{-1ex}
+      \caption{\emph{Left:} Comparison of the parameter efficiency on C10+ between \methodnameshort{} variations. \emph{Middle:} Comparison of the parameter efficiency between \methodnameshort{}-BC and (pre-activation) ResNets. \methodnameshort{}-BC requires about 1/3 of the parameters as ResNet to achieve comparable accuracy.
+      \emph{Right:} Training and testing curves of the 1001-layer pre-activation ResNet \cite{identity-mappings} with more than 10M parameters and a 100-layer \methodnameshort{} with only 0.8M parameters.}
+      \label{fig:params}
+      \vspace{-3ex}
+\end{figure*}
+
+
+
+\subsection{Classification Results on ImageNet}
+We evaluate \methodnameshort{}-BC with different depths and growth rates on the ImageNet classification task, and compare it with state-of-the-art ResNet architectures. To ensure a fair comparison between the two architectures, we eliminate all other factors such as differences in data preprocessing and optimization settings by adopting the publicly available Torch implementation for ResNet by \cite{blogresnet}\footnote{\url{https://github.com/facebook/fb.resnet.torch}}.
+We simply replace the ResNet model with the \methodnameshort{}-BC network, and keep all the experiment settings \emph{exactly} the same as those used for ResNet.
+
+We report the single-crop and 10-crop validation errors of \methodnameshorts{} on ImageNet in Table~\ref{table:imagenet-numbers}. Figure~\ref{fig:imagenet} shows the single-crop top-1 validation errors of \methodnameshorts{} and ResNets as a function of the number of parameters (left) and FLOPs (right). The results presented in the figure reveal that \methodnameshorts{} perform on par with the state-of-the-art ResNets, whilst requiring significantly fewer parameters and computation to achieve comparable performance. For example, a DenseNet-201 with 20M parameters model yields similar validation error as a 101-layer ResNet with more than 40M parameters. Similar trends can be observed from the right panel, which plots the validation error as a function of the number of FLOPs: a \methodnameshort{} that requires as much computation as a ResNet-50 performs on par with a ResNet-101, which requires twice as much computation.
+
+It is worth noting that our experimental setup implies that we use hyperparameter settings that are optimized for ResNets but not for \methodnameshorts{}. It is conceivable that more extensive hyper-parameter searches may further improve the performance of \methodnameshort{} on ImageNet.
+%We did not experiment with \methodnameshort{} architectures with more than 30M parameters, because of memory inefficiencies in our preliminary implementation, which was optimized for correctness and not for efficiency.
+
+% \begin{figure}[t]
+%       \centering
+%     \small
+%       \includegraphics[width=0.5\textwidth]{figures/curve.pdf}
+%       \caption{Training curves of 1001-layer ResNet (pre-activation) and 100-layer \methodnameshort{} on C10+.}
+%       \label{fig:curve}
+% %\vspace{-2ex}
+% \end{figure}
+

@@ -1,0 +1,252 @@
+{
+  "n_pages": 1,
+  "pages": [
+    {
+      "page": 0,
+      "blocks": [
+        {
+          "block_id": 0,
+          "block_type": "TEXT",
+          "bbox": [
+            718.0,
+            252.0,
+            982.0,
+            288.0
+          ],
+          "parsed_content": "Student Record",
+          "crop_path": null,
+          "metadata": {
+            "label": "figure_title",
+            "page": 0,
+            "reading_position": 0,
+            "handler": "_handle_text",
+            "n_lines": 1,
+            "mean_line_confidence": 0.9693,
+            "is_marginal": false,
+            "source_order": 0,
+            "status": "extracted"
+          },
+          "raw_lines": [
+            {
+              "text": "Student Record",
+              "bbox": [
+                720.0,
+                252.0,
+                979.0,
+                283.0
+              ],
+              "score": 0.9693
+            }
+          ]
+        },
+        {
+          "block_id": 1,
+          "block_type": "TABLE",
+          "bbox": [
+            612.0,
+            333.0,
+            1087.0,
+            625.0
+          ],
+          "parsed_content": "| Field | Entry |\n|---|---|\n| LastName | Okonkwo |\n| FirstName | Chidi |\n| Street | 2201 Lakeshore Road |\n| City | Burlington |\n| Grade | 94 |\n| Evaluation | Excellent |",
+          "crop_path": "StudentRecord/XML_Output_Predited/doc03_vertical_table/crops/page_0_block_1.png",
+          "metadata": {
+            "label": "table",
+            "page": 0,
+            "reading_position": 1,
+            "handler": "_handle_table",
+            "n_lines": 14,
+            "mean_line_confidence": 0.9976,
+            "is_marginal": false,
+            "source_order": 1,
+            "status": "completed",
+            "table_format": "markdown",
+            "table_rows": 7,
+            "table_columns": 2,
+            "merged_cells": false,
+            "cell_fill": 1.0,
+            "extractor": "paddle:TableRecognitionPipelineV2",
+            "ocr_fallback_text": "Field\nEntry\nLast Name\nOkonkwo\nFirst Name\nChidi\nStreet\n2201 Lakeshore Road\nCity\nBurlington\nGrade\n94\nEvaluation\nExcellent"
+          },
+          "raw_lines": [
+            {
+              "text": "Field",
+              "bbox": [
+                610.0,
+                341.0,
+                699.0,
+                377.0
+              ],
+              "score": 0.9991
+            },
+            {
+              "text": "Entry",
+              "bbox": [
+                791.0,
+                338.0,
+                894.0,
+                382.0
+              ],
+              "score": 0.9993
+            },
+            {
+              "text": "Last Name",
+              "bbox": [
+                611.0,
+                392.0,
+                765.0,
+                427.0
+              ],
+              "score": 0.994
+            },
+            {
+              "text": "Okonkwo",
+              "bbox": [
+                795.0,
+                393.0,
+                926.0,
+                428.0
+              ],
+              "score": 0.9992
+            },
+            {
+              "text": "First Name",
+              "bbox": [
+                611.0,
+                431.0,
+                771.0,
+                465.0
+              ],
+              "score": 0.9817
+            },
+            {
+              "text": "Chidi",
+              "bbox": [
+                794.0,
+                430.0,
+                878.0,
+                466.0
+              ],
+              "score": 0.9997
+            },
+            {
+              "text": "Street",
+              "bbox": [
+                611.0,
+                470.0,
+                700.0,
+                503.0
+              ],
+              "score": 0.9997
+            },
+            {
+              "text": "2201 Lakeshore Road",
+              "bbox": [
+                796.0,
+                471.0,
+                1085.0,
+                501.0
+              ],
+              "score": 0.9953
+            },
+            {
+              "text": "City",
+              "bbox": [
+                608.0,
+                502.0,
+                681.0,
+                547.0
+              ],
+              "score": 0.9988
+            },
+            {
+              "text": "Burlington",
+              "bbox": [
+                794.0,
+                506.0,
+                946.0,
+                544.0
+              ],
+              "score": 0.9999
+            },
+            {
+              "text": "Grade",
+              "bbox": [
+                612.0,
+                545.0,
+                702.0,
+                578.0
+              ],
+              "score": 0.9996
+            },
+            {
+              "text": "94",
+              "bbox": [
+                793.0,
+                544.0,
+                837.0,
+                579.0
+              ],
+              "score": 0.9998
+            },
+            {
+              "text": "Evaluation",
+              "bbox": [
+                612.0,
+                584.0,
+                762.0,
+                616.0
+              ],
+              "score": 0.9999
+            },
+            {
+              "text": "Excellent",
+              "bbox": [
+                794.0,
+                583.0,
+                924.0,
+                617.0
+              ],
+              "score": 0.9999
+            }
+          ]
+        },
+        {
+          "block_id": 2,
+          "block_type": "TEXT",
+          "bbox": [
+            245.0,
+            706.0,
+            1209.0,
+            739.0
+          ],
+          "parsed_content": "Generated from the student information system. Entries are shown exactly as stored.",
+          "crop_path": null,
+          "metadata": {
+            "label": "text",
+            "page": 0,
+            "reading_position": 2,
+            "handler": "_handle_text",
+            "n_lines": 1,
+            "mean_line_confidence": 0.9895,
+            "is_marginal": false,
+            "source_order": 2,
+            "status": "extracted"
+          },
+          "raw_lines": [
+            {
+              "text": "Generated from the student information system. Entries are shown exactly as stored.",
+              "bbox": [
+                249.0,
+                707.0,
+                1205.0,
+                733.0
+              ],
+              "score": 0.9895
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

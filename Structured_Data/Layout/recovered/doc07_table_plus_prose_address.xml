@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='utf-8'?>
+<document source="doc07_table_plus_prose_address.pdf" model="nielsr/layoutlmv3-finetuned-funsd">
+  <surname label="Surname" by="layoutlmv3">Yamamoto</surname>
+  <first_name label="First Name" by="layoutlmv3">Hana</first_name>
+  <mark label="Mark" by="layoutlmv3">79</mark>
+  <evaluation label="Evaluation" by="layoutlmv3">Satisfactory</evaluation>
+  <unkeyed by="layoutlmv3">April 2026</unkeyed>
+  <unkeyed by="layoutlmv3">Yamamoto</unkeyed>
+  <mailing_address label="Mailing Address" by="gliner" score="0.91">62 Winston Churchill Boulevard</mailing_address>
+  <city label="City" by="gliner" score="0.98">Mississauga</city>
+</document>

@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='utf-8'?>
+<document title="doc01_email" pages="1" blocks="8">
+  <page number="0">
+    <paragraph id="0" bbox="193.0,203.0,669.0,273.0" status="extracted" label="text">From:r.delacroix@milton-college.ca
+To:</paragraph>
+    <paragraph id="1" bbox="195.0,243.0,761.0,349.0" status="extracted" label="text">academic.advising@milton-college.ca
+Date: 12 March 2026
+Subject: year-end file</paragraph>
+    <heading level="2" id="2" bbox="193.0,422.0,323.0,463.0" status="extracted" label="paragraph_title">Hi Dana,</heading>
+    <paragraph id="3" bbox="190.0,479.0,1142.0,520.0" status="extracted" label="text">Closing out the last of the year-end files before the deadline on Friday.</paragraph>
+    <paragraph id="4" bbox="192.0,535.0,1505.0,652.0" status="extracted" label="text">The one still outstanding is Farees Siddiqui. The mailing address we have on record is 14 Fake
+Street, in Milton —Ihave not been able to confirm whether that is still current, so it may be worth
+a phone call before anything goes out by post.</paragraph>
+    <paragraph id="5" bbox="193.0,666.0,1503.0,745.0" status="extracted" label="text">They finished the term with a grade of 90, and the evaluation entered against that grade is Satis-
+factory. Nothing else on the file needs your sign-off.</paragraph>
+    <paragraph id="6" bbox="195.0,761.0,312.0,800.0" status="extracted" label="text">Thanks,</paragraph>
+    <paragraph id="7" bbox="195.0,818.0,296.0,856.0" status="extracted" label="text">Renée</paragraph>
+  </page>
+</document>

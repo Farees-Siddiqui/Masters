@@ -1,0 +1,75 @@
+\section{Training setup}
+
+\begin{kvtable}{Learning rate}{tab:sec_training-learning-rate}
+\K{Learning rate} & 0.1 & \Sd{p.4}\\
+\K{Learning rate} & 0.01 & \Sd{p.7}\\
+\K{Learning rate} & 0.001 & \Sd{p.10}\\
+\K{Learning rate} & 0.0001 & \Sd{p.10}\\
+\end{kvtable}
+
+\begin{kvtable}{Weight decay}{tab:sec_training-weight-decay}
+\K{Weight decay} & 0.0001 & \Sd{p.4}\\
+\end{kvtable}
+
+\begin{kvtable}{Momentum}{tab:sec_training-momentum}
+\K{Momentum} & 0.9 & \Sd{p.4}\\
+\end{kvtable}
+
+\begin{kvtable}{Batch size}{tab:sec_training-batch-size}
+\K{Batch size} & 256 & \Sd{p.4}\\
+\K{Batch size} & 128 & \Sd{p.7}\\
+\K{Batch size} & 8 images & \Sd{p.10}\\
+\K{Batch size} & 16 images & \Sd{p.10}\\
+\end{kvtable}
+
+\begin{kvtable}{Iterations}{tab:sec_training-iterations}
+\K{Iterations} & 60 x 10\textasciicircum{}4 & \Sd{p.4}\\
+\K{Iterations} & 32k & \Sd{p.7}\\
+\K{Iterations} & 48k & \Sd{p.7}\\
+\K{Iterations} & 64k & \Sd{p.7}\\
+\K{Iterations} & 400 iterations & \Sd{p.7}\\
+\K{Iterations} & 240k & \Sd{p.10}\\
+\K{Iterations} & 80k & \Sd{p.10}\\
+\end{kvtable}
+
+\begin{kvtable}{Crop}{tab:sec_training-crop}
+\K{Crop} & 224x224 & \Sd{p.4}\\
+\K{Crop} & 32x32 & \Sd{p.7}\\
+\end{kvtable}
+
+\begin{kvtable}{Scale}{tab:sec_training-scale}
+\K{Scale} & [256, 480] & \Sd{p.4}\\
+\K{Scale} & \{224, 256, 384, 480, 640\} & \Sd{p.4}\\
+\K{Scale} & 600 pixels & \Sd{p.10}\\
+\K{Scale} & \{200, 400, 600, 800, 1000\} & \Sd{p.10}\\
+\end{kvtable}
+
+\begin{kvtable}{Augmentation}{tab:sec_training-augmentation}
+\K{Augmentation} & horizontal flip & \Sd{p.4}\\
+\K{Augmentation} & per-pixel mean subtracted & \Sd{p.4}\\
+\K{Augmentation} & color augmentation & \Sd{p.4}\\
+\K{Augmentation} & 4 pixels are padded & \Sd{p.7}\\
+\end{kvtable}
+
+\begin{kvtable}{Hardware}{tab:sec_training-hardware}
+\K{Hardware} & two GPUs & \Sd{p.7}\\
+\K{Hardware} & 8-GPU implementation & \Sd{p.10}\\
+\K{Hardware} & 1 per GPU & \Sd{p.10}\\
+\end{kvtable}
+
+\begin{kvtable}{Threshold}{tab:sec_training-threshold}
+\K{Threshold} & 0.3 & \Sd{p.10}\\
+\end{kvtable}
+
+\begin{kvtable}{Ratio}{tab:sec_training-ratio}
+\K{Ratio} & 1:1 & \Sd{p.12}\\
+\end{kvtable}
+
+\begin{kvtable}{Proposals}{tab:sec_training-proposals}
+\K{Proposals} & 300 proposals & \Sd{p.10}\\
+\K{Proposals} & 200 proposals & \Sd{p.12}\\
+\end{kvtable}
+
+\begin{kvtable}{Anchors}{tab:sec_training-anchors}
+\K{Anchors} & 8 anchors & \Sd{p.12}\\
+\end{kvtable}

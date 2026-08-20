@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='utf-8'?>
+<email date="12 March 2026" subject="year-end file" title="doc01_email" source="doc01_email.pdf">
+  <sender email_address="r.delacroix@milton-college.ca" />
+  <recipients email_address="academic.advising@milton-college.ca" />
+  <body>
+    <student name="Farees Siddiqui">
+      <mailing_address street="14 Fake Street" city="Milton" />
+      <grade value="90" evaluation="Satisfactory" />
+    </student>
+  </body>
+</email>

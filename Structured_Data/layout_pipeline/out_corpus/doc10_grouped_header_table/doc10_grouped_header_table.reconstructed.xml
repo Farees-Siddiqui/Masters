@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<document title="doc10_grouped_header_table" pages="1" blocks="2">
+  <page number="0">
+    <paragraph id="0" bbox="845.0,139.0,1355.0,181.0" status="extracted" label="figure_title">Consolidated Student Register</paragraph>
+    <table format="html" rows="3" columns="6" merged_cells="true" id="1" bbox="662.0,245.0,1534.0,389.0" status="completed" label="table">&lt;table&gt;&lt;tr&gt;&lt;td colspan="2"&gt;Name&lt;/td&gt;&lt;td colspan="2"&gt;Address&lt;/td&gt;&lt;td colspan="2"&gt;Evaluation&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Last&lt;/td&gt;&lt;td&gt;First&lt;/td&gt;&lt;td&gt;Street&lt;/td&gt;&lt;td&gt;City&lt;/td&gt;&lt;td&gt;Grade&lt;/td&gt;&lt;td&gt;Remark&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Chen&lt;/td&gt;&lt;td&gt;Wei&lt;/td&gt;&lt;td&gt;704Highland Avenue&lt;/td&gt;&lt;td&gt;Hamilton&lt;/td&gt;&lt;td&gt;97&lt;/td&gt;&lt;td&gt;Excellent&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</table>
+  </page>
+</document>

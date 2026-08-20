@@ -1,0 +1,305 @@
+{
+  "schema_domain": "education",
+  "metadata": {
+    "stage": "5:rendered_documents",
+    "source": "llm_generated_latex",
+    "layout_style": "auto",
+    "layouts": {
+      "form": 2,
+      "letter": 3,
+      "table": 1
+    },
+    "engine": "pdflatex",
+    "max_retries": 2,
+    "keep_tex": true,
+    "seed": 7,
+    "model": "llama3.1:8b",
+    "generated_at": "2026-08-20T11:26:49+00:00"
+  },
+  "summary": {
+    "documents": 6,
+    "compiled": 6,
+    "failed": 0,
+    "repaired": 0,
+    "compilations": 6,
+    "records_total": 9,
+    "records_covered": 9,
+    "joins": 3,
+    "orphaned_foreign_keys": 0,
+    "documents_value_complete": 5,
+    "values_missing": 1
+  },
+  "documents": [
+    {
+      "document_id": "doc-001-course_001",
+      "layout": "form",
+      "root_record": "course-001",
+      "root_entity": "Course",
+      "record_ids": [
+        "course-001"
+      ],
+      "records": [
+        {
+          "id": "course-001",
+          "entity_name": "Course",
+          "attributes": {
+            "id": "course-001",
+            "title": "Early Childhood Education",
+            "credits": 30,
+            "duration": "2 years"
+          },
+          "foreign_keys": {}
+        }
+      ],
+      "joins": [],
+      "orphaned_foreign_keys": [],
+      "pdf": "doc-001-course_001.pdf",
+      "tex": "doc-001-course_001.tex",
+      "fidelity": {
+        "values_expected": 4,
+        "values_missing_before_repair": 0,
+        "restored": false,
+        "values_missing": 0
+      },
+      "attempts": 1,
+      "status": "compiled"
+    },
+    {
+      "document_id": "doc-002-course_002",
+      "layout": "letter",
+      "root_record": "course-002",
+      "root_entity": "Course",
+      "record_ids": [
+        "course-002"
+      ],
+      "records": [
+        {
+          "id": "course-002",
+          "entity_name": "Course",
+          "attributes": {
+            "id": "course-002",
+            "title": "Master of Business Administration",
+            "credits": 120,
+            "duration": "1 year full-time or 2-3 years part-time"
+          },
+          "foreign_keys": {}
+        }
+      ],
+      "joins": [],
+      "orphaned_foreign_keys": [],
+      "pdf": "doc-002-course_002.pdf",
+      "tex": "doc-002-course_002.tex",
+      "fidelity": {
+        "values_expected": 4,
+        "values_missing_before_repair": 0,
+        "restored": false,
+        "values_missing": 0
+      },
+      "attempts": 1,
+      "status": "compiled"
+    },
+    {
+      "document_id": "doc-003-course_003",
+      "layout": "form",
+      "root_record": "course-003",
+      "root_entity": "Course",
+      "record_ids": [
+        "course-003"
+      ],
+      "records": [
+        {
+          "id": "course-003",
+          "entity_name": "Course",
+          "attributes": {
+            "id": "course-003",
+            "title": "Diploma in Nursing",
+            "credits": 80,
+            "duration": "18 months"
+          },
+          "foreign_keys": {}
+        }
+      ],
+      "joins": [],
+      "orphaned_foreign_keys": [],
+      "pdf": "doc-003-course_003.pdf",
+      "tex": "doc-003-course_003.tex",
+      "fidelity": {
+        "values_expected": 4,
+        "values_missing_before_repair": 0,
+        "restored": false,
+        "values_missing": 0
+      },
+      "attempts": 1,
+      "status": "compiled"
+    },
+    {
+      "document_id": "doc-004-student_001",
+      "layout": "letter",
+      "root_record": "student-001",
+      "root_entity": "Student",
+      "record_ids": [
+        "student-001",
+        "enrollment-001"
+      ],
+      "records": [
+        {
+          "id": "student-001",
+          "entity_name": "Student",
+          "attributes": {
+            "id": "student-001",
+            "first_name": "Emily",
+            "last_name": "Patel",
+            "email": "emily.patel@edu.ac.uk"
+          },
+          "foreign_keys": {}
+        },
+        {
+          "id": "enrollment-001",
+          "entity_name": "Enrollment",
+          "attributes": {
+            "id": "enrollment-001",
+            "course_id": "course_id-2144",
+            "start_date": "2022-09-01"
+          },
+          "foreign_keys": {
+            "student_id": "student-001"
+          }
+        }
+      ],
+      "joins": [
+        [
+          "enrollment-001",
+          "student_id",
+          "student-001"
+        ]
+      ],
+      "orphaned_foreign_keys": [],
+      "pdf": "doc-004-student_001.pdf",
+      "tex": "doc-004-student_001.tex",
+      "fidelity": {
+        "values_expected": 7,
+        "values_missing_before_repair": 3,
+        "restored": true,
+        "values_missing": 1,
+        "missing": [
+          {
+            "record": "enrollment-001",
+            "field": "id",
+            "value": "enrollment-001"
+          }
+        ]
+      },
+      "attempts": 1,
+      "status": "compiled"
+    },
+    {
+      "document_id": "doc-005-student_002",
+      "layout": "table",
+      "root_record": "student-002",
+      "root_entity": "Student",
+      "record_ids": [
+        "student-002",
+        "enrollment-003"
+      ],
+      "records": [
+        {
+          "id": "student-002",
+          "entity_name": "Student",
+          "attributes": {
+            "id": "student-002",
+            "first_name": "Liam",
+            "last_name": "Brown",
+            "email": "liam.brown@edu.ac.uk"
+          },
+          "foreign_keys": {}
+        },
+        {
+          "id": "enrollment-003",
+          "entity_name": "Enrollment",
+          "attributes": {
+            "id": "enrollment-003",
+            "course_id": "course_id-2486",
+            "start_date": "2019-08-26"
+          },
+          "foreign_keys": {
+            "student_id": "student-002"
+          }
+        }
+      ],
+      "joins": [
+        [
+          "enrollment-003",
+          "student_id",
+          "student-002"
+        ]
+      ],
+      "orphaned_foreign_keys": [],
+      "pdf": "doc-005-student_002.pdf",
+      "tex": "doc-005-student_002.tex",
+      "fidelity": {
+        "values_expected": 7,
+        "values_missing_before_repair": 2,
+        "restored": true,
+        "values_missing": 0
+      },
+      "attempts": 1,
+      "status": "compiled"
+    },
+    {
+      "document_id": "doc-006-student_003",
+      "layout": "letter",
+      "root_record": "student-003",
+      "root_entity": "Student",
+      "record_ids": [
+        "student-003",
+        "enrollment-002"
+      ],
+      "records": [
+        {
+          "id": "student-003",
+          "entity_name": "Student",
+          "attributes": {
+            "id": "student-003",
+            "first_name": "Ava",
+            "last_name": "Lee",
+            "email": null
+          },
+          "foreign_keys": {}
+        },
+        {
+          "id": "enrollment-002",
+          "entity_name": "Enrollment",
+          "attributes": {
+            "id": "enrollment-002",
+            "course_id": "course_id-4943",
+            "start_date": "2021-02-15"
+          },
+          "foreign_keys": {
+            "student_id": "student-003"
+          }
+        }
+      ],
+      "joins": [
+        [
+          "enrollment-002",
+          "student_id",
+          "student-003"
+        ]
+      ],
+      "orphaned_foreign_keys": [],
+      "pdf": "doc-006-student_003.pdf",
+      "tex": "doc-006-student_003.tex",
+      "fidelity": {
+        "values_expected": 6,
+        "values_missing_before_repair": 1,
+        "restored": true,
+        "values_missing": 0
+      },
+      "attempts": 1,
+      "status": "compiled"
+    }
+  ],
+  "warnings": [
+    "doc-004-student_001: 1 recorded value(s) are not on the page (enrollment-001.id)"
+  ]
+}

@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='utf-8'?>
+<document source="doc09_directory_entry.pdf" model="nielsr/layoutlmv3-finetuned-funsd">
+  <surname label="Surname" by="gliner" score="0.73">Petrov</surname>
+  <surname label="Surname" by="gliner" score="0.52">Dmitri</surname>
+  <street label="Street" by="gliner" score="0.91">23 Sunnybrook Lane</street>
+  <city label="City" by="gliner" score="0.98">Waterloo</city>
+  <grade label="Grade" by="gliner" score="0.60">Unsatisfactory</grade>
+</document>

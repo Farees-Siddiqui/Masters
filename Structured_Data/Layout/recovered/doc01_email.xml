@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='utf-8'?>
+<document source="doc01_email.pdf" model="nielsr/layoutlmv3-finetuned-funsd">
+  <from label="From:" by="layoutlmv3">r.delacroix@milton-college.ca</from>
+  <to label="To:" by="layoutlmv3">academic.advising@milton-college.ca</to>
+  <date label="Date:" by="layoutlmv3">12 March 2026</date>
+  <subject label="Subject:" by="layoutlmv3">year-end file</subject>
+  <still label="still" by="layoutlmv3">Farees Siddiqui.</still>
+  <unkeyed by="layoutlmv3">Ren´ee</unkeyed>
+  <street label="Street" by="gliner" score="0.93">14 Fake Street</street>
+  <city label="City" by="gliner" score="0.99">Milton</city>
+  <grade label="Grade" by="gliner" score="0.86">90</grade>
+  <grade label="Grade" by="gliner" score="0.83">Satisfactory</grade>
+</document>

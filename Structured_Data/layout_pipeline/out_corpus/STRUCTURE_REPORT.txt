@@ -1,0 +1,28 @@
+STRUCTURAL DEPTH SUMMARY - semantic XML (dynamic IE schema discovery)
+corpus: StudentRecord/Output (10 docs)   model: llama3.3:70b
+
+document                         doc type               root                             dep nodes  child node types
+--------------------------------------------------------------------------------------------------------------------
+doc01_email                      narrative (email)      <email>                            4     7  sender, recipients, body
+doc02_letter                     narrative (letter)     <letter>                           3     8  issuer, addressee, content, signatory
+doc03_vertical_table             table (vertical)       <student_record>                   2     2  address
+doc04_horizontal_table           table (horizontal)     <placement_term_record_extract>    3     3  candidates
+doc05_form                       form                   <student_evaluation_form>          2     4  student, address, evaluation
+doc06_prose_plus_address_table   mixed prose + table    <term_summary_note>                2     4  student, correspondence_address, filing_details
+doc07_table_plus_prose_address   mixed table + prose    <assessment_entry>                 2     5  applicant, mailing_address, notice_details, evaluation_result
+doc08_report_card                report card            <student_report>                   2     3  student, academic_status
+doc09_directory_entry            directory line         <directory_entry>                  2     2  name
+doc10_grouped_header_table       table (grouped header) <student_register>                 3     4  students
+
+nested sub-entity tags observed (depth>=2): academic_status, address, addressee, applicant, body, candidates, content, correspondence_address, evaluation, evaluation_result, filing_details, grade, issuer, mailing_address, name, notice_details, recipients, sender, signatory, student, students
+
+depth distribution: min=2 max=4 mean=2.5  (depth>=3: 4/10, depth==2: 6/10)
+all 10 documents produced BOTH .reconstructed.xml and .semantic.xml
+validation: 20/20 files parse as XML; 0 empty tags; 0 unparsed-JSON leaks; 0 invalid-char crashes
+
+nesting exceptions (composite kept flat instead of split into children):
+  doc08_report_card  <student mailing_address='1180 Fanshawe Park Road, London'>  - IE welded street+city
+  doc09_directory_entry  root attrs address='23 Sunnybrook Lane, Waterloo', rating='58 (Unsatisfactory)'
+                         - IE welded street+city and grade+remark, and left them on the root
+  doc06_prose_plus_address_table  <correspondence_address street='315 Colborne Street Kitchener'>
+                         - upstream: the table recognizer emitted one merged cell + an empty City cell

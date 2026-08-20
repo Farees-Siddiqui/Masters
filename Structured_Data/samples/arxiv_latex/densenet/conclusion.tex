@@ -1,0 +1,9 @@
+%!TEX root=main.tex
+\section{Conclusion}
+We proposed a new convolutional network architecture, which we refer to as \methodnamecap{} (\methodnameshort{}). It introduces direct connections between any two layers with the same feature-map size.
+We showed that \methodnameshorts{} scale naturally to hundreds of layers, while exhibiting no optimization difficulties. In our experiments, \methodnameshorts{} tend to yield consistent improvement in accuracy with growing number of parameters, without any signs of performance degradation or overfitting. Under multiple settings, it achieved state-of-the-art results across several highly competitive datasets. Moreover, \methodnameshorts{} require substantially fewer parameters and less computation to achieve state-of-the-art performances.
+Because we adopted hyperparameter settings optimized for residual networks in our study, we believe that further gains in accuracy of \methodnameshorts{} may be obtained by more detailed tuning of hyperparameters and learning rate schedules. 
+
+Whilst following a simple connectivity rule, \methodnameshorts{} naturally integrate the properties of identity mappings, deep supervision, and diversified depth. They allow feature reuse throughout the networks and can consequently learn more compact and, according to our experiments, more accurate models. Because of their compact internal representations and reduced feature redundancy, \methodnameshorts{} may be good feature extractors for various computer vision tasks that build on convolutional features, \emph{e.g.}, ~\cite{gardner2015deep,gatys2015neural}. We plan to study such feature transfer with \methodnameshorts{} in future work.
+
+

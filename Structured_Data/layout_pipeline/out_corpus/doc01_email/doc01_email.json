@@ -1,0 +1,284 @@
+{
+  "config": {
+    "beta": 1.3,
+    "theta_v": 0.9,
+    "min_gap_px": 1.0,
+    "overlap_threshold": 0.3,
+    "mask_titles": false,
+    "mask_vision": true,
+    "mask_marginal": true,
+    "enable_cross_mask": false
+  },
+  "n_pages": 1,
+  "pages": [
+    {
+      "source": "doc01_email.pdf",
+      "page_index": 0,
+      "width": 1700,
+      "height": 2200,
+      "n_blocks": 8,
+      "blocks": [
+        {
+          "order": 0,
+          "label": "text",
+          "bbox": [
+            193.0,
+            203.0,
+            669.0,
+            273.0
+          ],
+          "score": null,
+          "synthetic": true,
+          "text": "From:r.delacroix@milton-college.ca\nTo:",
+          "lines": [
+            {
+              "text": "From:r.delacroix@milton-college.ca",
+              "bbox": [
+                195.0,
+                203.0,
+                669.0,
+                235.0
+              ],
+              "score": 0.9849
+            },
+            {
+              "text": "To:",
+              "bbox": [
+                193.0,
+                241.0,
+                246.0,
+                273.0
+              ],
+              "score": 0.993
+            }
+          ]
+        },
+        {
+          "order": 1,
+          "label": "text",
+          "bbox": [
+            195.0,
+            243.0,
+            761.0,
+            349.0
+          ],
+          "score": null,
+          "synthetic": true,
+          "text": "academic.advising@milton-college.ca\nDate: 12 March 2026\nSubject: year-end file",
+          "lines": [
+            {
+              "text": "academic.advising@milton-college.ca",
+              "bbox": [
+                294.0,
+                243.0,
+                761.0,
+                273.0
+              ],
+              "score": 0.9631
+            },
+            {
+              "text": "Date: 12 March 2026",
+              "bbox": [
+                195.0,
+                280.0,
+                484.0,
+                311.0
+              ],
+              "score": 0.9607
+            },
+            {
+              "text": "Subject: year-end file",
+              "bbox": [
+                197.0,
+                318.0,
+                472.0,
+                349.0
+              ],
+              "score": 0.9884
+            }
+          ]
+        },
+        {
+          "order": 2,
+          "label": "paragraph_title",
+          "bbox": [
+            193.0,
+            422.0,
+            323.0,
+            463.0
+          ],
+          "score": 0.5868,
+          "synthetic": false,
+          "text": "Hi Dana,",
+          "lines": [
+            {
+              "text": "Hi Dana,",
+              "bbox": [
+                194.0,
+                421.0,
+                321.0,
+                460.0
+              ],
+              "score": 0.9919
+            }
+          ]
+        },
+        {
+          "order": 3,
+          "label": "text",
+          "bbox": [
+            190.0,
+            479.0,
+            1142.0,
+            520.0
+          ],
+          "score": 0.8227,
+          "synthetic": false,
+          "text": "Closing out the last of the year-end files before the deadline on Friday.",
+          "lines": [
+            {
+              "text": "Closing out the last of the year-end files before the deadline on Friday.",
+              "bbox": [
+                196.0,
+                479.0,
+                1137.0,
+                515.0
+              ],
+              "score": 0.9739
+            }
+          ]
+        },
+        {
+          "order": 4,
+          "label": "text",
+          "bbox": [
+            192.0,
+            535.0,
+            1505.0,
+            652.0
+          ],
+          "score": 0.9257,
+          "synthetic": false,
+          "text": "The one still outstanding is Farees Siddiqui. The mailing address we have on record is 14 Fake\nStreet, in Milton —Ihave not been able to confirm whether that is still current, so it may be worth\na phone call before anything goes out by post.",
+          "lines": [
+            {
+              "text": "The one still outstanding is Farees Siddiqui. The mailing address we have on record is 14 Fake",
+              "bbox": [
+                195.0,
+                537.0,
+                1502.0,
+                571.0
+              ],
+              "score": 0.9726
+            },
+            {
+              "text": "Street, in Milton —Ihave not been able to confirm whether that is still current, so it may be worth",
+              "bbox": [
+                196.0,
+                574.0,
+                1500.0,
+                607.0
+              ],
+              "score": 0.9653
+            },
+            {
+              "text": "a phone call before anything goes out by post.",
+              "bbox": [
+                196.0,
+                614.0,
+                818.0,
+                647.0
+              ],
+              "score": 0.9717
+            }
+          ]
+        },
+        {
+          "order": 5,
+          "label": "text",
+          "bbox": [
+            193.0,
+            666.0,
+            1503.0,
+            745.0
+          ],
+          "score": 0.8975,
+          "synthetic": false,
+          "text": "They finished the term with a grade of 90, and the evaluation entered against that grade is Satis-\nfactory. Nothing else on the file needs your sign-off.",
+          "lines": [
+            {
+              "text": "They finished the term with a grade of 90, and the evaluation entered against that grade is Satis-",
+              "bbox": [
+                195.0,
+                669.0,
+                1500.0,
+                702.0
+              ],
+              "score": 0.9822
+            },
+            {
+              "text": "factory. Nothing else on the file needs your sign-off.",
+              "bbox": [
+                195.0,
+                706.0,
+                886.0,
+                739.0
+              ],
+              "score": 0.9664
+            }
+          ]
+        },
+        {
+          "order": 6,
+          "label": "text",
+          "bbox": [
+            195.0,
+            761.0,
+            312.0,
+            800.0
+          ],
+          "score": 0.7583,
+          "synthetic": false,
+          "text": "Thanks,",
+          "lines": [
+            {
+              "text": "Thanks,",
+              "bbox": [
+                192.0,
+                758.0,
+                311.0,
+                799.0
+              ],
+              "score": 0.9985
+            }
+          ]
+        },
+        {
+          "order": 7,
+          "label": "text",
+          "bbox": [
+            195.0,
+            818.0,
+            296.0,
+            856.0
+          ],
+          "score": 0.7297,
+          "synthetic": false,
+          "text": "Renée",
+          "lines": [
+            {
+              "text": "Renée",
+              "bbox": [
+                192.0,
+                814.0,
+                294.0,
+                856.0
+              ],
+              "score": 0.9967
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

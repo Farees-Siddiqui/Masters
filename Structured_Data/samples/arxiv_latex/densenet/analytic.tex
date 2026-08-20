@@ -1,0 +1,96 @@
+%!TEX root=main.tex
+\section{Discussion}
+
+
+Superficially, \methodnameshort{}s are quite similar to ResNets: Eq. (\ref{eqn:densenet}) differs from Eq.~(\ref{eq:resnet}) only in that the inputs to $H_\ell(\cdot)$ are concatenated instead of summed. However, the implications of this seemingly small modification lead to substantially different behaviors of the two network architectures.
+
+\vspace{-2ex}
+\paragraph{Model compactness.}
+% \begin{figure}[t]
+%       \centering
+%       \includegraphics[width=0.6\textwidth]{figures/Parameter.pdf}
+%       \caption{Comparison of parameter efficiency between \methodnameshort{} and ResNet on C10+.}
+%       \label{fig:params}
+% \end{figure}
+As a direct consequence of the input concatenation, the feature-maps learned by any of the \methodnameshort{} layers can be accessed by all subsequent layers. This encourages feature reuse throughout the network, and leads to more compact models.
+%\begin{wrapfigure}[t]
+%      \centering
+%      \includegraphics[width=0.6\textwidth]{figures/Parameter.pdf}
+%      \caption{}
+%      \label{fig:params}
+%\end{figure}
+
+The left two plots in Figure~\ref{fig:params} show the result of an experiment that aims to compare the parameter efficiency of all variants of \methodnameshorts{} (left) and also a comparable ResNet architecture (middle).
+We train multiple small networks with varying depths on C10+ and plot their test accuracies as a function of network parameters.
+In comparison with other popular network architectures, such as AlexNet \cite{alexnet} or VGG-net \cite{vgg}, ResNets with pre-activation use fewer parameters while typically achieving better results~\cite{identity-mappings}. Hence, we compare \methodnameshort{} ($k=12$) against this architecture. The training setting for \methodnameshort{} is kept the same as in the previous section.
+
+The graph shows that \methodnameshort{}-BC is consistently the most parameter efficient variant of \methodnameshort{}.
+Further, to achieve the same level of accuracy, \methodnameshort{}-BC only requires around 1/3 of the parameters of ResNets (middle plot). This result is in line with the results on ImageNet we presented in Figure~\ref{fig:imagenet}. The right plot in Figure~\ref{fig:params} shows that a DenseNet-BC with only 0.8M trainable parameters is able to achieve comparable accuracy as the 1001-layer (pre-activation) ResNet \cite{identity-mappings} with 10.2M parameters.
+
+%As mentioned earlier, there are evidences that convolutional layers tend to use features learned in many earlier layers, not just those extracted by the layer directly preceding it \cite{resnet,highway,stochastic}. The Highways Networks and ResNet addressed this issue to some extent, while \methodnameshort{} explicitly solves the problem.
+%Empirically, we find that \methodnameshort{} generally requires significantly fewer parameters to achieve similar results compared to the parameter efficient ResNet.
+
+
+
+\vspace{-2ex}
+\paragraph{Implicit Deep Supervision.}
+One explanation for the improved accuracy of \methodname{}s may be that individual layers receive additional supervision from the loss function through the shorter connections. One can interpret \methodnameshorts{} to perform a kind of ``deep supervision''. The benefits of deep supervision have previously been shown in deeply-supervised nets (DSN; \cite{dsn}), which have classifiers attached to every hidden layer, enforcing the intermediate layers to learn discriminative features.
+
+%Though deep supervision has proven to be effective, DSN becomes cumbersome as networks going deeper, since many classifiers have to be trained simultaneously.
+%Moreover, since during testing only the final classifier is used, the objective of DSN during training is different from the true objective.
+\methodnameshorts{} perform a similar deep supervision in an implicit fashion: a single classifier on top of the network provides direct supervision to all layers through at most two or three transition layers. However, the loss function and gradient of \methodnameshorts{} are substantially less complicated, as the same loss function is shared between all layers.
+% \paragraph{Memory Saving}
+% \methodnameshort{} not only uses parameters efficiently, but also has the advantage of saving memory. In practice, the filter sizes in CNNs are rather small compared to feature-map sizes, thus the major memory consumption comes from saving the feature-maps. As \methodnameshort{} reuses feature-maps within the same dense block, it can save a significant amount of memory if implemented properly. As shown in \ref{fig:ccnn}, only non-transparent feature-maps need to be stored in memory. When acting as a feature extractor, the feature extracted by \methodnameshort{} is of much lower dimension compared to ResNet. We leave investigating the transferability of features learned by \methodnameshort{} as future work.
+
+\vspace{-2ex}
+\paragraph{Stochastic vs. deterministic connection.} There is an interesting connection between \methodname{}s and stochastic depth regularization of residual networks~\cite{stochastic}. In stochastic depth, layers in residual networks are randomly dropped, which creates direct connections between the surrounding layers. As the pooling layers are never dropped, the network results in a similar connectivity pattern as \methodnameshort{}: there is a small probability for any two layers, between the same pooling layers, to be directly connected---if all intermediate layers are randomly dropped.  Although the methods are ultimately quite different, the \methodnameshort{} interpretation of stochastic depth may provide insights into the success of this regularizer.
+
+
+
+\paragraph{Feature Reuse.}
+By design, \methodnameshorts{} allow layers access to feature-maps from all of its preceding layers (although sometimes through transition layers). We conduct an experiment to investigate if  a trained network takes advantage of this opportunity.
+%Is access to all of these layers really necessary? Would it be sufficient for a layer to only have access to $m<L$ earlier feature-maps?
+% To answer this question, we conduct two additional experiments with \methodnameshort{}s on C10+.
+%Our first experiment aims to discover if layers make use of earlier feature-maps in practice.
+We first train a \methodnameshort{} on C10+ with $L\!=\!40$ and $k\!=\!12$. For each convolutional layer $\ell$ within a block, we compute the average (absolute) weight assigned to connections with layer $s$. Figure~\ref{fig:weight} shows a heat-map for all three dense blocks.
+The average absolute weight serves as a surrogate for the dependency of a convolutional layer on its preceding layers.
+% in which columns correspond to layers and rows correspond to how many layers back a feature-map was generated.
+A red dot in position ($\ell,s$) indicates that the layer $\ell$  makes, on average, strong use of feature-maps produced $s$-layers before.
+Several observations can be made from the plot:
+%\begin{enumerate}
+%\vspace{-1ex}
+\vspace{-2pt}
+\begin{enumerate}
+\setlength{\itemsep}{-2.6pt}
+\item All layers spread their weights over many inputs within the same block. This indicates that features extracted by very early layers are, indeed, directly used by deep layers throughout the same dense block.
+%\vspace{-1ex}
+\item The weights of the transition layers also spread their weight across all layers within the preceding dense block, indicating information flow from the first to the last layers of the \methodnameshort{} through few indirections.
+%  \item The average importance of the features produced in parallel by the transition layers (correspond to the rectangular regions in the upper part of each dense block shown in \ref{fig:weight}) is slightly lower, but individually some of them are heavily used by later layers. It suggests that parallelly producing many feature-maps within a same layer might introduces a lot of redundancy. Since this happens all the time in traditional CNNs while only occurs at transition layers in \methodnameshort{}, our method can yield more compact models;
+\item The layers within the second and third dense block consistently assign the least weight to the outputs of the transition layer (the top row of the triangles), indicating that the transition layer outputs many redundant features (with low weight on average).  This is in keeping with the strong results of \methodnameshort{}-BC where exactly these outputs are compressed.
+\item Although the final classification layer, shown on the very right, also uses weights across the entire dense block, there seems to be a concentration towards final feature-maps, suggesting that there may be some more high-level features produced late in the network.
+\end{enumerate}
+%\end{enumerate}
+%
+
+% We conclude from this first experiment  that convolutional layers tend to use features from all over the network. Our second experiment investigates if this is  \emph{necessary}. We modify the structure of a \methodnameshort{} and remove all ``long-distance'' connections, such that for each layer only feature-maps from the $m$ closest preceding feature-maps remain as inputs. Within each dense block we set $m$ to be the initial number of feature-maps in this block (lower values of $m$ would render some outputs of the transition layer inaccessible). We refer to this setup as a \emph{partial \methodnameshort{}}.
+% We train two networks with $L\!=\!40$ and $k\!=\!12$, one with partial connectivity, the other with all dense connections. For the partial \methodnameshort{}, we have $m=16$ for the first dense block, as the initial convolutional layer produces 16 output feature-maps. For block 2 and 3 the values of $m$ are 160 and 304, respectively.
+%  The corresponding training curves are shown in Figure~\ref{fig:partial}. The graph shows that removing the direct ``long-distance''  connections between layers, which are far from each other, degrades the performance significantly.
+% This seems to suggest that long distance dependencies are, indeed, necessary to produce the low error rates we obtained in our experiments in Section~\ref{sec:results}.
+\begin{figure}[t]
+      \centering
+      \includegraphics[width=0.48 \textwidth]{figures/heatmap_3plots1.pdf}
+            \vspace{-2ex}
+      \caption{The average absolute filter weights of convolutional layers in a trained \methodnameshort{}. The color of pixel $(s,\ell)$ encodes the average $L1$ norm (normalized by number of input feature-maps) of the weights connecting convolutional layer $s$ to $\ell$ within a dense block. Three columns highlighted by black rectangles correspond to two transition layers and the classification layer. The first row encodes weights connected to the input layer of the dense block. }
+      \label{fig:weight}
+      \vspace{-2ex}
+\end{figure}
+
+% \begin{figure}[t]
+%       \centering
+%       \includegraphics[width=0.4\textwidth]{figures/partial.pdf}
+%       \caption{A comparison between two \methodnameshort{}s on C10+, one with all and one with only short-range connections. }
+%       \label{fig:partial}
+% \end{figure}
+
+
+

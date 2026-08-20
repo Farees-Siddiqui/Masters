@@ -1,0 +1,11 @@
+# The LLM client is stdlib urllib (reused from
+# layout_pipeline/src/ie_engine/llm_client.py), so nothing here is for
+# inference: typer is the CLI.
+#
+# jinja2 is no longer needed. Stage 5 used to render three fixed templates;
+# the LaTeX is now written per document by the model itself.
+typer>=0.12
+
+# Stage 5 also needs a LaTeX engine on PATH -- pdflatex, xelatex or lualatex,
+# from TeX Live or MiKTeX. Not installable with pip. Without one the pipeline
+# still runs and writes .tex sources plus the manifest; nothing is compiled.

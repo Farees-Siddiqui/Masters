@@ -1,0 +1,44 @@
+%!TEX root=main.tex
+
+\begin{figure*}[t]
+\vspace{-2 ex}
+      \centering
+      \includegraphics[width=\textwidth]{figures/denseNet}
+      \caption{A deep \methodnameshort{} with three dense blocks. The layers between two adjacent blocks are referred to as transition layers and change feature-map sizes via convolution and pooling. }
+      \label{fig:ccnn_all}
+      \vspace{-2 ex}
+\end{figure*}
+
+\section{Related Work}
+The exploration of network architectures has been a part of neural network research since their initial discovery.
+The recent resurgence in popularity of neural networks has also revived this research domain.
+The increasing number of layers in modern networks amplifies the differences between architectures and motivates the exploration of different connectivity patterns and the revisiting of old research ideas.
+
+A {cascade structure} similar to our proposed dense network layout has already been studied in the neural networks literature in the 1980s \cite{fahlman1989cascade}. Their pioneering work focuses on fully connected multi-layer perceptrons trained in a layer-by-layer fashion. More recently, fully connected cascade networks to be trained with batch gradient descent were proposed \cite{wilamowski2010neural}. Although effective on small datasets, this approach only scales to networks with a few hundred parameters. %The multi-scale convolutional network proposed in \cite{yang2015multi} shows that connecting the classification layer with multiple internal layers effectively boosts the classification performance.
+In \cite{hypercolumn, fcn, pedestrian, yang2015multi}, utilizing multi-level features in CNNs through skip-connnections has been found to be effective for various vision tasks.
+Parallel to our work, \cite{cortes2016adanet} derived a purely theoretical framework for networks with cross-layer connections similar to ours.
+
+Highway Networks \cite{highway} were amongst the first architectures that provided a means to effectively train end-to-end networks with more than 100 layers. Using bypassing paths along with gating units, Highway Networks with hundreds of layers can be optimized without difficulty. The bypassing paths are presumed to be the key factor that eases the training of these very deep networks. This point is further supported by ResNets \cite{resnet}, in which pure identity mappings are used as bypassing paths. ResNets have achieved impressive, record-breaking performance on many challenging image recognition, localization, and detection tasks, such as ImageNet and COCO object detection~\cite{resnet}. Recently, \emph{stochastic depth} was proposed as a way to successfully train a 1202-layer ResNet \cite{stochastic}. Stochastic depth improves the training of deep residual networks by dropping layers randomly during training. This shows that not all layers may be needed and highlights that there is a great amount of redundancy in deep (residual) networks. Our paper was partly inspired by that observation. ResNets with \emph{pre-activation} also facilitate the training of state-of-the-art networks with $>$ 1000 layers \cite{identity-mappings}.
+
+An orthogonal approach to making networks deeper (\emph{e.g.}, with the help of skip connections) is to increase the network \emph{width}. The GoogLeNet \cite{szegedy2015going,szegedy2015rethinking} uses an ``Inception module'' which concatenates feature-maps produced by filters of different sizes. In \cite{rir}, a variant of ResNets with wide generalized residual blocks was proposed. In fact, simply increasing the number of filters in each layer of ResNets can improve its performance provided the depth is sufficient \cite{wide}. FractalNets also achieve competitive results on several datasets using a wide network structure \cite{fractalnet}.
+
+Instead of drawing representational power from extremely deep or wide architectures, \methodnameshorts{} exploit the potential of the network through \emph{feature reuse}, yielding condensed models that are easy to train and highly parameter-efficient. Concatenating feature-maps learned by \emph{different layers} increases variation in the input of subsequent layers and improves efficiency. This constitutes a major difference between \methodnameshorts{} and ResNets. Compared to Inception networks \cite{szegedy2015going,szegedy2015rethinking}, which also concatenate features from different layers, \methodnameshort{}s are simpler and more efficient.
+
+There are other notable network architecture innovations which have yielded competitive results. The Network in Network (NIN) \cite{netinnet} structure includes micro multi-layer perceptrons into the filters of convolutional layers to extract more complicated features. In Deeply Supervised Network (DSN) \cite{dsn}, internal layers are directly supervised by auxiliary classifiers, which can strengthen the gradients received by earlier layers. Ladder Networks \cite{rasmus2015semi,pezeshki2015deconstructing} introduce lateral connections into autoencoders, producing impressive accuracies on semi-supervised learning tasks. In \cite{wang2016deeply}, Deeply-Fused Nets (DFNs) were proposed to improve information flow by combining intermediate layers of different base networks.
+The augmentation of networks with pathways that minimize reconstruction losses was also shown to improve image classification models \cite{zhang2016augmenting}.
+
+
+
+%Network in network
+%
+%Highway networks \cite{highway} and residual networks \cite{resnet,identity-mappings}.
+%
+%FractalNet \cite {fractalnet}
+%
+%
+%all convolution
+%
+%Deeply supervised network \cite{dsn}
+%
+%Cascade-correlation architecture \cite{fahlman1989cascade}
+

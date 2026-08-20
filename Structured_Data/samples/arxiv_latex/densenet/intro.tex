@@ -1,0 +1,53 @@
+%!TEX root = main.tex
+\section{Introduction}
+
+%CNNs are awesome and become deeper and deeper
+Convolutional neural networks (CNNs) have become the dominant machine learning approach for visual object recognition. Although they were originally introduced over 20 years ago~\cite{lecun}, improvements in computer hardware and network structure have enabled the training of  truly deep CNNs only recently. The original LeNet5~\cite{lenet5} consisted of 5 layers, VGG featured 19~\cite{vgg}, and only last year Highway Networks~\cite{highway} and Residual Networks (ResNets)~\cite{resnet} have surpassed the 100-layer barrier.
+
+\begin{figure}[t]
+%\vspace{-2 ex}
+      \centering
+      \includegraphics[width=0.5\textwidth]{figures/denseBlock.pdf}
+      \caption{A 5-layer \methodblock{} with a growth rate of $k=4$. Each layer takes all preceding feature-maps as input. }
+      \label{fig:ccnn}
+%      \vspace{-2 ex}
+\end{figure}
+
+%the problem becomes information and gradient flow
+As CNNs become increasingly deep, a new research problem emerges: as information about the input or gradient passes through many layers, it can vanish and ``wash out'' by the time it reaches the end (or beginning) of the network.
+Many recent publications address this or related problems. %For example, Rectified Linear Unites (ReLu)~\cite{ReLu} avoid gradient saturation, batch-normalization~\cite{batch-norm} reduces covariate shift across layers by re-scaling the outputs of the ReLus.
+ResNets~\cite{resnet} and Highway Networks~\cite{highway} bypass signal from one layer to the next via identity connections. Stochastic depth~\cite{stochastic} shortens ResNets by randomly dropping layers during training to allow better information and gradient flow.
+FractalNets \cite{fractalnet} repeatedly combine several parallel layer sequences with different number of convolutional blocks to obtain a large nominal depth, while maintaining many short paths in the network.
+%Finally, \{dsn} introduced Deeply Supervised Net (DSN), which inject training signal directly into intermediate layers with the help of a  ``companion'' objective for each hidden layer. Apart from DSN,
+Although these different approaches vary in network topology and training procedure, they all share a key characteristic: they create short paths from early layers to later layers.
+
+%we solve it with CasNets
+In this paper, we propose an architecture that distills this insight into a simple connectivity pattern: to ensure maximum information flow between layers in the network, we connect \emph{all layers} (with matching feature-map sizes) directly with each other. To preserve the feed-forward nature, each layer obtains additional inputs from all preceding layers and passes on its own feature-maps to all subsequent layers.
+Figure~\ref{fig:ccnn} illustrates this layout schematically.
+Crucially, in contrast to ResNets, we never combine features through summation before they are passed into a layer; instead, we combine features by concatenating them.
+Hence, the $\ell^{th}$ layer has $\ell$ inputs, consisting of the feature-maps of all preceding convolutional blocks. Its own feature-maps are passed on to all $L-\ell$ subsequent layers. This introduces $\frac{L(L+1)}{2}$  connections in an $L$-layer network, instead of just $L$, as in traditional architectures.
+Because of its dense connectivity pattern, we refer to our approach as {\emph{\methodnamecap{} (\methodnameshort{})}.
+
+% no passing on
+A possibly counter-intuitive effect of this dense connectivity pattern is that it requires \emph{fewer} parameters than traditional convolutional networks, as there is no need to re-learn redundant feature-maps.
+Traditional feed-forward architectures can be viewed as algorithms with a state, which is passed on from layer to layer. Each layer reads the state from its preceding layer and writes to the subsequent layer. It changes the state but also passes on information that needs to be preserved. ResNets~\cite{resnet} make this information preservation explicit through additive identity transformations.
+Recent variations of ResNets~\cite{stochastic} show that many layers contribute very little and can in fact be randomly dropped during training. This makes the state of ResNets similar to (unrolled) recurrent neural networks~\cite{liao2016bridging}, but the number of parameters of ResNets is substantially larger because each layer has its own weights.
+Our proposed \methodnameshort{} architecture explicitly differentiates between information that is added to the network and information that is preserved.
+\methodnameshort{} layers are very narrow (\emph{e.g.}, 12 filters per layer), adding only a small set of feature-maps to the ``collective knowledge'' of the network and keep the remaining feature-maps unchanged---and the final classifier makes a decision based on all feature-maps in the network.
+
+% it is not massive
+% A possibly counter-intuitive effect of this connectivity pattern is that it requires \emph{fewer} parameters than traditional convolutional networks.
+% Although the number of connections grows quadratically with depth, the topology encourages heavy feature reuse.
+% %Prior work~\cite{stochastic} has shown that there is substantial redundancy within the feature-maps of the individual layers in ResNets.
+% In \methodnameshorts{}, all layers have direct access to every feature-map from all preceding layers, which means that there is no need to re-learn redundant feature-maps.
+% Consequently,
+
+
+%With increasing depth, the \methodnameshort{} provides a richer representation to learn from, as all layers share and have access to the collective ``knowledge'' of the entire network. Consequently, each individual layer only needs to add a small number of feature-maps. This leads to a {\textbf{substantially smaller number of parameters}} compared to prior architectures.
+
+ %this is how awesome we are
+%Although they follow a simple generative rule,  \methodnameshorts{} are very general and easy to train.
+%In fact, several prior architectures, such as ResNets, can be identified as special cases of this architecture.
+Besides better parameter efficiency, one big advantage of \methodnameshort{}s is their improved flow of information and gradients throughout the network, which makes them easy to train. Each layer has direct access to the gradients from the loss function and the original input signal, leading to an implicit deep supervision \cite{dsn}. This helps training of deeper network architectures. Further, we also observe that dense connections have a regularizing effect, which reduces overfitting on tasks with smaller training set sizes.
+
+We evaluate \methodnameshort{}s on four highly competitive benchmark datasets (CIFAR-10, CIFAR-100, SVHN, and ImageNet). Our models tend to require much fewer parameters than existing algorithms with comparable accuracy. Further, we significantly outperform the current state-of-the-art results on most of the benchmark tasks.

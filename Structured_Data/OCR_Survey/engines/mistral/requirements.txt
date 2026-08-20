@@ -1,0 +1,36 @@
+# Mistral OCR (`mistral-ocr-latest`) -- API client only, no local model.
+#
+#   python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+#   export MISTRAL_API_KEY=...
+#
+# There is nothing to run on a GPU here. This engine's timings are network round
+# trips against someone else's hardware, so they are reported separately and
+# never compared with the four local engines.
+#
+# mistralai 2.x restructured the package: `from mistralai import Mistral` fails
+# with "unknown location" (the top level is a namespace package). The client
+# moved to `mistralai.client`. run_mistral.py tries 1.x then falls back, the same
+# way ../../../parsers.py does.
+
+mistralai==2.9.1
+
+# --- transitive, pinned so a rebuild is byte-comparable ---
+annotated-types==0.8.0
+anyio==4.14.2
+certifi==2026.7.22
+eval_type_backport==0.4.0
+h11==0.16.0
+httpcore==1.0.9
+httpx==0.28.1
+idna==3.18
+importlib_metadata==8.7.1
+jsonpath-python==1.1.6
+opentelemetry-api==1.39.1
+opentelemetry-semantic-conventions==0.60b1
+pydantic==2.13.4
+pydantic_core==2.46.4
+python-dateutil==2.9.0.post0
+six==1.17.0
+typing-inspection==0.4.2
+typing_extensions==4.16.0
+zipp==4.1.0

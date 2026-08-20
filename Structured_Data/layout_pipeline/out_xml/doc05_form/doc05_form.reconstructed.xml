@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='utf-8'?>
+<document title="STUDENT EVALUATION FORM" pages="1" blocks="13">
+  <page number="0">
+    <heading level="1" id="0" bbox="558.0,202.0,1139.0,236.0" status="extracted" label="doc_title">STUDENT EVALUATION FORM</heading>
+    <paragraph id="1" bbox="468.0,253.0,627.0,280.0" status="extracted" label="text">Form SR-114</paragraph>
+    <paragraph id="2" bbox="705.0,255.0,1227.0,281.0" status="extracted" label="text">To be completed by the supervising instructor</paragraph>
+    <heading level="2" id="3" bbox="196.0,372.0,558.0,403.0" status="extracted" label="paragraph_title">SECTION 1—NAME</heading>
+    <paragraph id="4" bbox="196.0,454.0,888.0,487.0" status="extracted" label="text">Family Name
+Martinez</paragraph>
+    <paragraph id="5" bbox="197.0,538.0,888.0,572.0" status="extracted" label="text">Given Name(s)
+Elena</paragraph>
+    <heading level="2" id="6" bbox="195.0,648.0,616.0,679.0" status="extracted" label="paragraph_title">SECTION 2—ADDRESS</heading>
+    <paragraph id="7" bbox="195.0,731.0,889.0,762.0" status="extracted" label="text">Street
+9 Rosedale Court</paragraph>
+    <paragraph id="8" bbox="195.0,813.0,889.0,847.0" status="extracted" label="text">Municipality
+Oakville</paragraph>
+    <paragraph id="9" bbox="198.0,923.0,680.0,953.0" status="extracted" label="text">SECTION 3— EVALUATION</paragraph>
+    <paragraph id="10" bbox="195.0,1006.0,888.0,1038.0" status="extracted" label="text">Numeric Grade
+68</paragraph>
+    <paragraph id="11" bbox="198.0,1090.0,889.0,1124.0" status="extracted" label="text">Assessment
+Needs Improvement</paragraph>
+    <paragraph id="12" bbox="197.0,1242.0,716.0,1270.0" status="extracted" label="text">Retain the completed form in the student file.</paragraph>
+  </page>
+</document>

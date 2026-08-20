@@ -1,0 +1,197 @@
+{
+  "n_pages": 1,
+  "pages": [
+    {
+      "page": 0,
+      "blocks": [
+        {
+          "block_id": 0,
+          "block_type": "TEXT",
+          "bbox": [
+            802.0,
+            141.0,
+            1398.0,
+            179.0
+          ],
+          "parsed_content": "Placement Term — Record Extract",
+          "crop_path": null,
+          "metadata": {
+            "label": "figure_title",
+            "page": 0,
+            "reading_position": 0,
+            "handler": "_handle_text",
+            "n_lines": 1,
+            "mean_line_confidence": 0.9529,
+            "is_marginal": false,
+            "source_order": 0,
+            "status": "extracted"
+          },
+          "raw_lines": [
+            {
+              "text": "Placement Term — Record Extract",
+              "bbox": [
+                804.0,
+                139.0,
+                1394.0,
+                174.0
+              ],
+              "score": 0.9529
+            }
+          ]
+        },
+        {
+          "block_id": 1,
+          "block_type": "TABLE",
+          "bbox": [
+            587.0,
+            240.0,
+            1612.0,
+            335.0
+          ],
+          "parsed_content": "| Surname | Given Name | Street Address | City | Score | Standing |\n|---|---|---|---|---|---|\n| Kaur | Simran | 47Hillcrest Drive | Brampton | 82 | Satisfactory |",
+          "crop_path": "layout_pipeline/out_xml/doc04_horizontal_table/crops/page_0_block_1.png",
+          "metadata": {
+            "label": "table",
+            "page": 0,
+            "reading_position": 1,
+            "handler": "_handle_table",
+            "n_lines": 12,
+            "mean_line_confidence": 0.9944,
+            "is_marginal": false,
+            "source_order": 1,
+            "status": "completed",
+            "table_format": "markdown",
+            "table_rows": 2,
+            "table_columns": 6,
+            "merged_cells": false,
+            "cell_fill": 1.0,
+            "extractor": "paddle:TableRecognitionPipelineV2",
+            "ocr_fallback_text": "Surname\nGiven Name\nStreet Address\nCity\nScore\n Standing\nKaur\nSimran\n47 Hillcrest Drive\nBrampton\n82\nSatisfactory"
+          },
+          "raw_lines": [
+            {
+              "text": "Surname",
+              "bbox": [
+                586.0,
+                244.0,
+                718.0,
+                279.0
+              ],
+              "score": 0.9998
+            },
+            {
+              "text": "Given Name",
+              "bbox": [
+                743.0,
+                248.0,
+                925.0,
+                276.0
+              ],
+              "score": 0.9979
+            },
+            {
+              "text": "Street Address",
+              "bbox": [
+                950.0,
+                248.0,
+                1165.0,
+                276.0
+              ],
+              "score": 0.9979
+            },
+            {
+              "text": "City",
+              "bbox": [
+                1192.0,
+                241.0,
+                1267.0,
+                284.0
+              ],
+              "score": 0.9986
+            },
+            {
+              "text": "Score",
+              "bbox": [
+                1351.0,
+                246.0,
+                1438.0,
+                279.0
+              ],
+              "score": 0.9998
+            },
+            {
+              "text": " Standing",
+              "bbox": [
+                1456.0,
+                242.0,
+                1594.0,
+                284.0
+              ],
+              "score": 0.9463
+            },
+            {
+              "text": "Kaur",
+              "bbox": [
+                584.0,
+                291.0,
+                658.0,
+                329.0
+              ],
+              "score": 0.9997
+            },
+            {
+              "text": "Simran",
+              "bbox": [
+                742.0,
+                294.0,
+                837.0,
+                327.0
+              ],
+              "score": 0.9998
+            },
+            {
+              "text": "47 Hillcrest Drive",
+              "bbox": [
+                949.0,
+                294.0,
+                1173.0,
+                325.0
+              ],
+              "score": 0.9933
+            },
+            {
+              "text": "Brampton",
+              "bbox": [
+                1196.0,
+                295.0,
+                1327.0,
+                327.0
+              ],
+              "score": 0.9997
+            },
+            {
+              "text": "82",
+              "bbox": [
+                1350.0,
+                293.0,
+                1390.0,
+                327.0
+              ],
+              "score": 0.9998
+            },
+            {
+              "text": "Satisfactory",
+              "bbox": [
+                1458.0,
+                291.0,
+                1610.0,
+                330.0
+              ],
+              "score": 0.9998
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

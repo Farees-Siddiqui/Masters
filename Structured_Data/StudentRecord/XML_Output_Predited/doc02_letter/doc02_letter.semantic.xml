@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<letter office_of_the_registrar="Milton College" date="19 March 2026" title="Offi ce of the Registrar Milton College" source="doc02_letter.pdf">
+  <recipient name="Thuy Nguyen" address="88 Braemar Avenue, Guelph" />
+  <placement_term_result grade="76" evaluation="Satisfactory" />
+  <transcript_info entries_final="true" correction_deadline="thirty days" />
+  <sender name="A. Whitfield" title="Assistant Registrar" />
+</letter>

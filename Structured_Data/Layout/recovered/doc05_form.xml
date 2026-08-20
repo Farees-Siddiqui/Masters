@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='utf-8'?>
+<document source="doc05_form.pdf" model="nielsr/layoutlmv3-finetuned-funsd">
+  <name label="NAME" by="layoutlmv3">Martinez</name>
+  <given_name_s label="Given Name(s)" by="layoutlmv3">Elena</given_name_s>
+  <section_2_address label="SECTION 2 — ADDRESS" by="layoutlmv3">9 Rosedale Court</section_2_address>
+  <municipality label="Municipality" by="layoutlmv3">Oakville</municipality>
+  <numeric_grade label="Numeric Grade" by="layoutlmv3">68</numeric_grade>
+  <assessment label="Assessment" by="layoutlmv3">Needs Improvement</assessment>
+  <street label="Street" by="gliner" score="0.83">9</street>
+</document>

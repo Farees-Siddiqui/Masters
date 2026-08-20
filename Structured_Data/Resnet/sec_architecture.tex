@@ -1,0 +1,157 @@
+\section{Architecture}
+
+\begin{kvtable}{Architecture}{tab:sec_architecture-architecture}
+\K{Architecture} & deep convolutional neural networks & \Sd{p.1}\\
+\K{Architecture} & VGG nets & \Sd{p.1}\\
+\K{Architecture} & residual nets & \Sd{p.1}\\
+\K{Architecture} & plain & \Sd{p.1}\\
+\K{Architecture} & VLAD & \Sd{p.2}\\
+\K{Architecture} & Fisher Vector & \Sd{p.2}\\
+\K{Architecture} & Multigrid & \Sd{p.2}\\
+\K{Architecture} & MLPs & \Sd{p.2}\\
+\K{Architecture} & inception & \Sd{p.2}\\
+\K{Architecture} & highway networks & \Sd{p.2}\\
+\K{Architecture} & ResNet & \Sd{p.2}\\
+\K{Architecture} & VGG-19 & \Sd{p.3}\\
+\K{Architecture} & 34-layer plain & \Sd{p.4}\\
+\K{Architecture} & 34-layer residual & \Sd{p.4}\\
+\K{Architecture} & plain-18 & \Sd{p.5}\\
+\K{Architecture} & plain-34 & \Sd{p.5}\\
+\K{Architecture} & ResNet-18 & \Sd{p.5}\\
+\K{Architecture} & ResNet-34 & \Sd{p.5}\\
+\K{Architecture} & VGG-16 & \Sd{p.6}\\
+\K{Architecture} & GoogLeNet & \Sd{p.6}\\
+\K{Architecture} & PReLU-net & \Sd{p.6}\\
+\K{Architecture} & ResNet-34 A & \Sd{p.6}\\
+\K{Architecture} & ResNet-34 B & \Sd{p.6}\\
+\K{Architecture} & ResNet-34 C & \Sd{p.6}\\
+\K{Architecture} & ResNet-50 & \Sd{p.6}\\
+\K{Architecture} & ResNet-101 & \Sd{p.6}\\
+\K{Architecture} & ResNet-152 & \Sd{p.6}\\
+\K{Architecture} & BN-inception & \Sd{p.6}\\
+\K{Architecture} & ResNet-50/101/152 & \Sd{p.6}\\
+\K{Architecture} & bottleneck & \Sd{p.6}\\
+\K{Architecture} & VGG-16/19 & \Sd{p.7}\\
+\K{Architecture} & Maxout & \Sd{p.7}\\
+\K{Architecture} & NIN & \Sd{p.7}\\
+\K{Architecture} & DSN & \Sd{p.7}\\
+\K{Architecture} & FitNet & \Sd{p.7}\\
+\K{Architecture} & Highway & \Sd{p.7}\\
+\K{Architecture} & ResNet-20 & \Sd{p.7}\\
+\K{Architecture} & ResNet-56 & \Sd{p.7}\\
+\K{Architecture} & ResNet-110 & \Sd{p.7}\\
+\K{Architecture} & 1202-layer network & \Sd{p.7}\\
+\K{Architecture} & Faster R-CNN & \Sd{p.8}\\
+\K{Architecture} & Fast R-CNN & \Sd{p.10}\\
+\K{Architecture} & ResNet-50/101 & \Sd{p.10}\\
+\K{Architecture} & OverFeat & \Sd{p.12}\\
+\K{Architecture} & R-CNN & \Sd{p.12}\\
+\K{Architecture} & RPN & \Sd{p.12}\\
+\end{kvtable}
+
+\begin{kvtable}{Component}{tab:sec_architecture-component}
+\K{Component} & shortcut connections & \Sd{p.2}\\
+\K{Component} & identity shortcuts & \Sd{p.2}\\
+\K{Component} & weight layer & \Sd{p.2}\\
+\K{Component} & ReLU & \Sd{p.3}\\
+\K{Component} & global average pooling & \Sd{p.3}\\
+\K{Component} & 1000-way fully-connected layer & \Sd{p.3}\\
+\K{Component} & softmax & \Sd{p.3}\\
+\K{Component} & batch normalization (BN) & \Sd{p.4}\\
+\K{Component} & projection shortcut & \Sd{p.4}\\
+\K{Component} & zero-padding shortcuts & \Sd{p.4}\\
+\K{Component} & max pool & \Sd{p.5}\\
+\K{Component} & 10-way fully-connected layer & \Sd{p.7}\\
+\K{Component} & region proposal network (RPN) & \Sd{p.10}\\
+\K{Component} & RoI pooling & \Sd{p.10}\\
+\K{Component} & Spatial Pyramid Pooling & \Sd{p.10}\\
+\K{Component} & anchor & \Sd{p.12}\\
+\K{Component} & cls & \Sd{p.12}\\
+\K{Component} & reg & \Sd{p.12}\\
+\end{kvtable}
+
+\begin{kvtable}{Depth}{tab:sec_architecture-depth}
+\K{Depth} & 152 & \Sd{p.1}\\
+\K{Depth} & 100 & \Sd{p.1}\\
+\K{Depth} & 1000 & \Sd{p.1}\\
+\K{Depth} & 20 & \Sd{p.1}\\
+\K{Depth} & 56 & \Sd{p.1}\\
+\K{Depth} & sixteen & \Sd{p.1}\\
+\K{Depth} & thirty & \Sd{p.1}\\
+\K{Depth} & 34 & \Sd{p.3}\\
+\K{Depth} & 18 & \Sd{p.5}\\
+\K{Depth} & 50 & \Sd{p.6}\\
+\K{Depth} & 101 & \Sd{p.6}\\
+\K{Depth} & 19 & \Sd{p.7}\\
+\K{Depth} & 32 & \Sd{p.7}\\
+\K{Depth} & 44 & \Sd{p.7}\\
+\K{Depth} & 110 & \Sd{p.7}\\
+\K{Depth} & 1202 & \Sd{p.7}\\
+\end{kvtable}
+
+\begin{kvtable}{Layers}{tab:sec_architecture-layers}
+\K{Layers} & 34 & \Sd{p.3}\\
+\K{Layers} & two or three layers & \Sd{p.3}\\
+\K{Layers} & 3 layers & \Sd{p.6}\\
+\K{Layers} & 6n+2 & \Sd{p.7}\\
+\K{Layers} & 3n & \Sd{p.7}\\
+\K{Layers} & 1+2n & \Sd{p.7}\\
+\K{Layers} & 2n & \Sd{p.7}\\
+\K{Layers} & 91 conv layers & \Sd{p.10}\\
+\K{Layers} & 13 conv layers & \Sd{p.10}\\
+\end{kvtable}
+
+\begin{kvtable}{Filters}{tab:sec_architecture-filters}
+\K{Filters} & 3x3 & \Sd{p.3}\\
+\K{Filters} & 1x1 & \Sd{p.4}\\
+\K{Filters} & 7x7 & \Sd{p.5}\\
+\K{Filters} & 64 & \Sd{p.5}\\
+\K{Filters} & 128 & \Sd{p.5}\\
+\K{Filters} & 256 & \Sd{p.5}\\
+\K{Filters} & 512 & \Sd{p.5}\\
+\K{Filters} & 1024 & \Sd{p.5}\\
+\K{Filters} & 2048 & \Sd{p.5}\\
+\K{Filters} & \{16, 32, 64\} & \Sd{p.7}\\
+\end{kvtable}
+
+\begin{kvtable}{Output size}{tab:sec_architecture-output-size}
+\K{Output size} & 112x112 & \Sd{p.5}\\
+\K{Output size} & 56x56 & \Sd{p.5}\\
+\K{Output size} & 28x28 & \Sd{p.5}\\
+\K{Output size} & 14x14 & \Sd{p.5}\\
+\K{Output size} & 7x7 & \Sd{p.5}\\
+\K{Output size} & 1x1 & \Sd{p.5}\\
+\K{Output size} & 32x32 & \Sd{p.7}\\
+\K{Output size} & 16x16 & \Sd{p.7}\\
+\K{Output size} & 8x8 & \Sd{p.7}\\
+\end{kvtable}
+
+\begin{kvtable}{FLOPs}{tab:sec_architecture-flops}
+\K{FLOPs} & 3.6 billion & \Sd{p.3}\\
+\K{FLOPs} & 19.6 billion & \Sd{p.3}\\
+\K{FLOPs} & 1.8x10\textasciicircum{}9 & \Sd{p.5}\\
+\K{FLOPs} & 3.6x10\textasciicircum{}9 & \Sd{p.5}\\
+\K{FLOPs} & 3.8x10\textasciicircum{}9 & \Sd{p.5}\\
+\K{FLOPs} & 7.6x10\textasciicircum{}9 & \Sd{p.5}\\
+\K{FLOPs} & 11.3x10\textasciicircum{}9 & \Sd{p.5}\\
+\K{FLOPs} & 3.8 billion & \Sd{p.7}\\
+\K{FLOPs} & 11.3 billion & \Sd{p.7}\\
+\K{FLOPs} & 15.3/19.6 billion & \Sd{p.7}\\
+\end{kvtable}
+
+\begin{kvtable}{Parameters}{tab:sec_architecture-parameters}
+\K{Parameters} & 2.5M & \Sd{p.7}\\
+\K{Parameters} & 2.3M & \Sd{p.7}\\
+\K{Parameters} & 1.25M & \Sd{p.7}\\
+\K{Parameters} & 0.27M & \Sd{p.7}\\
+\K{Parameters} & 0.46M & \Sd{p.7}\\
+\K{Parameters} & 0.66M & \Sd{p.7}\\
+\K{Parameters} & 0.85M & \Sd{p.7}\\
+\K{Parameters} & 1.7M & \Sd{p.7}\\
+\K{Parameters} & 19.4M & \Sd{p.7}\\
+\end{kvtable}
+
+\begin{kvtable}{Stride}{tab:sec_architecture-stride}
+\K{Stride} & 2 & \Sd{p.3}\\
+\K{Stride} & 16 pixels & \Sd{p.10}\\
+\end{kvtable}

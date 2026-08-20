@@ -1,0 +1,163 @@
+{
+  "resnet": {
+    "arxiv_id": "1512.03385v1",
+    "sha256": "a975e8b798fb4c447551bffd4e74a3abf169b151e4435390ab6d16bf88cef880",
+    "bytes": 506177,
+    "kind": "tar",
+    "n_files": 13,
+    "tex_files": [
+      "residual_v1_arxiv_release.tex"
+    ]
+  },
+  "attention": {
+    "arxiv_id": "1706.03762v7",
+    "sha256": "2e7a7d9ee2520d22eb23dae0cb148e167be02a30d6cb3f11b1c67723194339c6",
+    "bytes": 1150988,
+    "kind": "tar",
+    "n_files": 23,
+    "tex_files": [
+      "background.tex",
+      "introduction.tex",
+      "model_architecture.tex",
+      "ms.tex",
+      "parameter_attention.tex",
+      "results.tex",
+      "sqrt_d_trick.tex",
+      "training.tex",
+      "visualizations.tex",
+      "why_self_attention.tex"
+    ]
+  },
+  "bert": {
+    "arxiv_id": "1810.04805v2",
+    "sha256": "3b272da93640a021bf6f207a731e67ebe38c5963c691534311a5d6a2f2847158",
+    "bytes": 316748,
+    "kind": "tar",
+    "n_files": 28,
+    "tex_files": [
+      "ablation.tex",
+      "abstract.tex",
+      "appendix_main.tex",
+      "bert.tex",
+      "bert_details.tex",
+      "conclusion.tex",
+      "direction_ablation_tab.tex",
+      "experiment.tex",
+      "experiments_details.tex",
+      "glue_official_tab.tex",
+      "intro.tex",
+      "main.tex",
+      "mask_procedure_ablation_tab.tex",
+      "more_ablation.tex",
+      "pretrained_embeddings_tab.tex",
+      "related.tex",
+      "size_ablation_tab.tex",
+      "squad_tab.tex",
+      "steps_ablation_fig.tex",
+      "swag_official_tab.tex"
+    ]
+  },
+  "vgg": {
+    "arxiv_id": "1409.1556v6",
+    "sha256": "5aeaa92a65ed9319bae49a18a74c39c62da8b9d194d7045ae7ce6fe674dd0fab",
+    "bytes": 47960,
+    "kind": "tar",
+    "n_files": 6,
+    "tex_files": [
+      "ilsvrc14.tex"
+    ]
+  },
+  "faster-rcnn": {
+    "arxiv_id": "1506.01497v3",
+    "sha256": "a0bcbc3d691316278f68cb27df7847656dcb709742995fcd30a3879ef0497516",
+    "bytes": 6248466,
+    "kind": "tar",
+    "n_files": 13,
+    "tex_files": [
+      "rpn_pami_arxiv.tex"
+    ]
+  },
+  "adam": {
+    "arxiv_id": "1412.6980v9",
+    "sha256": "7d2362abfa27d56fd59b70d30b6d721311f78281009448318cb5147bf1cf7e0e",
+    "bytes": 501429,
+    "kind": "tar",
+    "n_files": 2,
+    "tex_files": [
+      "arxiv.tex"
+    ]
+  },
+  "vit": {
+    "arxiv_id": "2010.11929v2",
+    "sha256": "43ee59f7cc943bb373e28a6d166fe2d16461be0ff0e483939949e16a1e52f3ea",
+    "bytes": 3105369,
+    "kind": "tar",
+    "n_files": 38,
+    "tex_files": [
+      "01_introduction.tex",
+      "02_related_work.tex",
+      "03_method.tex",
+      "04_experiments.tex",
+      "05_conclusion.tex",
+      "06_appendix.tex",
+      "main.tex",
+      "math_commands.tex",
+      "vtab_table.tex"
+    ]
+  },
+  "unet": {
+    "arxiv_id": "1505.04597v1",
+    "sha256": "76e78335cc07e67b6dcd0852057f2efe0775cad662fd85581d251d76384cb55d",
+    "bytes": 1418544,
+    "kind": "tar",
+    "n_files": 12,
+    "tex_files": [
+      "paper459.tex"
+    ]
+  },
+  "densenet": {
+    "arxiv_id": "1608.06993v5",
+    "sha256": "30a8856364739894ef9ff7abe163c3e19c061f6ed4869c0b1738daf54b9f97e0",
+    "bytes": 5391928,
+    "kind": "tar",
+    "n_files": 68,
+    "tex_files": [
+      "DenseNetCVPR - arxiv 5b/abstract.tex",
+      "DenseNetCVPR - arxiv 5b/analytic.tex",
+      "DenseNetCVPR - arxiv 5b/conclusion.tex",
+      "DenseNetCVPR - arxiv 5b/experiments.tex",
+      "DenseNetCVPR - arxiv 5b/intro.tex",
+      "DenseNetCVPR - arxiv 5b/macros.tex",
+      "DenseNetCVPR - arxiv 5b/main.tex",
+      "DenseNetCVPR - arxiv 5b/method.tex",
+      "DenseNetCVPR - arxiv 5b/related_work.tex",
+      "DenseNetCVPR - arxiv 5b/result/caption.tex",
+      "DenseNetCVPR - arxiv 5b/result/office-31.tex",
+      "DenseNetCVPR - arxiv 5b/result/svn-mnist.tex",
+      "DenseNetCVPR - arxiv 5b/result/table.tex",
+      "abstract.tex",
+      "analytic.tex",
+      "conclusion.tex",
+      "experiments.tex",
+      "intro.tex",
+      "macros.tex",
+      "main.tex",
+      "method.tex",
+      "related_work.tex",
+      "result/caption.tex",
+      "result/office-31.tex",
+      "result/svn-mnist.tex",
+      "result/table.tex"
+    ]
+  },
+  "batchnorm": {
+    "arxiv_id": "1502.03167v3",
+    "sha256": "85cef6b37735cb1e60654d3090149c6253fb6d4fe9598c3166e0797001007249",
+    "bytes": 31055,
+    "kind": "tar",
+    "n_files": 7,
+    "tex_files": [
+      "arx.tex"
+    ]
+  }
+}

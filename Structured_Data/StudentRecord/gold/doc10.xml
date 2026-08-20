@@ -1,0 +1,8 @@
+<student-record>
+  <name lastname="Chen" firstname="Wei"/>
+  <address>
+    <street>704 Highland Avenue</street>
+    <city>Hamilton</city>
+  </address>
+  <evaluation grade="97">Excellent</evaluation>
+</student-record>

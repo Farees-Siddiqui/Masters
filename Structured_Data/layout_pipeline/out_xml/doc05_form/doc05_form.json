@@ -1,0 +1,409 @@
+{
+  "config": {
+    "beta": 1.3,
+    "theta_v": 0.9,
+    "min_gap_px": 1.0,
+    "overlap_threshold": 0.3,
+    "mask_titles": false,
+    "mask_vision": true,
+    "mask_marginal": true,
+    "enable_cross_mask": false
+  },
+  "n_pages": 1,
+  "pages": [
+    {
+      "source": "doc05_form.pdf",
+      "page_index": 0,
+      "width": 1700,
+      "height": 2200,
+      "n_blocks": 13,
+      "blocks": [
+        {
+          "order": 0,
+          "label": "doc_title",
+          "bbox": [
+            558.0,
+            202.0,
+            1139.0,
+            236.0
+          ],
+          "score": 0.7775,
+          "synthetic": false,
+          "text": "STUDENT EVALUATION FORM",
+          "lines": [
+            {
+              "text": "STUDENT EVALUATION FORM",
+              "bbox": [
+                561.0,
+                202.0,
+                1137.0,
+                232.0
+              ],
+              "score": 0.9906
+            }
+          ]
+        },
+        {
+          "order": 1,
+          "label": "text",
+          "bbox": [
+            468.0,
+            253.0,
+            627.0,
+            280.0
+          ],
+          "score": null,
+          "synthetic": true,
+          "text": "Form SR-114",
+          "lines": [
+            {
+              "text": "Form SR-114",
+              "bbox": [
+                468.0,
+                253.0,
+                627.0,
+                280.0
+              ],
+              "score": 0.9892
+            }
+          ]
+        },
+        {
+          "order": 2,
+          "label": "text",
+          "bbox": [
+            705.0,
+            255.0,
+            1227.0,
+            281.0
+          ],
+          "score": null,
+          "synthetic": true,
+          "text": "To be completed by the supervising instructor",
+          "lines": [
+            {
+              "text": "To be completed by the supervising instructor",
+              "bbox": [
+                705.0,
+                255.0,
+                1227.0,
+                281.0
+              ],
+              "score": 0.9918
+            }
+          ]
+        },
+        {
+          "order": 3,
+          "label": "paragraph_title",
+          "bbox": [
+            196.0,
+            372.0,
+            558.0,
+            403.0
+          ],
+          "score": 0.5744,
+          "synthetic": false,
+          "text": "SECTION 1—NAME",
+          "lines": [
+            {
+              "text": "SECTION 1—NAME",
+              "bbox": [
+                197.0,
+                371.0,
+                556.0,
+                402.0
+              ],
+              "score": 0.9796
+            }
+          ]
+        },
+        {
+          "order": 4,
+          "label": "text",
+          "bbox": [
+            196.0,
+            454.0,
+            888.0,
+            487.0
+          ],
+          "score": 0.754,
+          "synthetic": false,
+          "text": "Family Name\nMartinez",
+          "lines": [
+            {
+              "text": "Family Name",
+              "bbox": [
+                195.0,
+                451.0,
+                381.0,
+                486.0
+              ],
+              "score": 0.9439
+            },
+            {
+              "text": "Martinez",
+              "bbox": [
+                456.0,
+                452.0,
+                583.0,
+                483.0
+              ],
+              "score": 0.9994
+            }
+          ]
+        },
+        {
+          "order": 5,
+          "label": "text",
+          "bbox": [
+            197.0,
+            538.0,
+            888.0,
+            572.0
+          ],
+          "score": 0.743,
+          "synthetic": false,
+          "text": "Given Name(s)\nElena",
+          "lines": [
+            {
+              "text": "Given Name(s)",
+              "bbox": [
+                195.0,
+                532.0,
+                401.0,
+                572.0
+              ],
+              "score": 0.9579
+            },
+            {
+              "text": "Elena",
+              "bbox": [
+                455.0,
+                535.0,
+                541.0,
+                568.0
+              ],
+              "score": 0.9994
+            }
+          ]
+        },
+        {
+          "order": 6,
+          "label": "paragraph_title",
+          "bbox": [
+            195.0,
+            648.0,
+            616.0,
+            679.0
+          ],
+          "score": 0.5148,
+          "synthetic": false,
+          "text": "SECTION 2—ADDRESS",
+          "lines": [
+            {
+              "text": "SECTION 2—ADDRESS",
+              "bbox": [
+                197.0,
+                648.0,
+                613.0,
+                678.0
+              ],
+              "score": 0.9736
+            }
+          ]
+        },
+        {
+          "order": 7,
+          "label": "text",
+          "bbox": [
+            195.0,
+            731.0,
+            889.0,
+            762.0
+          ],
+          "score": 0.7592,
+          "synthetic": false,
+          "text": "Street\n9 Rosedale Court",
+          "lines": [
+            {
+              "text": "Street",
+              "bbox": [
+                195.0,
+                727.0,
+                284.0,
+                760.0
+              ],
+              "score": 0.9997
+            },
+            {
+              "text": "9 Rosedale Court",
+              "bbox": [
+                453.0,
+                727.0,
+                694.0,
+                757.0
+              ],
+              "score": 0.9708
+            }
+          ]
+        },
+        {
+          "order": 8,
+          "label": "text",
+          "bbox": [
+            195.0,
+            813.0,
+            889.0,
+            847.0
+          ],
+          "score": 0.7575,
+          "synthetic": false,
+          "text": "Municipality\nOakville",
+          "lines": [
+            {
+              "text": "Municipality",
+              "bbox": [
+                194.0,
+                809.0,
+                369.0,
+                847.0
+              ],
+              "score": 0.9989
+            },
+            {
+              "text": "Oakville",
+              "bbox": [
+                455.0,
+                810.0,
+                574.0,
+                842.0
+              ],
+              "score": 0.9439
+            }
+          ]
+        },
+        {
+          "order": 9,
+          "label": "text",
+          "bbox": [
+            198.0,
+            923.0,
+            680.0,
+            953.0
+          ],
+          "score": null,
+          "synthetic": true,
+          "text": "SECTION 3— EVALUATION",
+          "lines": [
+            {
+              "text": "SECTION 3— EVALUATION",
+              "bbox": [
+                198.0,
+                923.0,
+                680.0,
+                953.0
+              ],
+              "score": 0.979
+            }
+          ]
+        },
+        {
+          "order": 10,
+          "label": "text",
+          "bbox": [
+            195.0,
+            1006.0,
+            888.0,
+            1038.0
+          ],
+          "score": 0.7905,
+          "synthetic": false,
+          "text": "Numeric Grade\n68",
+          "lines": [
+            {
+              "text": "Numeric Grade",
+              "bbox": [
+                196.0,
+                1003.0,
+                406.0,
+                1034.0
+              ],
+              "score": 0.9989
+            },
+            {
+              "text": "68",
+              "bbox": [
+                448.0,
+                1000.0,
+                498.0,
+                1036.0
+              ],
+              "score": 0.9997
+            }
+          ]
+        },
+        {
+          "order": 11,
+          "label": "text",
+          "bbox": [
+            198.0,
+            1090.0,
+            889.0,
+            1124.0
+          ],
+          "score": 0.7555,
+          "synthetic": false,
+          "text": "Assessment\nNeeds Improvement",
+          "lines": [
+            {
+              "text": "Assessment",
+              "bbox": [
+                196.0,
+                1086.0,
+                353.0,
+                1120.0
+              ],
+              "score": 0.9999
+            },
+            {
+              "text": "Needs Improvement",
+              "bbox": [
+                455.0,
+                1086.0,
+                727.0,
+                1121.0
+              ],
+              "score": 0.9937
+            }
+          ]
+        },
+        {
+          "order": 12,
+          "label": "text",
+          "bbox": [
+            197.0,
+            1242.0,
+            716.0,
+            1270.0
+          ],
+          "score": 0.8213,
+          "synthetic": false,
+          "text": "Retain the completed form in the student file.",
+          "lines": [
+            {
+              "text": "Retain the completed form in the student file.",
+              "bbox": [
+                198.0,
+                1240.0,
+                713.0,
+                1264.0
+              ],
+              "score": 0.9832
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

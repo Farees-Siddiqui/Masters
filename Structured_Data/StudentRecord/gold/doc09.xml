@@ -1,0 +1,8 @@
+<student-record>
+  <name lastname="Petrov" firstname="Dmitri"/>
+  <address>
+    <street>23 Sunnybrook Lane</street>
+    <city>Waterloo</city>
+  </address>
+  <evaluation grade="58">Unsatisfactory</evaluation>
+</student-record>

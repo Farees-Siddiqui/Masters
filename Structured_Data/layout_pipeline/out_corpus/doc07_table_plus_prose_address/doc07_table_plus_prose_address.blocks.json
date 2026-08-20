@@ -1,0 +1,212 @@
+{
+  "n_pages": 1,
+  "pages": [
+    {
+      "page": 0,
+      "blocks": [
+        {
+          "block_id": 0,
+          "block_type": "TITLE",
+          "bbox": [
+            225.0,
+            232.0,
+            528.0,
+            269.0
+          ],
+          "parsed_content": "Assessment Entry",
+          "crop_path": null,
+          "metadata": {
+            "label": "paragraph_title",
+            "page": 0,
+            "reading_position": 0,
+            "handler": "_handle_text",
+            "n_lines": 1,
+            "mean_line_confidence": 0.983,
+            "is_marginal": false,
+            "source_order": 0,
+            "status": "extracted"
+          },
+          "raw_lines": [
+            {
+              "text": "Assessment Entry",
+              "bbox": [
+                228.0,
+                230.0,
+                522.0,
+                267.0
+              ],
+              "score": 0.983
+            }
+          ]
+        },
+        {
+          "block_id": 1,
+          "block_type": "TEXT",
+          "bbox": [
+            224.0,
+            504.0,
+            1476.0,
+            620.0
+          ],
+          "parsed_content": "The above entry was reviewed on 2 April 2026 and requires no further action. For the pur-\nposes of the mailed notice, Hana Yamamoto resides at 62 Winston Churchill Boulevardin\nMississauga; the notice was posted to that address on the same day.",
+          "crop_path": null,
+          "metadata": {
+            "label": "text",
+            "page": 0,
+            "reading_position": 1,
+            "handler": "_handle_text",
+            "n_lines": 3,
+            "mean_line_confidence": 0.9686,
+            "is_marginal": false,
+            "source_order": 1,
+            "status": "extracted"
+          },
+          "raw_lines": [
+            {
+              "text": "The above entry was reviewed on 2 April 2026 and requires no further action. For the pur-",
+              "bbox": [
+                228.0,
+                503.0,
+                1468.0,
+                536.0
+              ],
+              "score": 0.9605
+            },
+            {
+              "text": "poses of the mailed notice, Hana Yamamoto resides at 62 Winston Churchill Boulevardin",
+              "bbox": [
+                228.0,
+                541.0,
+                1469.0,
+                575.0
+              ],
+              "score": 0.9633
+            },
+            {
+              "text": "Mississauga; the notice was posted to that address on the same day.",
+              "bbox": [
+                229.0,
+                581.0,
+                1133.0,
+                611.0
+              ],
+              "score": 0.982
+            }
+          ]
+        },
+        {
+          "block_id": 2,
+          "block_type": "TABLE",
+          "bbox": [
+            514.0,
+            335.0,
+            1183.0,
+            442.0
+          ],
+          "parsed_content": "| Surname | First Name | Mark | Evaluation |\n|---|---|---|---|\n| Yamamoto | Hana | 79 | Satisfactory |",
+          "crop_path": "layout_pipeline/out_corpus/doc07_table_plus_prose_address/crops/page_0_block_2.png",
+          "metadata": {
+            "label": "table",
+            "page": 0,
+            "reading_position": 2,
+            "handler": "_handle_table",
+            "n_lines": 8,
+            "mean_line_confidence": 0.9951,
+            "is_marginal": false,
+            "source_order": 2,
+            "status": "completed",
+            "table_format": "markdown",
+            "table_rows": 2,
+            "table_columns": 4,
+            "merged_cells": false,
+            "cell_fill": 1.0,
+            "extractor": "paddle:TableRecognitionPipelineV2",
+            "ocr_fallback_text": "Surname\nFirst Name\nMark\nEvaluation\nYamamoto\nHana\n79\nSatisfactory"
+          },
+          "raw_lines": [
+            {
+              "text": "Surname",
+              "bbox": [
+                512.0,
+                341.0,
+                659.0,
+                378.0
+              ],
+              "score": 0.9997
+            },
+            {
+              "text": "First Name",
+              "bbox": [
+                688.0,
+                342.0,
+                874.0,
+                376.0
+              ],
+              "score": 0.9635
+            },
+            {
+              "text": "Mark",
+              "bbox": [
+                897.0,
+                343.0,
+                990.0,
+                376.0
+              ],
+              "score": 0.9996
+            },
+            {
+              "text": "Evaluation",
+              "bbox": [
+                1011.0,
+                343.0,
+                1183.0,
+                377.0
+              ],
+              "score": 0.999
+            },
+            {
+              "text": "Yamamoto",
+              "bbox": [
+                515.0,
+                397.0,
+                665.0,
+                428.0
+              ],
+              "score": 0.9998
+            },
+            {
+              "text": "Hana",
+              "bbox": [
+                687.0,
+                394.0,
+                770.0,
+                431.0
+              ],
+              "score": 0.9998
+            },
+            {
+              "text": "79",
+              "bbox": [
+                895.0,
+                394.0,
+                940.0,
+                431.0
+              ],
+              "score": 0.9998
+            },
+            {
+              "text": "Satisfactory",
+              "bbox": [
+                1012.0,
+                393.0,
+                1179.0,
+                433.0
+              ],
+              "score": 0.9998
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

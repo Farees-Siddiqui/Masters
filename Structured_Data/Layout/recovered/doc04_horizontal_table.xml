@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='utf-8'?>
+<document source="doc04_horizontal_table.pdf" model="nielsr/layoutlmv3-finetuned-funsd">
+  <surname label="Surname" by="layoutlmv3">Kaur</surname>
+  <given_name label="Given Name" by="layoutlmv3">Simran</given_name>
+  <street_address label="Street Address" by="layoutlmv3">47 Hillcrest Drive</street_address>
+  <city label="City" by="layoutlmv3">Brampton</city>
+  <score label="Score" by="layoutlmv3">82</score>
+  <standing label="Standing" by="layoutlmv3">Satisfactory</standing>
+  <surname label="Surname" by="gliner" score="0.67">Kaur Simran</surname>
+</document>

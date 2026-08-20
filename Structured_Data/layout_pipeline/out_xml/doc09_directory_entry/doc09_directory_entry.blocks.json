@@ -1,0 +1,150 @@
+{
+  "n_pages": 1,
+  "pages": [
+    {
+      "page": 0,
+      "blocks": [
+        {
+          "block_id": 0,
+          "block_type": "TEXT",
+          "bbox": [
+            234.0,
+            350.0,
+            1203.0,
+            385.0
+          ],
+          "parsed_content": "Petrov, Dmitri — 23 Sunnybrook Lane, Waterloo — 58 (Unsatisfactory)",
+          "crop_path": null,
+          "metadata": {
+            "label": "text",
+            "page": 0,
+            "reading_position": 0,
+            "handler": "_handle_text",
+            "n_lines": 1,
+            "mean_line_confidence": 0.9588,
+            "is_marginal": false,
+            "source_order": 0,
+            "status": "extracted"
+          },
+          "raw_lines": [
+            {
+              "text": "Petrov, Dmitri — 23 Sunnybrook Lane, Waterloo — 58 (Unsatisfactory)",
+              "bbox": [
+                236.0,
+                350.0,
+                1202.0,
+                384.0
+              ],
+              "score": 0.9588
+            }
+          ]
+        },
+        {
+          "block_id": 1,
+          "block_type": "TEXT",
+          "bbox": [
+            236.0,
+            244.0,
+            707.0,
+            276.0
+          ],
+          "parsed_content": "REGISTRAR'SDIRECTORY",
+          "crop_path": null,
+          "metadata": {
+            "label": "header",
+            "page": 0,
+            "reading_position": 1,
+            "handler": "_handle_text",
+            "n_lines": 1,
+            "mean_line_confidence": 0.9987,
+            "is_marginal": true,
+            "source_order": 1,
+            "status": "extracted"
+          },
+          "raw_lines": [
+            {
+              "text": "REGISTRAR'SDIRECTORY",
+              "bbox": [
+                239.0,
+                244.0,
+                707.0,
+                271.0
+              ],
+              "score": 0.9987
+            }
+          ]
+        },
+        {
+          "block_id": 2,
+          "block_type": "TEXT",
+          "bbox": [
+            236.0,
+            463.0,
+            1447.0,
+            493.0
+          ],
+          "parsed_content": "Directory entries are printed once per term and are superseded by any later correction filed with this office.",
+          "crop_path": null,
+          "metadata": {
+            "label": "text",
+            "page": 0,
+            "reading_position": 2,
+            "handler": "_handle_text",
+            "n_lines": 1,
+            "mean_line_confidence": 0.9672,
+            "is_marginal": false,
+            "source_order": 2,
+            "status": "extracted"
+          },
+          "raw_lines": [
+            {
+              "text": "Directory entries are printed once per term and are superseded by any later correction filed with this office.",
+              "bbox": [
+                236.0,
+                459.0,
+                1445.0,
+                490.0
+              ],
+              "score": 0.9672
+            }
+          ]
+        },
+        {
+          "block_id": 3,
+          "block_type": "TEXT",
+          "bbox": [
+            1371.0,
+            250.0,
+            1463.0,
+            280.0
+          ],
+          "parsed_content": "page 47",
+          "crop_path": null,
+          "metadata": {
+            "label": "number",
+            "page": 0,
+            "reading_position": 3,
+            "handler": "_handle_text",
+            "n_lines": 1,
+            "mean_line_confidence": 0.9869,
+            "is_marginal": true,
+            "source_order": 3,
+            "status": "extracted"
+          },
+          "raw_lines": [
+            {
+              "text": "page 47",
+              "bbox": [
+                1367.0,
+                245.0,
+                1465.0,
+                281.0
+              ],
+              "score": 0.9869
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

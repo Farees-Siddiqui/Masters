@@ -1,0 +1,189 @@
+{
+  "config": {
+    "beta": 1.3,
+    "theta_v": 0.9,
+    "min_gap_px": 1.0,
+    "overlap_threshold": 0.3,
+    "mask_titles": false,
+    "mask_vision": true,
+    "mask_marginal": true,
+    "enable_cross_mask": false
+  },
+  "n_pages": 1,
+  "pages": [
+    {
+      "source": "doc07_table_plus_prose_address.pdf",
+      "page_index": 0,
+      "width": 1700,
+      "height": 2200,
+      "n_blocks": 3,
+      "blocks": [
+        {
+          "order": 0,
+          "label": "paragraph_title",
+          "bbox": [
+            225.0,
+            232.0,
+            528.0,
+            269.0
+          ],
+          "score": 0.5212,
+          "synthetic": false,
+          "text": "Assessment Entry",
+          "lines": [
+            {
+              "text": "Assessment Entry",
+              "bbox": [
+                228.0,
+                230.0,
+                522.0,
+                267.0
+              ],
+              "score": 0.983
+            }
+          ]
+        },
+        {
+          "order": 1,
+          "label": "text",
+          "bbox": [
+            224.0,
+            504.0,
+            1476.0,
+            620.0
+          ],
+          "score": 0.9146,
+          "synthetic": false,
+          "text": "The above entry was reviewed on 2 April 2026 and requires no further action. For the pur-\nposes of the mailed notice, Hana Yamamoto resides at 62 Winston Churchill Boulevardin\nMississauga; the notice was posted to that address on the same day.",
+          "lines": [
+            {
+              "text": "The above entry was reviewed on 2 April 2026 and requires no further action. For the pur-",
+              "bbox": [
+                228.0,
+                503.0,
+                1468.0,
+                536.0
+              ],
+              "score": 0.9605
+            },
+            {
+              "text": "poses of the mailed notice, Hana Yamamoto resides at 62 Winston Churchill Boulevardin",
+              "bbox": [
+                228.0,
+                541.0,
+                1469.0,
+                575.0
+              ],
+              "score": 0.9633
+            },
+            {
+              "text": "Mississauga; the notice was posted to that address on the same day.",
+              "bbox": [
+                229.0,
+                581.0,
+                1133.0,
+                611.0
+              ],
+              "score": 0.982
+            }
+          ]
+        },
+        {
+          "order": 2,
+          "label": "table",
+          "bbox": [
+            514.0,
+            335.0,
+            1183.0,
+            442.0
+          ],
+          "score": 0.8848,
+          "synthetic": false,
+          "text": "Surname\nFirst Name\nMark\nEvaluation\nYamamoto\nHana\n79\nSatisfactory",
+          "lines": [
+            {
+              "text": "Surname",
+              "bbox": [
+                512.0,
+                341.0,
+                659.0,
+                378.0
+              ],
+              "score": 0.9997
+            },
+            {
+              "text": "First Name",
+              "bbox": [
+                688.0,
+                342.0,
+                874.0,
+                376.0
+              ],
+              "score": 0.9635
+            },
+            {
+              "text": "Mark",
+              "bbox": [
+                897.0,
+                343.0,
+                990.0,
+                376.0
+              ],
+              "score": 0.9996
+            },
+            {
+              "text": "Evaluation",
+              "bbox": [
+                1011.0,
+                343.0,
+                1183.0,
+                377.0
+              ],
+              "score": 0.999
+            },
+            {
+              "text": "Yamamoto",
+              "bbox": [
+                515.0,
+                397.0,
+                665.0,
+                428.0
+              ],
+              "score": 0.9998
+            },
+            {
+              "text": "Hana",
+              "bbox": [
+                687.0,
+                394.0,
+                770.0,
+                431.0
+              ],
+              "score": 0.9998
+            },
+            {
+              "text": "79",
+              "bbox": [
+                895.0,
+                394.0,
+                940.0,
+                431.0
+              ],
+              "score": 0.9998
+            },
+            {
+              "text": "Satisfactory",
+              "bbox": [
+                1012.0,
+                393.0,
+                1179.0,
+                433.0
+              ],
+              "score": 0.9998
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

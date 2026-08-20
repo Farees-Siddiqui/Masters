@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='utf-8'?>
+<placement_term_record_extract title="doc04_horizontal_table" source="doc04_horizontal_table.pdf">
+  <columns>Surname</columns>
+  <columns>Given Name</columns>
+  <columns>Street Address</columns>
+  <columns>City</columns>
+  <columns>Score</columns>
+  <columns>Standing</columns>
+  <records surname="Kaur" given_name="Simran" street_address="47Hillcrest Drive" city="Brampton" score="82" standing="Satisfactory" />
+</placement_term_record_extract>

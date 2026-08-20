@@ -1,0 +1,55 @@
+% Format: filled-in form. Fields are grouped under numbered section headings,
+% so the grouping of street/city under an address is shown explicitly.
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{parskip}
+\usepackage{array}
+\pagestyle{empty}
+
+\newcommand{\field}[2]{%
+  \makebox[3.2cm][l]{#1}\underline{\makebox[5.5cm][l]{\ #2}}%
+}
+
+\begin{document}
+
+\begin{center}
+{\large\bfseries STUDENT EVALUATION FORM}\\[0.3em]
+{\footnotesize Form SR--114 \quad|\quad To be completed by the supervising instructor}
+\end{center}
+
+\vspace{1em}
+\hrule
+\vspace{1.5em}
+
+\textbf{SECTION 1 --- NAME}
+
+\vspace{0.8em}
+\field{Family Name}{Martinez}
+
+\vspace{0.9em}
+\field{Given Name(s)}{Elena}
+
+\vspace{1.8em}
+\textbf{SECTION 2 --- ADDRESS}
+
+\vspace{0.8em}
+\field{Street}{9 Rosedale Court}
+
+\vspace{0.9em}
+\field{Municipality}{Oakville}
+
+\vspace{1.8em}
+\textbf{SECTION 3 --- EVALUATION}
+
+\vspace{0.8em}
+\field{Numeric Grade}{68}
+
+\vspace{0.9em}
+\field{Assessment}{Needs Improvement}
+
+\vspace{2.5em}
+\hrule
+\vspace{0.8em}
+{\footnotesize Retain the completed form in the student file.}
+
+\end{document}

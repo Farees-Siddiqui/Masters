@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='utf-8'?>
+<document source="doc02_letter.pdf" model="nielsr/layoutlmv3-finetuned-funsd">
+  <unkeyed by="layoutlmv3">Thuy Nguyen</unkeyed>
+  <dear label="Dear" by="layoutlmv3">Ms. Nguyen,</dear>
+  <unkeyed by="layoutlmv3">A. Whitfield</unkeyed>
+  <unkeyed by="layoutlmv3">Assistant Registrar</unkeyed>
+  <city label="City" by="gliner" score="0.63">Milton College</city>
+  <street label="Street" by="gliner" score="0.61">88 Braemar Avenue</street>
+  <city label="City" by="gliner" score="0.98">Guelph</city>
+  <grade label="Grade" by="gliner" score="0.92">76</grade>
+  <grade label="Grade" by="gliner" score="0.88">Satisfactory</grade>
+</document>

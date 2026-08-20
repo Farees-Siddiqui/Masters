@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='utf-8'?>
+<document title="doc06_prose_plus_address_table" pages="1" blocks="5">
+  <page number="0">
+    <heading level="2" id="0" bbox="225.0,232.0,583.0,269.0" status="extracted" label="paragraph_title">Term Summary Note</heading>
+    <paragraph id="1" bbox="222.0,336.0,1474.0,448.0" status="extracted" label="text">Ronan Fitzgerald has completed all requirements for the term. The final grade awarded is 91,
+and the evaluation entered against the record is Excellent. No outstanding items remain on
+the file.</paragraph>
+    <paragraph id="2" bbox="223.0,468.0,1475.0,544.0" status="extracted" label="text">Correspondence relating to this record should be directed to the address set out below, which
+was confirmed with the student at the exit interview.</paragraph>
+    <table format="html" rows="3" columns="2" merged_cells="true" id="3" bbox="657.0,599.0,1042.0,744.0" status="completed" label="table">&lt;table&gt;&lt;tr&gt;&lt;td colspan="2"&gt;Mailing Address&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Street&lt;/td&gt;&lt;td&gt;315Colborne Street Kitchener&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;City&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</table>
+    <paragraph id="4" bbox="226.0,807.0,964.0,844.0" status="extracted" label="text">Filed by the Office of Student Records, 24 March 2026.</paragraph>
+  </page>
+</document>

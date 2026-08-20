@@ -1,0 +1,138 @@
+{
+  "domain": "education",
+  "metadata": {
+    "stage": "1-2:parametric_schema",
+    "domain": "education",
+    "requested_entities": 3,
+    "max_depth": 2,
+    "seed": 7,
+    "attempts": 1,
+    "model": "llama3.1:8b",
+    "base_url": "http://127.0.0.1:11434",
+    "backend": "ollama",
+    "temperature": 0.0,
+    "generated_at": "2026-08-20T11:25:59+00:00"
+  },
+  "depth": 2,
+  "roots": [
+    "Course",
+    "Student"
+  ],
+  "entity_depths": {
+    "Course": 1,
+    "Student": 1,
+    "Enrollment": 2
+  },
+  "entities": [
+    {
+      "name": "Course",
+      "primary_key": "id",
+      "description": "A formal educational program.",
+      "attributes": [
+        {
+          "name": "id",
+          "type": "id",
+          "required": true,
+          "unique": true,
+          "description": "Key."
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "required": true,
+          "description": "Program name."
+        },
+        {
+          "name": "credits",
+          "type": "integer",
+          "required": false,
+          "description": "Total credits earned."
+        },
+        {
+          "name": "duration",
+          "type": "text",
+          "required": false,
+          "description": "Length of study."
+        }
+      ]
+    },
+    {
+      "name": "Student",
+      "primary_key": "id",
+      "description": "A person enrolled in a course.",
+      "attributes": [
+        {
+          "name": "id",
+          "type": "id",
+          "required": true,
+          "unique": true,
+          "description": "Key."
+        },
+        {
+          "name": "first_name",
+          "type": "string",
+          "required": true,
+          "description": "Given name."
+        },
+        {
+          "name": "last_name",
+          "type": "string",
+          "required": true,
+          "description": "Family name."
+        },
+        {
+          "name": "email",
+          "type": "email",
+          "required": false,
+          "description": "Contact address."
+        }
+      ]
+    },
+    {
+      "name": "Enrollment",
+      "primary_key": "id",
+      "description": "A student's participation in a course.",
+      "attributes": [
+        {
+          "name": "id",
+          "type": "id",
+          "required": true,
+          "unique": true,
+          "description": "Key."
+        },
+        {
+          "name": "student_id",
+          "type": "id",
+          "required": true,
+          "description": "Enrolling student."
+        },
+        {
+          "name": "course_id",
+          "type": "id",
+          "required": true,
+          "description": "Course enrolled in."
+        },
+        {
+          "name": "start_date",
+          "type": "date",
+          "required": true,
+          "description": "Commencement date."
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "name": "enrollment_to_student",
+      "parent_entity": "Student",
+      "parent_attribute": "id",
+      "child_entity": "Enrollment",
+      "child_attribute": "student_id",
+      "cardinality": "1:m",
+      "fk": "Enrollment.student_id -> Student.id"
+    }
+  ],
+  "warnings": [
+    "dropped FK Enrollment.course_id -> Course.id: Enrollment already has a parent, and the hierarchy must be a forest"
+  ]
+}

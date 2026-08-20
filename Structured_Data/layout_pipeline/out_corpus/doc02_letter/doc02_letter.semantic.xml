@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='utf-8'?>
+<letter date="19 March 2026" title="Offi ce of the Registrar Milton College" source="doc02_letter.pdf">
+  <issuer office="Office of the Registrar" institution="Milton College" />
+  <addressee>
+    <name title="Ms." surname="Nguyen" forename="Thuy" />
+    <address street="88 Braemar Avenue" city="Guelph" />
+  </addressee>
+  <content placement_term_status="formally closed" transcript_note="Both entries are final and will appear on any transcript issued from this point forward." correction_procedure="Should any part of this record require correction, please contact this office in writing within thirty days.">
+    <grade value="76" evaluation="Satisfactory" />
+  </content>
+  <signatory name="A. Whitfield" title="Assistant Registrar" />
+</letter>

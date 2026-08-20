@@ -1,0 +1,33 @@
+% Format: fully tabular with a spanning header row, so the grouping of fields
+% under name / address / evaluation is displayed by the layout itself.
+\documentclass[11pt]{article}
+\usepackage[margin=0.7in,landscape]{geometry}
+\usepackage{booktabs}
+\usepackage{parskip}
+\pagestyle{empty}
+
+\begin{document}
+
+\begin{center}
+{\large\bfseries Consolidated Student Register}
+\end{center}
+
+\vspace{1.5em}
+
+\begin{center}
+\small
+\begin{tabular}{@{}llllll@{}}
+\toprule
+\multicolumn{2}{c}{\textbf{Name}} &
+\multicolumn{2}{c}{\textbf{Address}} &
+\multicolumn{2}{c}{\textbf{Evaluation}} \\
+\cmidrule(lr){1-2}\cmidrule(lr){3-4}\cmidrule(lr){5-6}
+\textbf{Last} & \textbf{First} & \textbf{Street} & \textbf{City} &
+\textbf{Grade} & \textbf{Remark} \\
+\midrule
+Chen & Wei & 704 Highland Avenue & Hamilton & 97 & Excellent \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\end{document}

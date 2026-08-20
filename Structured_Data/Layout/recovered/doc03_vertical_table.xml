@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='utf-8'?>
+<document source="doc03_vertical_table.pdf" model="nielsr/layoutlmv3-finetuned-funsd">
+  <last_name label="Last Name" by="layoutlmv3">Okonkwo</last_name>
+  <first_name label="First Name" by="layoutlmv3">Chidi</first_name>
+  <street label="Street" by="layoutlmv3">2201 Lakeshore Road</street>
+  <city label="City" by="layoutlmv3">Burlington</city>
+  <grade label="Grade" by="layoutlmv3">94</grade>
+  <evaluation label="Evaluation" by="layoutlmv3">Excellent</evaluation>
+  <street label="Street" by="gliner" score="0.97">Chidi Street</street>
+  <mailing_address label="Mailing Address" by="gliner" score="0.51">2201</mailing_address>
+</document>

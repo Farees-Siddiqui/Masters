@@ -1,0 +1,8 @@
+<student-record>
+  <name lastname="Yamamoto" firstname="Hana"/>
+  <address>
+    <street>62 Winston Churchill Boulevard</street>
+    <city>Mississauga</city>
+  </address>
+  <evaluation grade="79">Satisfactory</evaluation>
+</student-record>

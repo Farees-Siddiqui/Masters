@@ -1,0 +1,227 @@
+{
+  "n_pages": 1,
+  "pages": [
+    {
+      "page": 0,
+      "blocks": [
+        {
+          "block_id": 0,
+          "block_type": "TEXT",
+          "bbox": [
+            845.0,
+            139.0,
+            1355.0,
+            181.0
+          ],
+          "parsed_content": "Consolidated Student Register",
+          "crop_path": null,
+          "metadata": {
+            "label": "figure_title",
+            "page": 0,
+            "reading_position": 0,
+            "handler": "_handle_text",
+            "n_lines": 1,
+            "mean_line_confidence": 0.9836,
+            "is_marginal": false,
+            "source_order": 0,
+            "status": "extracted"
+          },
+          "raw_lines": [
+            {
+              "text": "Consolidated Student Register",
+              "bbox": [
+                848.0,
+                140.0,
+                1350.0,
+                173.0
+              ],
+              "score": 0.9836
+            }
+          ]
+        },
+        {
+          "block_id": 1,
+          "block_type": "TABLE",
+          "bbox": [
+            662.0,
+            245.0,
+            1534.0,
+            389.0
+          ],
+          "parsed_content": "<table><tr><td colspan=\"2\">Name</td><td colspan=\"2\">Address</td><td colspan=\"2\">Evaluation</td></tr><tr><td>Last</td><td>First</td><td>Street</td><td>City</td><td>Grade</td><td>Remark</td></tr><tr><td>Chen</td><td>Wei</td><td>704Highland Avenue</td><td>Hamilton</td><td>97</td><td>Excellent</td></tr></table>",
+          "crop_path": "layout_pipeline/out_xml/doc10_grouped_header_table/crops/page_0_block_1.png",
+          "metadata": {
+            "label": "table",
+            "page": 0,
+            "reading_position": 1,
+            "handler": "_handle_table",
+            "n_lines": 15,
+            "mean_line_confidence": 0.998,
+            "is_marginal": false,
+            "source_order": 1,
+            "status": "completed",
+            "table_format": "html",
+            "table_rows": 3,
+            "table_columns": 6,
+            "merged_cells": true,
+            "cell_fill": 1.0,
+            "extractor": "paddle:TableRecognitionPipelineV2",
+            "ocr_fallback_text": "Name\nAddress\nEvaluation\nLast\nFirst\nStreet\nCity\nGrade\nRemark\nChen\nWei\n704 Highland Avenue\nHamilton\n97\nExcellent"
+          },
+          "raw_lines": [
+            {
+              "text": "Name",
+              "bbox": [
+                708.0,
+                248.0,
+                803.0,
+                287.0
+              ],
+              "score": 0.9997
+            },
+            {
+              "text": "Address",
+              "bbox": [
+                1005.0,
+                252.0,
+                1126.0,
+                284.0
+              ],
+              "score": 0.9999
+            },
+            {
+              "text": "Evaluation",
+              "bbox": [
+                1330.0,
+                253.0,
+                1487.0,
+                284.0
+              ],
+              "score": 0.9997
+            },
+            {
+              "text": "Last",
+              "bbox": [
+                661.0,
+                299.0,
+                731.0,
+                333.0
+              ],
+              "score": 0.9997
+            },
+            {
+              "text": "First",
+              "bbox": [
+                757.0,
+                299.0,
+                835.0,
+                332.0
+              ],
+              "score": 0.9993
+            },
+            {
+              "text": "Street",
+              "bbox": [
+                858.0,
+                299.0,
+                952.0,
+                331.0
+              ],
+              "score": 0.9998
+            },
+            {
+              "text": "City",
+              "bbox": [
+                1149.0,
+                295.0,
+                1222.0,
+                337.0
+              ],
+              "score": 0.9993
+            },
+            {
+              "text": "Grade",
+              "bbox": [
+                1298.0,
+                299.0,
+                1393.0,
+                331.0
+              ],
+              "score": 0.9998
+            },
+            {
+              "text": "Remark",
+              "bbox": [
+                1415.0,
+                298.0,
+                1535.0,
+                332.0
+              ],
+              "score": 0.9992
+            },
+            {
+              "text": "Chen",
+              "bbox": [
+                659.0,
+                343.0,
+                737.0,
+                383.0
+              ],
+              "score": 0.9992
+            },
+            {
+              "text": "Wei",
+              "bbox": [
+                756.0,
+                347.0,
+                816.0,
+                381.0
+              ],
+              "score": 0.9995
+            },
+            {
+              "text": "704 Highland Avenue",
+              "bbox": [
+                860.0,
+                348.0,
+                1127.0,
+                379.0
+              ],
+              "score": 0.9761
+            },
+            {
+              "text": "Hamilton",
+              "bbox": [
+                1152.0,
+                350.0,
+                1271.0,
+                378.0
+              ],
+              "score": 0.9998
+            },
+            {
+              "text": "97",
+              "bbox": [
+                1294.0,
+                347.0,
+                1336.0,
+                380.0
+              ],
+              "score": 0.9998
+            },
+            {
+              "text": "Excellent",
+              "bbox": [
+                1415.0,
+                347.0,
+                1536.0,
+                381.0
+              ],
+              "score": 0.9998
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

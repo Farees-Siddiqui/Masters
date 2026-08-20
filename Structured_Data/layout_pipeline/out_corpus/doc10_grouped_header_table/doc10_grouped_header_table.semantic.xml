@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<student_register title="doc10_grouped_header_table" source="doc10_grouped_header_table.pdf">
+  <students last_name="Chen" first_name="Wei">
+    <address street="704Highland Avenue" city="Hamilton" />
+    <evaluation grade="97" remark="Excellent" />
+  </students>
+</student_register>

@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='utf-8'?>
+<document source="doc10_grouped_header_table.pdf" model="nielsr/layoutlmv3-finetuned-funsd">
+  <last label="Last" by="layoutlmv3">Chen</last>
+  <first label="First" by="layoutlmv3">Wei</first>
+  <street label="Street" by="layoutlmv3">704 Highland Avenue</street>
+  <city label="City" by="layoutlmv3">Hamilton</city>
+  <grade label="Grade" by="layoutlmv3">97</grade>
+  <remark label="Remark" by="layoutlmv3">Excellent</remark>
+  <surname label="Surname" by="gliner" score="0.64">Chen Wei</surname>
+</document>

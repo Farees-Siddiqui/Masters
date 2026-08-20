@@ -1,0 +1,8 @@
+<student-record>
+  <name lastname="Siddiqui" firstname="Farees"/>
+  <address>
+    <street>14 Fake Street</street>
+    <city>Milton</city>
+  </address>
+  <evaluation grade="90">Satisfactory</evaluation>
+</student-record>

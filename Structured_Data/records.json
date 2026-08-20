@@ -1,2071 +1,3666 @@
 {
-  "source": "samples\\resnet.pdf",
-  "record_count": 295,
+  "source": "samples/resnet.mistral.md",
+  "ocr": "mistral (cached)",
+  "backend": "ollama",
+  "model": "llama3.3:70b",
+  "vocab": "vocab.json",
+  "record_count": 189,
+  "value_grounded_count": 170,
+  "grounded_count": 189,
+  "grounded_by": {
+    "value_in_evidence": 154,
+    "value_in_document": 16,
+    "evidence_only": 19
+  },
+  "distinct_keys": 26,
+  "distinct_raw_keys": 29,
   "records": [
     {
-      "key": "title",
-      "value": "Deep Residual Learning for Image Recognition",
-      "evidence": "Deep Residual Learning for Image Recognition",
+      "key": "dataset",
+      "raw_key": "dataset",
+      "value": "ImageNet",
+      "evidence": "On the ImageNet dataset we evaluate residual nets with a depth of up to 152 layers—8× deeper than VGG nets [41] but still having lower complexity",
       "confidence": "high",
-      "grounded": true
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 11,
+      "spans": [
+        {
+          "start": 720,
+          "end": 728,
+          "text": "ImageNet"
+        },
+        {
+          "start": 1430,
+          "end": 1438,
+          "text": "ImageNet"
+        },
+        {
+          "start": 5832,
+          "end": 5840,
+          "text": "ImageNet"
+        },
+        {
+          "start": 14639,
+          "end": 14647,
+          "text": "ImageNet"
+        },
+        {
+          "start": 16809,
+          "end": 16817,
+          "text": "ImageNet"
+        },
+        {
+          "start": 24871,
+          "end": 24879,
+          "text": "ImageNet"
+        },
+        {
+          "start": 33742,
+          "end": 33750,
+          "text": "ImageNet"
+        },
+        {
+          "start": 45458,
+          "end": 45466,
+          "text": "ImageNet"
+        },
+        {
+          "start": 46718,
+          "end": 46726,
+          "text": "ImageNet"
+        },
+        {
+          "start": 55472,
+          "end": 55480,
+          "text": "ImageNet"
+        },
+        {
+          "start": 57713,
+          "end": 57721,
+          "text": "ImageNet"
+        }
+      ]
     },
     {
-      "key": "author",
-      "value": "Kaiming He",
-      "evidence": "Kaiming He Xiangyu Zhang Shaoqing Ren Jian Sun",
+      "key": "task",
+      "raw_key": "task",
+      "value": "classification",
+      "evidence": "won the 1st place on the ILSVRC 2015 classification task",
       "confidence": "high",
-      "grounded": true
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 5,
+      "spans": [
+        {
+          "start": 991,
+          "end": 1005,
+          "text": "classification"
+        },
+        {
+          "start": 6557,
+          "end": 6571,
+          "text": "classification"
+        },
+        {
+          "start": 17978,
+          "end": 17992,
+          "text": "classification"
+        },
+        {
+          "start": 32577,
+          "end": 32591,
+          "text": "Classification"
+        },
+        {
+          "start": 57611,
+          "end": 57625,
+          "text": "classification"
+        }
+      ]
     },
     {
-      "key": "author",
-      "value": "Xiangyu Zhang",
-      "evidence": "Kaiming He Xiangyu Zhang Shaoqing Ren Jian Sun",
+      "key": "dataset",
+      "raw_key": "dataset",
+      "value": "CIFAR-10",
+      "evidence": "We also present analysis on CIFAR-10 with 100 and 1000 layers",
       "confidence": "high",
-      "grounded": true
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 4,
+      "spans": [
+        {
+          "start": 1040,
+          "end": 1048,
+          "text": "CIFAR-10"
+        },
+        {
+          "start": 6283,
+          "end": 6291,
+          "text": "CIFAR-10"
+        },
+        {
+          "start": 30730,
+          "end": 30738,
+          "text": "CIFAR-10"
+        },
+        {
+          "start": 34796,
+          "end": 34804,
+          "text": "CIFAR-10"
+        }
+      ]
     },
     {
-      "key": "author",
-      "value": "Shaoqing Ren",
-      "evidence": "Kaiming He Xiangyu Zhang Shaoqing Ren Jian Sun",
+      "key": "dataset",
+      "raw_key": "dataset",
+      "value": "COCO",
+      "evidence": "Solely due to our extremely deep representations, we obtain a 28% relative improvement on the COCO object detection dataset",
       "confidence": "high",
-      "grounded": true
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 4,
+      "spans": [
+        {
+          "start": 1259,
+          "end": 1263,
+          "text": "COCO"
+        },
+        {
+          "start": 1473,
+          "end": 1477,
+          "text": "COCO"
+        },
+        {
+          "start": 37225,
+          "end": 37229,
+          "text": "COCO"
+        },
+        {
+          "start": 45608,
+          "end": 45612,
+          "text": "COCO"
+        }
+      ]
     },
     {
-      "key": "author",
-      "value": "Jian Sun",
-      "evidence": "Kaiming He Xiangyu Zhang Shaoqing Ren Jian Sun",
+      "key": "architecture",
+      "raw_key": "architecture",
+      "value": "residual nets",
+      "evidence": "we present a residual learning framework to ease the training of networks that are substantially deeper than those used previously",
       "confidence": "high",
-      "grounded": true
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 3,
+      "spans": [
+        {
+          "start": 749,
+          "end": 762,
+          "text": "residual nets"
+        },
+        {
+          "start": 5939,
+          "end": 5952,
+          "text": "residual nets"
+        },
+        {
+          "start": 23301,
+          "end": 23314,
+          "text": "residual nets"
+        }
+      ]
+    },
+    {
+      "key": "task",
+      "raw_key": "task",
+      "value": "object detection",
+      "evidence": "Solely due to our extremely deep representations, we obtain a 28% relative improvement on the COCO object detection dataset",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 3,
+      "spans": [
+        {
+          "start": 1264,
+          "end": 1280,
+          "text": "object detection"
+        },
+        {
+          "start": 37903,
+          "end": 37919,
+          "text": "Object Detection"
+        },
+        {
+          "start": 46793,
+          "end": 46809,
+          "text": "object detection"
+        }
+      ]
+    },
+    {
+      "key": "task",
+      "raw_key": "task",
+      "value": "detection",
+      "evidence": "ImageNet detection",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 3,
+      "spans": [
+        {
+          "start": 1439,
+          "end": 1448,
+          "text": "detection"
+        },
+        {
+          "start": 55481,
+          "end": 55490,
+          "text": "Detection"
+        },
+        {
+          "start": 60039,
+          "end": 60048,
+          "text": "detection"
+        }
+      ]
+    },
+    {
+      "key": "year",
+      "raw_key": "date",
+      "value": "2015",
+      "evidence": "ILSVRC & COCO 2015 competitions",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 3,
+      "spans": [
+        {
+          "start": 1361,
+          "end": 1365,
+          "text": "2015"
+        },
+        {
+          "start": 40156,
+          "end": 40160,
+          "text": "2015"
+        },
+        {
+          "start": 40878,
+          "end": 40882,
+          "text": "2015"
+        }
+      ]
+    },
+    {
+      "key": "architecture",
+      "raw_key": "architecture",
+      "value": "ResNet",
+      "evidence": "We evaluate our method on the ImageNet 2012 classification dataset [36] that consists of 1000 classes. ... ResNets of 18 and 34 layers.",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 3,
+      "spans": [
+        {
+          "start": 21927,
+          "end": 21933,
+          "text": "ResNet"
+        },
+        {
+          "start": 34135,
+          "end": 34141,
+          "text": "ResNet"
+        },
+        {
+          "start": 45675,
+          "end": 45681,
+          "text": "ResNet"
+        }
+      ]
+    },
+    {
+      "key": "year",
+      "raw_key": "year",
+      "value": "2012",
+      "evidence": "arXiv:1207.0580, 2012.",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 3,
+      "spans": [
+        {
+          "start": 17973,
+          "end": 17977,
+          "text": "2012"
+        },
+        {
+          "start": 40632,
+          "end": 40636,
+          "text": "2012"
+        },
+        {
+          "start": 41132,
+          "end": 41136,
+          "text": "2012"
+        }
+      ]
+    },
+    {
+      "key": "architecture",
+      "raw_key": "architecture",
+      "value": "plain nets",
+      "evidence": "the counterpart “plain” nets",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 2,
+      "spans": [
+        {
+          "start": 5996,
+          "end": 6007,
+          "text": "plain” nets"
+        },
+        {
+          "start": 33611,
+          "end": 33621,
+          "text": "plain nets"
+        }
+      ]
+    },
+    {
+      "key": "task",
+      "raw_key": "task",
+      "value": "localization",
+      "evidence": "ImageNet localization",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 2,
+      "spans": [
+        {
+          "start": 1459,
+          "end": 1471,
+          "text": "localization"
+        },
+        {
+          "start": 57152,
+          "end": 57164,
+          "text": "Localization"
+        }
+      ]
     },
     {
       "key": "organization",
-      "value": "Microsoft Research",
-      "evidence": "Microsoft Research",
+      "raw_key": "organization",
+      "value": "ILSVRC",
+      "evidence": "ILSVRC 2015 classification competition",
       "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "email",
-      "value": "kahe@microsoft.com",
-      "evidence": "{kahe, v-xiangz, v-shren, jiansun}@microsoft.com",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "email",
-      "value": "v-xiangz@microsoft.com",
-      "evidence": "{kahe, v-xiangz, v-shren, jiansun}@microsoft.com",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "email",
-      "value": "v-shren@microsoft.com",
-      "evidence": "{kahe, v-xiangz, v-shren, jiansun}@microsoft.com",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "email",
-      "value": "jiansun@microsoft.com",
-      "evidence": "{kahe, v-xiangz, v-shren, jiansun}@microsoft.com",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "architecture",
-      "value": "residual nets",
-      "evidence": "we present a residual learning framework",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "dataset",
-      "value": "ImageNet",
-      "evidence": "On the ImageNet dataset",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "metric",
-      "value": "3.57% error",
-      "evidence": "3.57% error on the ImageNet test set",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "dataset",
-      "value": "COCO",
-      "evidence": "the COCO object detection dataset",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "task",
-      "value": "object detection",
-      "evidence": "COCO object detection dataset",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "metric",
-      "value": "28% relative improvement",
-      "evidence": "28% relative improvement on the COCO object detection dataset",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "publishing_number",
-      "value": "1512.03385v1",
-      "evidence": "arXiv:1512.03385v1",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "category",
-      "value": "cs.CV",
-      "evidence": "[cs.CV]",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "date",
-      "value": "10 Dec 2015",
-      "evidence": "10 Dec 2015",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "architecture",
-      "value": "residual learning framework",
-      "evidence": "introducing a deep residual learning framework",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "architecture",
-      "value": "feedforward neural networks with shortcut connections",
-      "evidence": "The formulation ofF (x) +x can be realized by feedforward neural networks with “shortcut connections”",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "dataset",
-      "value": "CIFAR-10",
-      "evidence": "Similar phenomena are also shown on the CIFAR-10 set",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "metric",
-      "value": "3.57% top-5 error",
-      "evidence": "Our ensemble has 3.57% top-5 error on the ImageNet test set",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "task",
-      "value": "image classification",
-      "evidence": "On the ImageNet classiﬁcation dataset",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "task",
-      "value": "image localization",
-      "evidence": "ImageNet localization",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "task",
-      "value": "COCO detection",
-      "evidence": "COCO detection",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "task",
-      "value": "COCO segmentation",
-      "evidence": "COCO segmentation",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "date",
-      "value": "2015",
-      "evidence": "ILSVRC 2015",
-      "confidence": "high",
-      "grounded": true
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 2,
+      "spans": [
+        {
+          "start": 979,
+          "end": 985,
+          "text": "ILSVRC"
+        },
+        {
+          "start": 6872,
+          "end": 6878,
+          "text": "ILSVRC"
+        }
+      ]
     },
     {
       "key": "identifier",
-      "value": "VGG nets",
-      "evidence": "while still having lower complexity than VGG nets",
+      "raw_key": "identifier",
+      "value": "[41]",
+      "evidence": "Left: the VGG-19 model [41] (19.6 billion FLOPs) as a reference.",
       "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "identifier",
-      "value": "Caffe",
-      "evidence": "can be easily implemented using common libraries ( e.g., Caffe [19])",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "architecture",
-      "value": "highway networks",
-      "evidence": "Concurrent with our work, “highway networks” [42, 43] present shortcut connections with gating functions",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "architecture",
-      "value": "residual networks",
-      "evidence": "We adopt residual learning to every few stacked layers.",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "architecture",
-      "value": "plain networks",
-      "evidence": "We have tested various plain/residual nets, and have observed consistent phenomena.",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "architecture",
-      "value": "VGG nets",
-      "evidence": "Our plain baselines (Fig. 3, middle) are mainly inspired by the philosophy of VGG nets [41] (Fig. 3, left).",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "metric",
-      "value": "FLOPs",
-      "evidence": "Our 34-layer baseline has 3.6 billion FLOPs (multiply-adds), which is only 18% of VGG-19 (19.6 billion FLOPs).",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "result",
-      "value": "3.6 billion FLOPs",
-      "evidence": "Our 34-layer baseline has 3.6 billion FLOPs (multiply-adds), which is only 18% of VGG-19 (19.6 billion FLOPs).",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "result",
-      "value": "19.6 billion FLOPs",
-      "evidence": "Our 34-layer baseline has 3.6 billion FLOPs (multiply-adds), which is only 18% of VGG-19 (19.6 billion FLOPs).",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "identifier",
-      "value": "VGG-19",
-      "evidence": "Our 34-layer baseline has 3.6 billion FLOPs (multiply-adds), which is only 18% of VGG-19 (19.6 billion FLOPs).",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "architecture",
-      "value": "VGG-19",
-      "evidence": "VGG-19 34-layer plain",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "architecture",
-      "value": "residual network",
-      "evidence": "residual network with 34 parameter layers",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "metric",
-      "value": "top-1 error rate",
-      "evidence": "We evaluate both top-1 and top-5 error rates",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "metric",
-      "value": "top-5 error rate",
-      "evidence": "We evaluate both top-1 and top-5 error rates",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "layer_name",
-      "value": "conv1",
-      "evidence": "conv1 112×112 7×7, 64, stride 2",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "layer_name",
-      "value": "conv2x",
-      "evidence": "conv2x 56×56",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "layer_name",
-      "value": "conv3x",
-      "evidence": "conv3x 28×28",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "layer_name",
-      "value": "conv4x",
-      "evidence": "conv4x 14×14",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "layer_name",
-      "value": "conv5x",
-      "evidence": "conv5x 7×7",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "output_size",
-      "value": "112",
-      "evidence": "output size: 112",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "output_size",
-      "value": "224",
-      "evidence": "output size: 224",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "output_size",
-      "value": "56",
-      "evidence": "output size: 56",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "output_size",
-      "value": "28",
-      "evidence": "output size: 28",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "output_size",
-      "value": "14",
-      "evidence": "output size: 14",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "output_size",
-      "value": "7",
-      "evidence": "output size: 7",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "output_size",
-      "value": "1",
-      "evidence": "output size: 1",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "learning_rate",
-      "value": "0.1",
-      "evidence": "The learning rate starts from 0.1",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "weight_decay",
-      "value": "0.0001",
-      "evidence": "We use a weight decay of 0.0001",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "momentum",
-      "value": "0.9",
-      "evidence": "and a momentum of 0.9",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "batch_size",
-      "value": "256",
-      "evidence": "We use SGD with a mini-batch size of 256",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "architecture",
-      "value": "ResNet-18",
-      "evidence": "ResNet-18",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "architecture",
-      "value": "ResNet-34",
-      "evidence": "ResNet-34",
-      "confidence": "high",
-      "grounded": true
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 2,
+      "spans": [
+        {
+          "start": 6776,
+          "end": 6778,
+          "text": "41"
+        },
+        {
+          "start": 15737,
+          "end": 15739,
+          "text": "41"
+        }
+      ]
     },
     {
       "key": "layers",
-      "value": "18-layer",
-      "evidence": "18-layer",
+      "raw_key": "layers",
+      "value": "34",
+      "evidence": "The total number of weighted layers is 34 in Fig. 3 (middle).",
       "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "layers",
-      "value": "34-layer",
-      "evidence": "34-layer",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "metric",
-      "value": "27.94",
-      "evidence": "18 layers 27.94",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "metric",
-      "value": "27.88",
-      "evidence": "18 layers 27.94 27.88",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "metric",
-      "value": "28.54",
-      "evidence": "34 layers 28.54",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "metric",
-      "value": "25.03",
-      "evidence": "34 layers 28.54 25.03",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "figure",
-      "value": "Figure 4",
-      "evidence": "Figure 4. Training on ImageNet",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "table",
-      "value": "Table 2",
-      "evidence": "Table 2. Top-1 error (%, 10-crop testing) on ImageNet validation",
-      "confidence": "high",
-      "grounded": true
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 2,
+      "spans": [
+        {
+          "start": 15315,
+          "end": 15317,
+          "text": "34"
+        },
+        {
+          "start": 15453,
+          "end": 15455,
+          "text": "34"
+        }
+      ]
     },
     {
       "key": "architecture",
-      "value": "plain network",
-      "evidence": "plain networks of 18 and 34 layers",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "architecture",
-      "value": "ResNets",
-      "evidence": "ResNets of 18 and 34 layers",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "result",
-      "value": "2.8% better",
-      "evidence": "the 34-layer ResNet is better than the 18-layer ResNet (by 2.8%)",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "architecture",
+      "raw_key": "model",
       "value": "VGG-16",
       "evidence": "VGG-16 [41]",
       "confidence": "high",
-      "grounded": true
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 2,
+      "spans": [
+        {
+          "start": 24502,
+          "end": 24508,
+          "text": "VGG-16"
+        },
+        {
+          "start": 45650,
+          "end": 45656,
+          "text": "VGG-16"
+        }
+      ]
     },
     {
       "key": "architecture",
-      "value": "GoogLeNet",
-      "evidence": "GoogLeNet [44]",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "architecture",
-      "value": "PReLU-net",
-      "evidence": "PReLU-net [13]",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "architecture",
+      "raw_key": "model",
       "value": "ResNet-50",
       "evidence": "ResNet-50",
       "confidence": "high",
-      "grounded": true
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 2,
+      "spans": [
+        {
+          "start": 24733,
+          "end": 24742,
+          "text": "ResNet-50"
+        },
+        {
+          "start": 45566,
+          "end": 45575,
+          "text": "ResNet-50"
+        }
+      ]
     },
     {
       "key": "architecture",
+      "raw_key": "model",
       "value": "ResNet-101",
       "evidence": "ResNet-101",
       "confidence": "high",
-      "grounded": true
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 2,
+      "spans": [
+        {
+          "start": 24764,
+          "end": 24774,
+          "text": "ResNet-101"
+        },
+        {
+          "start": 59549,
+          "end": 59559,
+          "text": "ResNet-101"
+        }
+      ]
+    },
+    {
+      "key": "venue",
+      "raw_key": "venue",
+      "value": "ILSVRC 2015",
+      "evidence": "*This entry won the 1st place in ILSVRC 2015.*",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 2,
+      "spans": [
+        {
+          "start": 30651,
+          "end": 30662,
+          "text": "ILSVRC 2015"
+        },
+        {
+          "start": 61882,
+          "end": 61893,
+          "text": "ILSVRC 2015"
+        }
+      ]
+    },
+    {
+      "key": "metric",
+      "raw_key": "metric",
+      "value": "mAP@.5",
+      "evidence": "mAP@.5",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 2,
+      "spans": [
+        {
+          "start": 37079,
+          "end": 37085,
+          "text": "mAP@.5"
+        },
+        {
+          "start": 55563,
+          "end": 55569,
+          "text": "mAP@.5"
+        }
+      ]
+    },
+    {
+      "key": "dataset",
+      "raw_key": "dataset",
+      "value": "PASCAL VOC 2007",
+      "evidence": "PASCAL VOC 2007/2012 test sets",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 2,
+      "spans": [
+        {
+          "start": 36961,
+          "end": 36976,
+          "text": "PASCAL VOC 2007"
+        },
+        {
+          "start": 52224,
+          "end": 52239,
+          "text": "PASCAL VOC 2007"
+        }
+      ]
+    },
+    {
+      "key": "dataset",
+      "raw_key": "dataset",
+      "value": "PASCAL VOC 2012",
+      "evidence": "PASCAL VOC 2007/2012 test sets",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 2,
+      "spans": [
+        {
+          "start": 47208,
+          "end": 47223,
+          "text": "PASCAL VOC 2012"
+        },
+        {
+          "start": 53299,
+          "end": 53314,
+          "text": "PASCAL VOC 2012"
+        }
+      ]
+    },
+    {
+      "key": "author",
+      "raw_key": "author",
+      "value": "K. He",
+      "evidence": "[11] K. He and J. Sun.",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 2,
+      "spans": [
+        {
+          "start": 40073,
+          "end": 40078,
+          "text": "K. He"
+        },
+        {
+          "start": 40168,
+          "end": 40173,
+          "text": "K. He"
+        }
+      ]
+    },
+    {
+      "key": "author",
+      "raw_key": "author",
+      "value": "J. Sun",
+      "evidence": "[11] K. He and J. Sun.",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 2,
+      "spans": [
+        {
+          "start": 40083,
+          "end": 40089,
+          "text": "J. Sun"
+        },
+        {
+          "start": 40197,
+          "end": 40203,
+          "text": "J. Sun"
+        }
+      ]
+    },
+    {
+      "key": "year",
+      "raw_key": "year",
+      "value": "2014",
+      "evidence": "In ECCV, 2014.",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 2,
+      "spans": [
+        {
+          "start": 39818,
+          "end": 39822,
+          "text": "2014"
+        },
+        {
+          "start": 40293,
+          "end": 40297,
+          "text": "2014"
+        }
+      ]
+    },
+    {
+      "key": "author",
+      "raw_key": "author",
+      "value": "H. Jegou",
+      "evidence": "[17] H. Jegou, M. Douze, and C. Schmid.",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 2,
+      "spans": [
+        {
+          "start": 40890,
+          "end": 40898,
+          "text": "H. Jegou"
+        },
+        {
+          "start": 40998,
+          "end": 41006,
+          "text": "H. Jegou"
+        }
+      ]
+    },
+    {
+      "key": "author",
+      "raw_key": "author",
+      "value": "M. Douze",
+      "evidence": "[17] H. Jegou, M. Douze, and C. Schmid.",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 2,
+      "spans": [
+        {
+          "start": 40900,
+          "end": 40908,
+          "text": "M. Douze"
+        },
+        {
+          "start": 41022,
+          "end": 41030,
+          "text": "M. Douze"
+        }
+      ]
+    },
+    {
+      "key": "publishing_number",
+      "raw_key": "publishing_number",
+      "value": "1512.03385v1",
+      "evidence": "arXiv:1512.03385v1",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 6,
+          "end": 18,
+          "text": "1512.03385v1"
+        }
+      ]
+    },
+    {
+      "key": "category",
+      "raw_key": "category",
+      "value": "cs.CV",
+      "evidence": "[cs.CV]",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 20,
+          "end": 25,
+          "text": "cs.CV"
+        }
+      ]
+    },
+    {
+      "key": "year",
+      "raw_key": "date",
+      "value": "10 Dec 2015",
+      "evidence": "10 Dec 2015",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 27,
+          "end": 38,
+          "text": "10 Dec 2015"
+        }
+      ]
+    },
+    {
+      "key": "title",
+      "raw_key": "title",
+      "value": "Deep Residual Learning for Image Recognition",
+      "evidence": "# Deep Residual Learning for Image Recognition",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 42,
+          "end": 86,
+          "text": "Deep Residual Learning for Image Recognition"
+        }
+      ]
+    },
+    {
+      "key": "author",
+      "raw_key": "author",
+      "value": "Kaiming He",
+      "evidence": "Kaiming He Xiangyu Zhang Shaoqing Ren Jian Sun",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 88,
+          "end": 98,
+          "text": "Kaiming He"
+        }
+      ]
+    },
+    {
+      "key": "author",
+      "raw_key": "author",
+      "value": "Xiangyu Zhang",
+      "evidence": "Kaiming He Xiangyu Zhang Shaoqing Ren Jian Sun",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 99,
+          "end": 112,
+          "text": "Xiangyu Zhang"
+        }
+      ]
+    },
+    {
+      "key": "author",
+      "raw_key": "author",
+      "value": "Shaoqing Ren",
+      "evidence": "Kaiming He Xiangyu Zhang Shaoqing Ren Jian Sun",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 113,
+          "end": 125,
+          "text": "Shaoqing Ren"
+        }
+      ]
+    },
+    {
+      "key": "author",
+      "raw_key": "author",
+      "value": "Jian Sun",
+      "evidence": "Kaiming He Xiangyu Zhang Shaoqing Ren Jian Sun",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 126,
+          "end": 134,
+          "text": "Jian Sun"
+        }
+      ]
+    },
+    {
+      "key": "organization",
+      "raw_key": "organization",
+      "value": "Microsoft Research",
+      "evidence": "Microsoft Research",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 136,
+          "end": 154,
+          "text": "Microsoft Research"
+        }
+      ]
+    },
+    {
+      "key": "email",
+      "raw_key": "email",
+      "value": "jiansun@microsoft.com",
+      "evidence": "{kahe, v-xiangz, v-shren, jiansun}@microsoft.com",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 182,
+          "end": 204,
+          "text": "jiansun}@microsoft.com"
+        }
+      ]
+    },
+    {
+      "key": "metric",
+      "raw_key": "metric",
+      "value": "3.57% error",
+      "evidence": "An ensemble of these residual nets achieves 3.57% error on the ImageNet test set",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 904,
+          "end": 915,
+          "text": "3.57% error"
+        }
+      ]
     },
     {
       "key": "architecture",
+      "raw_key": "architecture",
+      "value": "VGG nets",
+      "evidence": "8× deeper than VGG nets [41] but still having lower complexity",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 811,
+          "end": 819,
+          "text": "VGG nets"
+        }
+      ]
+    },
+    {
+      "key": "metric",
+      "raw_key": "metric",
+      "value": "training error",
+      "evidence": "higher training error when the depth increases",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 6050,
+          "end": 6064,
+          "text": "training error"
+        }
+      ]
+    },
+    {
+      "key": "result",
+      "raw_key": "result",
+      "value": "lower complexity than VGG nets",
+      "evidence": "while still having lower complexity than VGG nets [41]",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 6744,
+          "end": 6774,
+          "text": "lower complexity than VGG nets"
+        }
+      ]
+    },
+    {
+      "key": "metric",
+      "raw_key": "metric",
+      "value": "3.57% top-5 error",
+      "evidence": "Our ensemble has 3.57% top-5 error on the ImageNet test set",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 6798,
+          "end": 6815,
+          "text": "3.57% top-5 error"
+        }
+      ]
+    },
+    {
+      "key": "method",
+      "raw_key": "method",
+      "value": "residual learning",
+      "evidence": "the residual learning principle",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 7221,
+          "end": 7238,
+          "text": "residual learning"
+        }
+      ]
+    },
+    {
+      "key": "equation",
+      "raw_key": "equation",
+      "value": "(1)",
+      "evidence": "$$/mathbf{y} = /mathcal{F}(/mathbf{x}, /{W_i/) + /mathbf{x}. /tag{1}$$",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_document",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 6,
+          "end": 7,
+          "text": "1"
+        }
+      ]
+    },
+    {
+      "key": "operation",
+      "raw_key": "operation",
+      "value": "element-wise addition",
+      "evidence": "The operation $/mathcal{F} + /mathbf{x}$ is performed by a shortcut connection and element-wise addition.",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_document",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 12705,
+          "end": 12726,
+          "text": "element-wise addition"
+        }
+      ]
+    },
+    {
+      "key": "nonlinearity",
+      "raw_key": "nonlinearity",
+      "value": "ReLU",
+      "evidence": "$/sigma$ denotes ReLU [29]",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_document",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 12558,
+          "end": 12562,
+          "text": "ReLU"
+        }
+      ]
+    },
+    {
+      "key": "architecture",
+      "raw_key": "model",
+      "value": "VGG-19",
+      "evidence": "Left: the VGG-19 model [41] (19.6 billion FLOPs) as a reference.",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 15723,
+          "end": 15729,
+          "text": "VGG-19"
+        }
+      ]
+    },
+    {
+      "key": "flops",
+      "raw_key": "flops",
+      "value": "3.6 billion",
+      "evidence": "Our 34-layer baseline has 3.6 billion FLOPs (multiply-adds)",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 15475,
+          "end": 15486,
+          "text": "3.6 billion"
+        }
+      ]
+    },
+    {
+      "key": "figure",
+      "raw_key": "figure",
+      "value": "Fig. 3",
+      "evidence": "Figure 3. Example network architectures for ImageNet.",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_document",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 14697,
+          "end": 14703,
+          "text": "Fig. 3"
+        }
+      ]
+    },
+    {
+      "key": "architecture",
+      "raw_key": "architecture",
+      "value": "plain network",
+      "evidence": "Plain Network. Our plain baselines (Fig. 3, middle) are mainly inspired by the philosophy of VGG nets [41]",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 14661,
+          "end": 14674,
+          "text": "Plain Network"
+        }
+      ]
+    },
+    {
+      "key": "dataset",
+      "raw_key": "dataset",
+      "value": "ImageNet 2012",
+      "evidence": "We evaluate our method on the ImageNet 2012 classification dataset [36]",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 17964,
+          "end": 17977,
+          "text": "ImageNet 2012"
+        }
+      ]
+    },
+    {
+      "key": "architecture",
+      "raw_key": "architecture",
+      "value": "plain net",
+      "evidence": "Plain Networks. We first evaluate 18-layer and 34-layer plain nets.",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 18272,
+          "end": 18281,
+          "text": "Plain Net"
+        }
+      ]
+    },
+    {
+      "key": "metric",
+      "raw_key": "metric",
+      "value": "top-1 error",
+      "evidence": "Table 2. Top-1 error (%, 10-crop testing) on ImageNet validation.",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 22173,
+          "end": 22184,
+          "text": "Top-1 error"
+        }
+      ]
+    },
+    {
+      "key": "hyperparameter",
+      "raw_key": "training_parameter",
+      "value": "batch size of 256",
+      "evidence": "We use SGD with a mini-batch size of 256.",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 17333,
+          "end": 17350,
+          "text": "batch size of 256"
+        }
+      ]
+    },
+    {
+      "key": "hyperparameter",
+      "raw_key": "training_parameter",
+      "value": "learning rate of 0.1",
+      "evidence": "The learning rate starts from 0.1 and is divided by 10 when the error plateaus,",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_document",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 33064,
+          "end": 33084,
+          "text": "learning rate of 0.1"
+        }
+      ]
+    },
+    {
+      "key": "hyperparameter",
+      "raw_key": "training_parameter",
+      "value": "weight decay of 0.0001",
+      "evidence": "We use a weight decay of 0.0001",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 17499,
+          "end": 17521,
+          "text": "weight decay of 0.0001"
+        }
+      ]
+    },
+    {
+      "key": "hyperparameter",
+      "raw_key": "training_parameter",
+      "value": "momentum of 0.9",
+      "evidence": "and a momentum of 0.9.",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 17528,
+          "end": 17543,
+          "text": "momentum of 0.9"
+        }
+      ]
+    },
+    {
+      "key": "metric",
+      "raw_key": "metric",
+      "value": "top-1 err.",
+      "evidence": "top-1 err. | top-5 err.",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 24452,
+          "end": 24462,
+          "text": "top-1 err."
+        }
+      ]
+    },
+    {
+      "key": "result",
+      "raw_key": "result",
+      "value": "28.07",
+      "evidence": "VGG-16 [41] | 28.07 | 9.33",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 24516,
+          "end": 24521,
+          "text": "28.07"
+        }
+      ]
+    },
+    {
+      "key": "result",
+      "raw_key": "result",
+      "value": "25.03",
+      "evidence": "ResNet-34 A | 25.03 | 7.76",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 24648,
+          "end": 24653,
+          "text": "25.03"
+        }
+      ]
+    },
+    {
+      "key": "architecture",
+      "raw_key": "model",
+      "value": "ResNet-34 A",
+      "evidence": "ResNet-34 A",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 24634,
+          "end": 24645,
+          "text": "ResNet-34 A"
+        }
+      ]
+    },
+    {
+      "key": "architecture",
+      "raw_key": "architecture",
+      "value": "GoogLeNet",
+      "evidence": "GoogLeNet [44]",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 24535,
+          "end": 24544,
+          "text": "GoogLeNet"
+        }
+      ]
+    },
+    {
+      "key": "result",
+      "raw_key": "result",
+      "value": "3.57",
+      "evidence": "ResNet (ILSVRC'15) | 3.57",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 25778,
+          "end": 25782,
+          "text": "3.57"
+        }
+      ]
+    },
+    {
+      "key": "metric",
+      "raw_key": "metric",
+      "value": "top-5 err.",
+      "evidence": "top-1 err. | top-5 err.",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 24465,
+          "end": 24475,
+          "text": "top-5 err."
+        }
+      ]
+    },
+    {
+      "key": "result",
+      "raw_key": "result",
+      "value": "9.33",
+      "evidence": "VGG-16 [41] | 28.07 | 9.33",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 24524,
+          "end": 24528,
+          "text": "9.33"
+        }
+      ]
+    },
+    {
+      "key": "architecture",
+      "raw_key": "model",
       "value": "ResNet-152",
       "evidence": "ResNet-152",
       "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "metric",
-      "value": "28.07 top-1 err.",
-      "evidence": "VGG-16 [41] 28.07",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "metric",
-      "value": "9.33 top-5 err.",
-      "evidence": "VGG-16 [41] 28.07 9.33",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "metric",
-      "value": "24.27 top-1 err.",
-      "evidence": "PReLU-net [13] 24.27",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "metric",
-      "value": "7.38 top-5 err.",
-      "evidence": "PReLU-net [13] 24.27 7.38",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "metric",
-      "value": "25.03 top-1 err.",
-      "evidence": "ResNet-34 A 25.03",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "metric",
-      "value": "7.76 top-5 err.",
-      "evidence": "ResNet-34 A 25.03 7.76",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "metric",
-      "value": "24.52 top-1 err.",
-      "evidence": "ResNet-34 B 24.52",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "metric",
-      "value": "7.46 top-5 err.",
-      "evidence": "ResNet-34 B 24.52 7.46",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "metric",
-      "value": "24.19 top-1 err.",
-      "evidence": "ResNet-34 C 24.19",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "metric",
-      "value": "7.40 top-5 err.",
-      "evidence": "ResNet-34 C 24.19 7.40",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "metric",
-      "value": "22.85 top-1 err.",
-      "evidence": "ResNet-50 22.85",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "metric",
-      "value": "6.71 top-5 err.",
-      "evidence": "ResNet-50 22.85 6.71",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "metric",
-      "value": "21.75 top-1 err.",
-      "evidence": "ResNet-101 21.75",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "metric",
-      "value": "6.05 top-5 err.",
-      "evidence": "ResNet-101 21.75 6.05",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "metric",
-      "value": "21.43 top-1 err.",
-      "evidence": "ResNet-152 21.43",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "metric",
-      "value": "5.71 top-5 err.",
-      "evidence": "ResNet-152 21.43 5.71",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "metric",
-      "value": "8.43 top-5 err.",
-      "evidence": "VGG [41] (ILSVRC’14) - 8.43 †",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "metric",
-      "value": "7.89 top-5 err.",
-      "evidence": "GoogLeNet [44] (ILSVRC’14) - 7.89",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "metric",
-      "value": "7.1 top-5 err.",
-      "evidence": "VGG [41] (v5) 24.4 7.1",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "metric",
-      "value": "5.81 top-5 err.",
-      "evidence": "BN-inception [16] 21.99 5.81",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "metric",
-      "value": "5.60 top-5 err.",
-      "evidence": "ResNet-34 C 21.53 5.60",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "metric",
-      "value": "5.25 top-5 err.",
-      "evidence": "ResNet-50 20.74 5.25",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "metric",
-      "value": "4.60 top-5 err.",
-      "evidence": "ResNet-101 19.87 4.60",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "metric",
-      "value": "4.49 top-5 err.",
-      "evidence": "ResNet-152 19.38 4.49",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "metric",
-      "value": "7.32 top-5 err.",
-      "evidence": "VGG [41] (ILSVRC’14) 7.32",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "metric",
-      "value": "6.66 top-5 err.",
-      "evidence": "GoogLeNet [44] (ILSVRC’14) 6.66",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "metric",
-      "value": "6.8 top-5 err.",
-      "evidence": "VGG [41] (v5) 6.8",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "metric",
-      "value": "4.94 top-5 err.",
-      "evidence": "PReLU-net [13] 4.94",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "metric",
-      "value": "4.82 top-5 err.",
-      "evidence": "BN-inception [16] 4.82",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "metric",
-      "value": "3.57 top-5 err.",
-      "evidence": "ResNet (ILSVRC’15) 3.57",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "architecture",
-      "value": "VGG-16/19 nets",
-      "evidence": "VGG-16/19 nets",
-      "confidence": "high",
-      "grounded": true
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 24796,
+          "end": 24806,
+          "text": "ResNet-152"
+        }
+      ]
     },
     {
       "key": "result",
-      "value": "4.49% top-5 validation error",
-      "evidence": "single-model top-5 validation error of 4.49%",
+      "raw_key": "result",
+      "value": "22.85",
+      "evidence": "ResNet-50 | 22.85 | 6.71",
       "confidence": "high",
-      "grounded": true
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 24745,
+          "end": 24750,
+          "text": "22.85"
+        }
+      ]
     },
     {
       "key": "result",
-      "value": "3.57% top-5 error",
-      "evidence": "3.57% top-5 error on the test set",
+      "raw_key": "result",
+      "value": "21.75",
+      "evidence": "ResNet-101 | 21.75 | 6.05",
       "confidence": "high",
-      "grounded": true
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 24777,
+          "end": 24782,
+          "text": "21.75"
+        }
+      ]
     },
     {
-      "key": "model",
-      "value": "34-layer ResNet",
-      "evidence": "34-layer net",
+      "key": "result",
+      "raw_key": "result",
+      "value": "21.43",
+      "evidence": "ResNet-152 | 21.43 | 5.71",
       "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "model",
-      "value": "50-layer ResNet",
-      "evidence": "50-layer ResNet",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "model",
-      "value": "152-layer ResNet",
-      "evidence": "152-layer ResNet",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "identifier",
-      "value": "arXiv:1512.03385v1",
-      "evidence": "arXiv:1512.03385v1",
-      "confidence": "high",
-      "grounded": true
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 24809,
+          "end": 24814,
+          "text": "21.43"
+        }
+      ]
     },
     {
       "key": "metric",
+      "raw_key": "metric",
+      "value": "error (%)",
+      "evidence": "Classification error on the CIFAR-10 test set",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_document",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 22179,
+          "end": 22187,
+          "text": "error (%"
+        }
+      ]
+    },
+    {
+      "key": "result",
+      "raw_key": "result",
+      "value": "9.38",
+      "evidence": "Maxout [10] |   |   | 9.38",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 32121,
+          "end": 32125,
+          "text": "9.38"
+        }
+      ]
+    },
+    {
+      "key": "result",
+      "raw_key": "result",
+      "value": "8.81",
+      "evidence": "NIN [25] |   |   | 8.81",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 32151,
+          "end": 32155,
+          "text": "8.81"
+        }
+      ]
+    },
+    {
+      "key": "result",
+      "raw_key": "result",
+      "value": "8.22",
+      "evidence": "DSN [24] |   |   | 8.22",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 32181,
+          "end": 32185,
+          "text": "8.22"
+        }
+      ]
+    },
+    {
+      "key": "result",
+      "raw_key": "result",
+      "value": "8.39",
+      "evidence": "FitNet [35] | 19 | 2.5M | 8.39",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 32250,
+          "end": 32254,
+          "text": "8.39"
+        }
+      ]
+    },
+    {
+      "key": "result",
+      "raw_key": "result",
+      "value": "7.54 (7.72±0.16)",
+      "evidence": "Highway [42, 43] | 19 | 2.3M | 7.54 (7.72±0.16)",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 32292,
+          "end": 32307,
+          "text": "7.54 (7.72±0.16"
+        }
+      ]
+    },
+    {
+      "key": "result",
+      "raw_key": "result",
+      "value": "8.80",
+      "evidence": "Highway [42, 43] | 32 | 1.25M | 8.80",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 32347,
+          "end": 32351,
+          "text": "8.80"
+        }
+      ]
+    },
+    {
+      "key": "result",
+      "raw_key": "result",
+      "value": "8.75",
+      "evidence": "ResNet | 20 | 0.27M | 8.75",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 32380,
+          "end": 32384,
+          "text": "8.75"
+        }
+      ]
+    },
+    {
+      "key": "result",
+      "raw_key": "result",
+      "value": "7.51",
+      "evidence": "ResNet | 32 | 0.46M | 7.51",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 32413,
+          "end": 32417,
+          "text": "7.51"
+        }
+      ]
+    },
+    {
+      "key": "result",
+      "raw_key": "result",
+      "value": "7.17",
+      "evidence": "ResNet | 44 | 0.66M | 7.17",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 32446,
+          "end": 32450,
+          "text": "7.17"
+        }
+      ]
+    },
+    {
+      "key": "result",
+      "raw_key": "result",
+      "value": "6.97",
+      "evidence": "ResNet | 56 | 0.85M | 6.97",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 32479,
+          "end": 32483,
+          "text": "6.97"
+        }
+      ]
+    },
+    {
+      "key": "result",
+      "raw_key": "result",
+      "value": "6.43 (6.61±0.16)",
+      "evidence": "ResNet | 110 | 1.7M | 6.43 (6.61±0.16)",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 32512,
+          "end": 32527,
+          "text": "6.43 (6.61±0.16"
+        }
+      ]
+    },
+    {
+      "key": "result",
+      "raw_key": "result",
+      "value": "7.93",
+      "evidence": "ResNet | 1202 | 19.4M | 7.93",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 32559,
+          "end": 32563,
+          "text": "7.93"
+        }
+      ]
+    },
+    {
+      "key": "model_size",
+      "raw_key": "model_size",
       "value": "3.8 billion FLOPs",
-      "evidence": "3.8 billion FLOPs",
+      "evidence": "This model has 3.8 billion FLOPs",
       "confidence": "high",
-      "grounded": true
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 29469,
+          "end": 29486,
+          "text": "3.8 billion FLOPs"
+        }
+      ]
     },
     {
-      "key": "metric",
+      "key": "model_size",
+      "raw_key": "model_size",
       "value": "11.3 billion FLOPs",
-      "evidence": "11.3 billion FLOPs",
+      "evidence": "the 152-layer ResNet (11.3 billion FLOPs)",
       "confidence": "high",
-      "grounded": true
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 29692,
+          "end": 29710,
+          "text": "11.3 billion FLOPs"
+        }
+      ]
     },
     {
-      "key": "metric",
+      "key": "model_size",
+      "raw_key": "model_size",
       "value": "15.3/19.6 billion FLOPs",
-      "evidence": "15.3/19.6 billion FLOPs",
+      "evidence": "VGG-16/19 nets (15.3/19.6 billion FLOPs)",
       "confidence": "high",
-      "grounded": true
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 29762,
+          "end": 29785,
+          "text": "15.3/19.6 billion FLOPs"
+        }
+      ]
     },
     {
       "key": "result",
-      "value": "8.75% error",
-      "evidence": "ResNet 20 0.27M 8.75",
+      "raw_key": "result",
+      "value": "4.49%",
+      "evidence": "Our 152-layer ResNet has a single-model top-5 validation error of 4.49%.",
       "confidence": "high",
-      "grounded": true
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 30351,
+          "end": 30356,
+          "text": "4.49%"
+        }
+      ]
     },
     {
       "key": "result",
-      "value": "7.51% error",
-      "evidence": "ResNet 32 0.46M 7.51",
+      "raw_key": "result",
+      "value": "3.57%",
+      "evidence": "**3.57%** top-5 error on the test set (Table 5)",
       "confidence": "high",
-      "grounded": true
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 30571,
+          "end": 30576,
+          "text": "3.57%"
+        }
+      ]
     },
     {
-      "key": "result",
-      "value": "7.17% error",
-      "evidence": "ResNet 44 0.66M 7.17",
+      "key": "hyperparameter",
+      "raw_key": "hyperparameter",
+      "value": "0.1",
+      "evidence": "initial learning rate of 0.1",
       "confidence": "high",
-      "grounded": true
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 34199,
+          "end": 34202,
+          "text": "0.1"
+        }
+      ]
     },
     {
-      "key": "result",
-      "value": "6.97% error",
-      "evidence": "ResNet 56 0.85M 6.97",
+      "key": "hyperparameter",
+      "raw_key": "hyperparameter",
+      "value": "0.01",
+      "evidence": "use 0.01 to warm up the training",
       "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "result",
-      "value": "6.43% error",
-      "evidence": "ResNet 110 1.7M 6.43",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "result",
-      "value": "7.93% error",
-      "evidence": "ResNet 1202 19.4M 7.93",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "architecture",
-      "value": "ResNet-20",
-      "evidence": "ResNet-20",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "architecture",
-      "value": "ResNet-56",
-      "evidence": "ResNet-56",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "architecture",
-      "value": "ResNet-110",
-      "evidence": "ResNet-110",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "architecture",
-      "value": "plain-20",
-      "evidence": "plain-20",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "architecture",
-      "value": "plain-56",
-      "evidence": "plain-56",
-      "confidence": "high",
-      "grounded": true
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 34257,
+          "end": 34261,
+          "text": "0.01"
+        }
+      ]
     },
     {
       "key": "metric",
-      "value": "6.43%",
-      "evidence": "6.43%, Table 6",
+      "raw_key": "metric",
+      "value": "90% error",
+      "evidence": "starts converging (<90% error) after several epochs",
       "confidence": "high",
-      "grounded": true
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 34620,
+          "end": 34629,
+          "text": "90% error"
+        }
+      ]
     },
     {
-      "key": "dataset",
-      "value": "PASCAL VOC 2007",
-      "evidence": "PASCAL VOC 2007",
+      "key": "architecture",
+      "raw_key": "architecture",
+      "value": "plain networks",
+      "evidence": "plain networks",
       "confidence": "high",
-      "grounded": true
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 2303,
+          "end": 2318,
+          "text": "plain” networks"
+        }
+      ]
     },
     {
-      "key": "dataset",
-      "value": "PASCAL VOC 2012",
-      "evidence": "PASCAL VOC 2012",
+      "key": "architecture",
+      "raw_key": "architecture",
+      "value": "FitNet",
+      "evidence": "FitNet [35]",
       "confidence": "high",
-      "grounded": true
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 32224,
+          "end": 32230,
+          "text": "FitNet"
+        }
+      ]
+    },
+    {
+      "key": "architecture",
+      "raw_key": "architecture",
+      "value": "Highway",
+      "evidence": "Highway [42]",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 32261,
+          "end": 32268,
+          "text": "Highway"
+        }
+      ]
     },
     {
       "key": "metric",
+      "raw_key": "metric",
+      "value": "mAP@[.5, .95]",
+      "evidence": "mAP@[.5, .95]",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 37088,
+          "end": 37100,
+          "text": "mAP@[.5, .95"
+        }
+      ]
+    },
+    {
+      "key": "metric",
+      "raw_key": "metric",
       "value": "73.2",
       "evidence": "73.2",
       "confidence": "high",
-      "grounded": true
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 36873,
+          "end": 36877,
+          "text": "73.2"
+        }
+      ]
     },
     {
       "key": "metric",
+      "raw_key": "metric",
       "value": "70.4",
       "evidence": "70.4",
       "confidence": "high",
-      "grounded": true
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 36880,
+          "end": 36884,
+          "text": "70.4"
+        }
+      ]
     },
     {
       "key": "metric",
+      "raw_key": "metric",
       "value": "76.4",
       "evidence": "76.4",
       "confidence": "high",
-      "grounded": true
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 36904,
+          "end": 36908,
+          "text": "76.4"
+        }
+      ]
     },
     {
       "key": "metric",
+      "raw_key": "metric",
       "value": "73.8",
       "evidence": "73.8",
       "confidence": "high",
-      "grounded": true
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 36911,
+          "end": 36915,
+          "text": "73.8"
+        }
+      ]
     },
     {
       "key": "metric",
+      "raw_key": "metric",
       "value": "41.5",
       "evidence": "41.5",
       "confidence": "high",
-      "grounded": true
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 37137,
+          "end": 37141,
+          "text": "41.5"
+        }
+      ]
     },
     {
       "key": "metric",
+      "raw_key": "metric",
       "value": "21.2",
       "evidence": "21.2",
       "confidence": "high",
-      "grounded": true
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 32335,
+          "end": 32342,
+          "text": "2 | 1.2"
+        }
+      ]
     },
     {
       "key": "metric",
+      "raw_key": "metric",
       "value": "48.4",
       "evidence": "48.4",
       "confidence": "high",
-      "grounded": true
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 25090,
+          "end": 25102,
+          "text": "4) | - | 8.4"
+        }
+      ]
     },
     {
       "key": "metric",
+      "raw_key": "metric",
       "value": "27.2",
       "evidence": "27.2",
       "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "metric",
-      "value": "6.0%",
-      "evidence": "6.0% increase in COCO’s standard metric",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "task",
-      "value": "ImageNet detection",
-      "evidence": "ImageNet detection",
-      "confidence": "high",
-      "grounded": true
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 37175,
+          "end": 37179,
+          "text": "27.2"
+        }
+      ]
     },
     {
       "key": "task",
-      "value": "ImageNet localization",
-      "evidence": "ImageNet localization",
+      "raw_key": "task",
+      "value": "COCO detection",
+      "evidence": "COCO detection",
       "confidence": "high",
-      "grounded": true
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 1473,
+          "end": 1487,
+          "text": "COCO detection"
+        }
+      ]
     },
     {
-      "key": "venue",
-      "value": "ILSVRC & COCO 2015",
+      "key": "task",
+      "raw_key": "task",
+      "value": "COCO segmentation",
+      "evidence": "COCO segmentation",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 1493,
+          "end": 1510,
+          "text": "COCO segmentation"
+        }
+      ]
+    },
+    {
+      "key": "event",
+      "raw_key": "event",
+      "value": "ILSVRC & COCO 2015 competitions",
       "evidence": "ILSVRC & COCO 2015 competitions",
       "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "author",
-      "value": "Y. Bengio",
-      "evidence": "Y. Bengio",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "author",
-      "value": "P. Simard",
-      "evidence": "P. Simard",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "author",
-      "value": "P. Frasconi",
-      "evidence": "P. Frasconi",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "publication",
-      "value": "IEEE Transactions on Neural Networks",
-      "evidence": "IEEE Transactions on Neural Networks",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "year",
-      "value": "1994",
-      "evidence": "1994",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "author",
-      "value": "C. M. Bishop",
-      "evidence": "C. M. Bishop",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "publication",
-      "value": "Oxford university press",
-      "evidence": "Oxford university press",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "year",
-      "value": "1995",
-      "evidence": "1995",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "author",
-      "value": "W. L. Briggs",
-      "evidence": "W. L. Briggs",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "author",
-      "value": "S. F. McCormick",
-      "evidence": "S. F. McCormick",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "publication",
-      "value": "Siam",
-      "evidence": "Siam",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "year",
-      "value": "2000",
-      "evidence": "2000",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "author",
-      "value": "V. Lempitsky",
-      "evidence": "V. Lempitsky",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "author",
-      "value": "A. Vedaldi",
-      "evidence": "A. Vedaldi",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "author",
-      "value": "A. Zisserman",
-      "evidence": "A. Zisserman",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "publication",
-      "value": "BMVC",
-      "evidence": "BMVC",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "year",
-      "value": "2011",
-      "evidence": "2011",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "author",
-      "value": "M. Everingham",
-      "evidence": "M. Everingham",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "author",
-      "value": "L. Van Gool",
-      "evidence": "L. Van Gool",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "author",
-      "value": "C. K. Williams",
-      "evidence": "C. K. Williams",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "author",
-      "value": "J. Winn",
-      "evidence": "J. Winn",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "publication",
-      "value": "IJCV",
-      "evidence": "IJCV",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "year",
-      "value": "2010",
-      "evidence": "2010",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "author",
-      "value": "S. Gidaris",
-      "evidence": "S. Gidaris",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "author",
-      "value": "N. Komodakis",
-      "evidence": "N. Komodakis",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "publication",
-      "value": "ICCV",
-      "evidence": "ICCV",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "year",
-      "value": "2015",
-      "evidence": "2015",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "author",
-      "value": "R. Girshick",
-      "evidence": "R. Girshick",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "author",
-      "value": "J. Donahue",
-      "evidence": "J. Donahue",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "author",
-      "value": "T. Darrell",
-      "evidence": "T. Darrell",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "author",
-      "value": "J. Malik",
-      "evidence": "J. Malik",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "publication",
-      "value": "CVPR",
-      "evidence": "CVPR",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "year",
-      "value": "2014",
-      "evidence": "2014",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "author",
-      "value": "X. Glorot",
-      "evidence": "X. Glorot",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "publication",
-      "value": "AISTATS",
-      "evidence": "AISTATS",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "author",
-      "value": "I. J. Goodfellow",
-      "evidence": "I. J. Goodfellow",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "author",
-      "value": "D. Warde-Farley",
-      "evidence": "D. Warde-Farley",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "author",
-      "value": "M. Mirza",
-      "evidence": "M. Mirza",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "author",
-      "value": "A. Courville",
-      "evidence": "A. Courville",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "publication",
-      "value": "arXiv",
-      "evidence": "arXiv:1302.4389",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "year",
-      "value": "2013",
-      "evidence": "2013",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "author",
-      "value": "K. He",
-      "evidence": "K. He",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "author",
-      "value": "J. Sun",
-      "evidence": "J. Sun",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "author",
-      "value": "X. Zhang",
-      "evidence": "X. Zhang",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "author",
-      "value": "S. Ren",
-      "evidence": "S. Ren",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "publication",
-      "value": "ECCV",
-      "evidence": "ECCV",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "author",
-      "value": "G. E. Hinton",
-      "evidence": "G. E. Hinton",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "author",
-      "value": "N. Srivastava",
-      "evidence": "N. Srivastava",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "author",
-      "value": "A. Krizhevsky",
-      "evidence": "A. Krizhevsky",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "author",
-      "value": "I. Sutskever",
-      "evidence": "I. Sutskever",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "author",
-      "value": "R. R. Salakhutdinov",
-      "evidence": "R. R. Salakhutdinov",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "year",
-      "value": "2012",
-      "evidence": "2012",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "author",
-      "value": "S. Hochreiter",
-      "evidence": "S. Hochreiter",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "author",
-      "value": "J. Schmidhuber",
-      "evidence": "J. Schmidhuber",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "publication",
-      "value": "Neural computation",
-      "evidence": "Neural computation",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "year",
-      "value": "1997",
-      "evidence": "1997",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "author",
-      "value": "S. Ioffe",
-      "evidence": "S. Ioffe",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "author",
-      "value": "C. Szegedy",
-      "evidence": "C. Szegedy",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "publication",
-      "value": "ICML",
-      "evidence": "ICML",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "author",
-      "value": "H. Jegou",
-      "evidence": "H. Jegou",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "author",
-      "value": "M. Douze",
-      "evidence": "M. Douze",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "author",
-      "value": "C. Schmid",
-      "evidence": "C. Schmid",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "publication",
-      "value": "TPAMI",
-      "evidence": "TPAMI",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "author",
-      "value": "F. Perronnin",
-      "evidence": "F. Perronnin",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "author",
-      "value": "J. Sanchez",
-      "evidence": "J. Sanchez",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "author",
-      "value": "P. Perez",
-      "evidence": "P. Perez",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "author",
-      "value": "Y. Jia",
-      "evidence": "Y. Jia",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "author",
-      "value": "E. Shelhamer",
-      "evidence": "E. Shelhamer",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "author",
-      "value": "S. Karayev",
-      "evidence": "S. Karayev",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "author",
-      "value": "J. Long",
-      "evidence": "J. Long",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "author",
-      "value": "S. Guadarrama",
-      "evidence": "S. Guadarrama",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "publication",
-      "value": "Tech Report",
-      "evidence": "Tech Report",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "year",
-      "value": "2009",
-      "evidence": "2009",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "architecture",
-      "value": "Faster R-CNN",
-      "evidence": "based on the baseline Faster R-CNN [32] system",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "dataset",
-      "value": "MS COCO",
-      "evidence": "The MS COCO dataset [26] involves 80 object cate- gories",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "metric",
-      "value": "mAP",
-      "evidence": "improves the mAP by >3% over VGG-16",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "result",
-      "value": ">3% improvement",
-      "evidence": "improves the mAP by >3% over VGG-16",
-      "confidence": "high",
-      "grounded": true
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 1347,
+          "end": 1378,
+          "text": "ILSVRC & COCO 2015 competitions"
+        }
+      ]
     },
     {
       "key": "venue",
-      "value": "COCO 2015",
-      "evidence": "at the time of the ILSVRC & COCO 2015 detection competitions",
+      "raw_key": "venue",
+      "value": "CVPR",
+      "evidence": "In CVPR, 2015.",
       "confidence": "high",
-      "grounded": true
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 40150,
+          "end": 40154,
+          "text": "CVPR"
+        }
+      ]
     },
     {
-      "key": "identifier",
-      "value": "[32]",
-      "evidence": "based on the baseline Faster R-CNN [32] system",
+      "key": "author",
+      "raw_key": "author",
+      "value": "X. Zhang",
+      "evidence": "[12] K. He, X. Zhang, S. Ren, and J. Sun.",
       "confidence": "high",
-      "grounded": true
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 40175,
+          "end": 40183,
+          "text": "X. Zhang"
+        }
+      ]
     },
     {
-      "key": "identifier",
-      "value": "[7]",
+      "key": "author",
+      "raw_key": "author",
+      "value": "S. Ren",
+      "evidence": "[12] K. He, X. Zhang, S. Ren, and J. Sun.",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 40185,
+          "end": 40191,
+          "text": "S. Ren"
+        }
+      ]
+    },
+    {
+      "key": "venue",
+      "raw_key": "venue",
+      "value": "ECCV",
+      "evidence": "In ECCV, 2014.",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 40287,
+          "end": 40291,
+          "text": "ECCV"
+        }
+      ]
+    },
+    {
+      "key": "author",
+      "raw_key": "author",
+      "value": "G. E. Hinton",
+      "evidence": "[14] G. E. Hinton, N. Srivastava, A. Krizhevsky, I. Sutskever, and R. R. Salakhutdinov.",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 40456,
+          "end": 40468,
+          "text": "G. E. Hinton"
+        }
+      ]
+    },
+    {
+      "key": "author",
+      "raw_key": "author",
+      "value": "N. Srivastava",
+      "evidence": "[14] G. E. Hinton, N. Srivastava, A. Krizhevsky, I. Sutskever, and R. R. Salakhutdinov.",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 40470,
+          "end": 40483,
+          "text": "N. Srivastava"
+        }
+      ]
+    },
+    {
+      "key": "author",
+      "raw_key": "author",
+      "value": "A. Krizhevsky",
+      "evidence": "[14] G. E. Hinton, N. Srivastava, A. Krizhevsky, I. Sutskever, and R. R. Salakhutdinov.",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 40485,
+          "end": 40498,
+          "text": "A. Krizhevsky"
+        }
+      ]
+    },
+    {
+      "key": "author",
+      "raw_key": "author",
+      "value": "I. Sutskever",
+      "evidence": "[14] G. E. Hinton, N. Srivastava, A. Krizhevsky, I. Sutskever, and R. R. Salakhutdinov.",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 40500,
+          "end": 40512,
+          "text": "I. Sutskever"
+        }
+      ]
+    },
+    {
+      "key": "author",
+      "raw_key": "author",
+      "value": "R. R. Salakhutdinov",
+      "evidence": "[14] G. E. Hinton, N. Srivastava, A. Krizhevsky, I. Sutskever, and R. R. Salakhutdinov.",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 40518,
+          "end": 40537,
+          "text": "R. R. Salakhutdinov"
+        }
+      ]
+    },
+    {
+      "key": "publishing_number",
+      "raw_key": "publishing_number",
+      "value": "1207.0580",
+      "evidence": "arXiv:1207.0580, 2012.",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 40621,
+          "end": 40630,
+          "text": "1207.0580"
+        }
+      ]
+    },
+    {
+      "key": "author",
+      "raw_key": "author",
+      "value": "S. Hochreiter",
+      "evidence": "[15] S. Hochreiter and J. Schmidhuber.",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 40644,
+          "end": 40657,
+          "text": "S. Hochreiter"
+        }
+      ]
+    },
+    {
+      "key": "author",
+      "raw_key": "author",
+      "value": "J. Schmidhuber",
+      "evidence": "[15] S. Hochreiter and J. Schmidhuber.",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 40662,
+          "end": 40676,
+          "text": "J. Schmidhuber"
+        }
+      ]
+    },
+    {
+      "key": "year",
+      "raw_key": "year",
+      "value": "1997",
+      "evidence": "Neural computation, 9(8):1735–1780, 1997.",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 40738,
+          "end": 40742,
+          "text": "1997"
+        }
+      ]
+    },
+    {
+      "key": "author",
+      "raw_key": "author",
+      "value": "S. Ioffe",
+      "evidence": "[16] S. Ioffe and C. Szegedy.",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 40750,
+          "end": 40758,
+          "text": "S. Ioffe"
+        }
+      ]
+    },
+    {
+      "key": "author",
+      "raw_key": "author",
+      "value": "C. Szegedy",
+      "evidence": "[16] S. Ioffe and C. Szegedy.",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 40763,
+          "end": 40773,
+          "text": "C. Szegedy"
+        }
+      ]
+    },
+    {
+      "key": "venue",
+      "raw_key": "venue",
+      "value": "ICML",
+      "evidence": "In ICML, 2015.",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 40872,
+          "end": 40876,
+          "text": "ICML"
+        }
+      ]
+    },
+    {
+      "key": "author",
+      "raw_key": "author",
+      "value": "C. Schmid",
+      "evidence": "[17] H. Jegou, M. Douze, and C. Schmid.",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 40914,
+          "end": 40923,
+          "text": "C. Schmid"
+        }
+      ]
+    },
+    {
+      "key": "year",
+      "raw_key": "year",
+      "value": "2011",
+      "evidence": "TPAMI, 33, 2011.",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 40986,
+          "end": 40990,
+          "text": "2011"
+        }
+      ]
+    },
+    {
+      "key": "author",
+      "raw_key": "author",
+      "value": "F. Perronnin",
+      "evidence": "[18] H. Jegou, F. Perronnin, M. Douze, J. Sanchez, P. Perez, and C. Schmid.",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 41008,
+          "end": 41020,
+          "text": "F. Perronnin"
+        }
+      ]
+    },
+    {
+      "key": "author",
+      "raw_key": "author",
+      "value": "Y. Jia",
+      "evidence": "[19] Y. Jia, E. Shelhamer, J. Donahue, S. Karayev, J. Long, R. Girshick, S. Guadarrama, and T. Darrell.",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 41144,
+          "end": 41150,
+          "text": "Y. Jia"
+        }
+      ]
+    },
+    {
+      "key": "author",
+      "raw_key": "author",
+      "value": "E. Shelhamer",
+      "evidence": "[19] Y. Jia, E. Shelhamer, J. Donahue, S. Karayev, J. Long, R. Girshick, S. Guadarrama, and T. Darrell.",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 41152,
+          "end": 41164,
+          "text": "E. Shelhamer"
+        }
+      ]
+    },
+    {
+      "key": "architecture",
+      "raw_key": "model",
+      "value": "Faster R-CNN",
+      "evidence": "based on the baseline Faster R-CNN [32] system.",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 45398,
+          "end": 45410,
+          "text": "Faster R-CNN"
+        }
+      ]
+    },
+    {
+      "key": "dataset",
+      "raw_key": "dataset",
+      "value": "PASCAL VOC",
+      "evidence": "# PASCAL VOC",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 47033,
+          "end": 47043,
+          "text": "PASCAL VOC"
+        }
+      ]
+    },
+    {
+      "key": "dataset",
+      "raw_key": "dataset",
+      "value": "MS COCO",
+      "evidence": "# MS COCO",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 47565,
+          "end": 47572,
+          "text": "MS COCO"
+        }
+      ]
+    },
+    {
+      "key": "metric",
+      "raw_key": "metric",
+      "value": "mAP @ IoU = 0.5",
+      "evidence": "We evaluate the PASCAL VOC metric (mAP @ IoU = 0.5)",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 47665,
+          "end": 47680,
+          "text": "mAP @ IoU = 0.5"
+        }
+      ]
+    },
+    {
+      "key": "metric",
+      "raw_key": "metric",
+      "value": "mAP @ IoU = .5:.05:.95",
+      "evidence": "the standard COCO metric (mAP @ IoU = .5:.05:.95)",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 47712,
+          "end": 47734,
+          "text": "mAP @ IoU = .5:.05:.95"
+        }
+      ]
+    },
+    {
+      "key": "model_component",
+      "raw_key": "model_component",
+      "value": "region proposal network (RPN)",
+      "evidence": "a region proposal network (RPN, generating 300 proposals) [32]",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 46216,
+          "end": 46244,
+          "text": "region proposal network (RPN"
+        }
+      ]
+    },
+    {
+      "key": "model_component",
+      "raw_key": "model_component",
+      "value": "Fast R-CNN detection network",
       "evidence": "and a Fast R-CNN detection network [7]",
       "confidence": "high",
-      "grounded": true
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 46283,
+          "end": 46311,
+          "text": "Fast R-CNN detection network"
+        }
+      ]
     },
     {
-      "key": "identifier",
-      "value": "[26]",
-      "evidence": "The MS COCO dataset [26] involves 80 object cate- gories",
+      "key": "hyperparameter",
+      "raw_key": "hyperparameter",
+      "value": "mini-batch size of 8 images",
+      "evidence": "the RPN step has a mini-batch size of 8 images (i.e., 1 per GPU)",
       "confidence": "high",
-      "grounded": true
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 47987,
+          "end": 48015,
+          "text": "mini-batch size of\n\n8 images"
+        }
+      ]
     },
     {
-      "key": "identifier",
-      "value": "[33]",
-      "evidence": "We adopt the idea of “Networks on Conv fea- ture maps” (NoC) [33]",
+      "key": "hyperparameter",
+      "raw_key": "hyperparameter",
+      "value": "learning rate of 0.001",
+      "evidence": "with a learning rate of 0.001 and then for 80k iterations with 0.0001",
       "confidence": "high",
-      "grounded": true
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 48171,
+          "end": 48193,
+          "text": "learning rate of 0.001"
+        }
+      ]
+    },
+    {
+      "key": "improvement_technique",
+      "raw_key": "improvement_technique",
+      "value": "box refinement",
+      "evidence": "Box refinement.",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 48847,
+          "end": 48861,
+          "text": "Box refinement"
+        }
+      ]
+    },
+    {
+      "key": "improvement_technique",
+      "raw_key": "improvement_technique",
+      "value": "global context",
+      "evidence": "Global context.",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 49425,
+          "end": 49439,
+          "text": "Global context"
+        }
+      ]
+    },
+    {
+      "key": "improvement_technique",
+      "raw_key": "improvement_technique",
+      "value": "multi-scale testing",
+      "evidence": "Multi-scale testing.",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 50041,
+          "end": 50060,
+          "text": "Multi-scale testing"
+        }
+      ]
+    },
+    {
+      "key": "metric",
+      "raw_key": "metric",
+      "value": "mAP",
+      "evidence": "Table 10. Detection results on the PASCAL VOC 2007 test set.",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_document",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 3761,
+          "end": 3764,
+          "text": "map"
+        }
+      ]
+    },
+    {
+      "key": "result",
+      "raw_key": "result",
+      "value": "73.2",
+      "evidence": "baseline | VGG-16 | 07+12 | 73.2 | ...",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_document",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 36873,
+          "end": 36877,
+          "text": "73.2"
+        }
+      ]
+    },
+    {
+      "key": "result",
+      "raw_key": "result",
+      "value": "76.4",
+      "evidence": "baseline | ResNet-101 | 07+12 | 76.4 | ...",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_document",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 36904,
+          "end": 36908,
+          "text": "76.4"
+        }
+      ]
+    },
+    {
+      "key": "year",
+      "raw_key": "date",
+      "value": "2015-11-26",
+      "evidence": "⁶http://host.robots.ox.ac.uk:8080/anonymous/30J40J.html, submitted on 2015-11-26.",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 56106,
+          "end": 56116,
+          "text": "2015-11-26"
+        }
+      ]
+    },
+    {
+      "key": "result",
+      "raw_key": "result",
+      "value": "85.6%",
+      "evidence": "we achieve 85.6% mAP on PASCAL VOC 2007 (Table 10)",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 55264,
+          "end": 55269,
+          "text": "85.6%"
+        }
+      ]
+    },
+    {
+      "key": "result",
+      "raw_key": "result",
+      "value": "83.8%",
+      "evidence": "we achieve 83.8% on PASCAL VOC 2012 (Table 11)⁶",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_document",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 55308,
+          "end": 55313,
+          "text": "83.8%"
+        }
+      ]
+    },
+    {
+      "key": "result",
+      "raw_key": "result",
+      "value": "55.7%",
+      "evidence": "an mAP@.5 of 55.7% and an mAP@[.5, .95] of 34.9% (Table 9).",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 54080,
+          "end": 54085,
+          "text": "55.7%"
+        }
+      ]
+    },
+    {
+      "key": "result",
+      "raw_key": "result",
+      "value": "34.9%",
+      "evidence": "an mAP@.5 of 55.7% and an mAP@[.5, .95] of 34.9% (Table 9).",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 54110,
+          "end": 54115,
+          "text": "34.9%"
+        }
+      ]
+    },
+    {
+      "key": "result",
+      "raw_key": "result",
+      "value": "58.8%",
+      "evidence": "Our single model with ResNet-101 has 58.8% mAP and our ensemble of 3 models has 62.1% mAP on the DET test set (Table 12).",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_document",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 56892,
+          "end": 56897,
+          "text": "58.8%"
+        }
+      ]
+    },
+    {
+      "key": "result",
+      "raw_key": "result",
+      "value": "62.1%",
+      "evidence": "Our single model with ResNet-101 has 58.8% mAP and our ensemble of 3 models has 62.1% mAP on the DET test set (Table 12).",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_document",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 56935,
+          "end": 56940,
+          "text": "62.1%"
+        }
+      ]
     },
     {
       "key": "organization",
-      "value": "MS",
-      "evidence": "The MS COCO dataset [26] involves 80 object cate- gories",
+      "raw_key": "organization",
+      "value": "COCO",
+      "evidence": "COCO 2015",
       "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "metric",
-      "value": "mAP@[.5, .95]",
-      "evidence": "ResNet-101 has a 6% increase of mAP@[.5, .95] over VGG-16",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "result",
-      "value": "6% increase",
-      "evidence": "ResNet-101 has a 6% increase of mAP@[.5, .95] over VGG-16",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "result",
-      "value": "28% relative improvement",
-      "evidence": "which is a 28% relative improvement, solely contributed by the features learned by the better network",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "dataset",
-      "value": "COCO val",
-      "evidence": "test data COCO val COCO test-dev",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "dataset",
-      "value": "COCO test-dev",
-      "evidence": "test data COCO val COCO test-dev",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "metric",
-      "value": "mAP @.5",
-      "evidence": "mAP @.5 @[.5, .95] @.5 @[.5, .95]",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "metric",
-      "value": "mAP @[.5, .95]",
-      "evidence": "mAP @.5 @[.5, .95] @.5 @[.5, .95]",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "result",
-      "value": "41.5",
-      "evidence": "baseline Faster R-CNN (VGG-16) 41.5 21.2",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "result",
-      "value": "21.2",
-      "evidence": "baseline Faster R-CNN (VGG-16) 41.5 21.2",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "result",
-      "value": "48.4",
-      "evidence": "baseline Faster R-CNN (ResNet-101) 48.4 27.2",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "result",
-      "value": "27.2",
-      "evidence": "baseline Faster R-CNN (ResNet-101) 48.4 27.2",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "result",
-      "value": "49.9",
-      "evidence": "+box reﬁnement 49.9 29.9",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "result",
-      "value": "29.9",
-      "evidence": "+box reﬁnement 49.9 29.9",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "result",
-      "value": "51.1",
-      "evidence": "+context 51.1 30.0 53.3 32.2",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "result",
-      "value": "30.0",
-      "evidence": "+context 51.1 30.0 53.3 32.2",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "result",
-      "value": "53.3",
-      "evidence": "+context 51.1 30.0 53.3 32.2",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "result",
-      "value": "32.2",
-      "evidence": "+context 51.1 30.0 53.3 32.2",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "result",
-      "value": "53.8",
-      "evidence": "+multi-scale testing 53.8 32.5 55.7 34.9",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "result",
-      "value": "32.5",
-      "evidence": "+multi-scale testing 53.8 32.5 55.7 34.9",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "result",
-      "value": "55.7",
-      "evidence": "+multi-scale testing 53.8 32.5 55.7 34.9",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "result",
-      "value": "34.9",
-      "evidence": "+multi-scale testing 53.8 32.5 55.7 34.9",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "result",
-      "value": "59.0",
-      "evidence": "ensemble 59.0 37.4",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "result",
-      "value": "37.4",
-      "evidence": "ensemble 59.0 37.4",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "result",
-      "value": "73.2",
-      "evidence": "baseline VGG-16 07+12 73.2 76.5 79.0 70.9 65.5 52.1 83.1 84.7 86.4 52.0 81.9 65.7 84.8 84.6 77.5 76.7 38.8 73.6 73.9 83.0 72.6",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "result",
-      "value": "76.5",
-      "evidence": "baseline VGG-16 07+12 73.2 76.5 79.0 70.9 65.5 52.1 83.1 84.7 86.4 52.0 81.9 65.7 84.8 84.6 77.5 76.7 38.8 73.6 73.9 83.0 72.6",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "result",
-      "value": "79.0",
-      "evidence": "baseline VGG-16 07+12 73.2 76.5 79.0 70.9 65.5 52.1 83.1 84.7 86.4 52.0 81.9 65.7 84.8 84.6 77.5 76.7 38.8 73.6 73.9 83.0 72.6",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "result",
-      "value": "70.9",
-      "evidence": "baseline VGG-16 07+12 73.2 76.5 79.0 70.9 65.5 52.1 83.1 84.7 86.4 52.0 81.9 65.7 84.8 84.6 77.5 76.7 38.8 73.6 73.9 83.0 72.6",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "result",
-      "value": "65.5",
-      "evidence": "baseline VGG-16 07+12 73.2 76.5 79.0 70.9 65.5 52.1 83.1 84.7 86.4 52.0 81.9 65.7 84.8 84.6 77.5 76.7 38.8 73.6 73.9 83.0 72.6",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "result",
-      "value": "52.1",
-      "evidence": "baseline VGG-16 07+12 73.2 76.5 79.0 70.9 65.5 52.1 83.1 84.7 86.4 52.0 81.9 65.7 84.8 84.6 77.5 76.7 38.8 73.6 73.9 83.0 72.6",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "result",
-      "value": "83.1",
-      "evidence": "baseline VGG-16 07+12 73.2 76.5 79.0 70.9 65.5 52.1 83.1 84.7 86.4 52.0 81.9 65.7 84.8 84.6 77.5 76.7 38.8 73.6 73.9 83.0 72.6",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "result",
-      "value": "84.7",
-      "evidence": "baseline VGG-16 07+12 73.2 76.5 79.0 70.9 65.5 52.1 83.1 84.7 86.4 52.0 81.9 65.7 84.8 84.6 77.5 76.7 38.8 73.6 73.9 83.0 72.6",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "result",
-      "value": "86.4",
-      "evidence": "baseline VGG-16 07+12 73.2 76.5 79.0 70.9 65.5 52.1 83.1 84.7 86.4 52.0 81.9 65.7 84.8 84.6 77.5 76.7 38.8 73.6 73.9 83.0 72.6",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "result",
-      "value": "52.0",
-      "evidence": "baseline VGG-16 07+12 73.2 76.5 79.0 70.9 65.5 52.1 83.1 84.7 86.4 52.0 81.9 65.7 84.8 84.6 77.5 76.7 38.8 73.6 73.9 83.0 72.6",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "result",
-      "value": "81.9",
-      "evidence": "baseline VGG-16 07+12 73.2 76.5 79.0 70.9 65.5 52.1 83.1 84.7 86.4 52.0 81.9 65.7 84.8 84.6 77.5 76.7 38.8 73.6 73.9 83.0 72.6",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "result",
-      "value": "65.7",
-      "evidence": "baseline VGG-16 07+12 73.2 76.5 79.0 70.9 65.5 52.1 83.1 84.7 86.4 52.0 81.9 65.7 84.8 84.6 77.5 76.7 38.8 73.6 73.9 83.0 72.6",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "result",
-      "value": "84.8",
-      "evidence": "baseline VGG-16 07+12 73.2 76.5 79.0 70.9 65.5 52.1 83.1 84.7 86.4 52.0 81.9 65.7 84.8 84.6 77.5 76.7 38.8 73.6 73.9 83.0 72.6",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "result",
-      "value": "84.6",
-      "evidence": "baseline VGG-16 07+12 73.2 76.5 79.0 70.9 65.5 52.1 83.1 84.7 86.4 52.0 81.9 65.7 84.8 84.6 77.5 76.7 38.8 73.6 73.9 83.0 72.6",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "result",
-      "value": "77.5",
-      "evidence": "baseline VGG-16 07+12 73.2 76.5 79.0 70.9 65.5 52.1 83.1 84.7 86.4 52.0 81.9 65.7 84.8 84.6 77.5 76.7 38.8 73.6 73.9 83.0 72.6",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "result",
-      "value": "76.7",
-      "evidence": "baseline VGG-16 07+12 73.2 76.5 79.0 70.9 65.5 52.1 83.1 84.7 86.4 52.0 81.9 65.7 84.8 84.6 77.5 76.7 38.8 73.6 73.9 83.0 72.6",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "result",
-      "value": "38.8",
-      "evidence": "baseline VGG-16 07+12 73.2 76.5 79.0 70.9 65.5 52.1 83.1 84.7 86.4 52.0 81.9 65.7 84.8 84.6 77.5 76.7 38.8 73.6 73.9 83.0 72.6",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "result",
-      "value": "73.6",
-      "evidence": "baseline VGG-16 07+12 73.2 76.5 79.0 70.9 65.5 52.1 83.1 84.7 86.4 52.0 81.9 65.7 84.8 84.6 77.5 76.7 38.8 73.6 73.9 83.0 72.6",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "result",
-      "value": "73.9",
-      "evidence": "baseline VGG-16 07+12 73.2 76.5 79.0 70.9 65.5 52.1 83.1 84.7 86.4 52.0 81.9 65.7 84.8 84.6 77.5 76.7 38.8 73.6 73.9 83.0 72.6",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "result",
-      "value": "83.0",
-      "evidence": "baseline VGG-16 07+12 73.2 76.5 79.0 70.9 65.5 52.1 83.1 84.7 86.4 52.0 81.9 65.7 84.8 84.6 77.5 76.7 38.8 73.6 73.9 83.0 72.6",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "result",
-      "value": "72.6",
-      "evidence": "baseline VGG-16 07+12 73.2 76.5 79.0 70.9 65.5 52.1 83.1 84.7 86.4 52.0 81.9 65.7 84.8 84.6 77.5 76.7 38.8 73.6 73.9 83.0 72.6",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "task",
-      "value": "localization",
-      "evidence": "The ImageNet Localization (LOC) task",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "metric",
-      "value": "58.8% mAP",
-      "evidence": "58.8% mAP and our ensemble of 3 models has 62.1% mAP",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "metric",
-      "value": "62.1% mAP",
-      "evidence": "58.8% mAP and our ensemble of 3 models has 62.1% mAP",
-      "confidence": "high",
-      "grounded": true
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 1356,
+          "end": 1360,
+          "text": "COCO"
+        }
+      ]
     },
     {
       "key": "architecture",
+      "raw_key": "architecture",
       "value": "RPN",
-      "evidence": "Our localization algorithm is based on the RPN framework",
+      "evidence": "Our localization algorithm is based on the RPN framework of [32] with a few modifications.",
       "confidence": "high",
-      "grounded": true
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 57780,
+          "end": 57783,
+          "text": "RPN"
+        }
+      ]
     },
     {
       "key": "metric",
-      "value": "11.7% error",
-      "evidence": "our ResNet-101 has an error of 11.7% using ground truth classes",
+      "raw_key": "metric",
+      "value": "top-5 localization error",
+      "evidence": "Table 13 compares the localization results.",
       "confidence": "high",
-      "grounded": true
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_document",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 59902,
+          "end": 59926,
+          "text": "top-5 localization error"
+        }
+      ]
+    },
+    {
+      "key": "method",
+      "raw_key": "method",
+      "value": "OverFeat",
+      "evidence": "OverFeat [40] (ILSVRC'13) | 30.0 | 29.9",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 59162,
+          "end": 59170,
+          "text": "OverFeat"
+        }
+      ]
+    },
+    {
+      "key": "method",
+      "raw_key": "method",
+      "value": "GoogLeNet",
+      "evidence": "GoogLeNet [44] (ILSVRC'14) | - | 26.7",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 59208,
+          "end": 59217,
+          "text": "GoogLeNet"
+        }
+      ]
+    },
+    {
+      "key": "method",
+      "raw_key": "method",
+      "value": "VGG",
+      "evidence": "VGG [41] (ILSVRC'14) | 26.9 | 25.3",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 59252,
+          "end": 59255,
+          "text": "VGG"
+        }
+      ]
     },
     {
       "key": "metric",
-      "value": "14.4% error",
-      "evidence": "the top-5 localization error is 14.4%",
+      "raw_key": "metric",
+      "value": "center-crop error",
+      "evidence": "VGG's paper [41] reports a center-crop error of 33.1% (Table 13) using ground truth classes.",
       "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "metric",
-      "value": "10.6% error",
-      "evidence": "This method reduces the top-5 localization error to 10.6%",
-      "confidence": "high",
-      "grounded": true
-    },
-    {
-      "key": "organization",
-      "value": "ILSVRC",
-      "evidence": "ILSVRC 2015",
-      "confidence": "high",
-      "grounded": true
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_document",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 59438,
+          "end": 59455,
+          "text": "center-crop error"
+        }
+      ]
     },
     {
       "key": "result",
-      "value": "64% relative reduction of error",
-      "evidence": "showing a 64% relative reduction of error",
+      "raw_key": "result",
+      "value": "33.1%",
+      "evidence": "VGG's paper [41] reports a center-crop error of 33.1% (Table 13) using ground truth classes.",
       "confidence": "high",
-      "grounded": true
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_document",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 59459,
+          "end": 59464,
+          "text": "33.1%"
+        }
+      ]
+    },
+    {
+      "key": "result",
+      "raw_key": "result",
+      "value": "13.3%",
+      "evidence": "Our RPN method using ResNet-101 net significantly reduces the center-crop error to 13.3%.",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 59611,
+          "end": 59616,
+          "text": "13.3%"
+        }
+      ]
+    },
+    {
+      "key": "metric",
+      "raw_key": "metric",
+      "value": "top-5 classification error",
+      "evidence": "Using ResNet-101 for predicting classes (4.6% top-5 classification error, Table 4)",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 59860,
+          "end": 59886,
+          "text": "top-5 classification error"
+        }
+      ]
+    },
+    {
+      "key": "result",
+      "raw_key": "result",
+      "value": "4.6%",
+      "evidence": "Using ResNet-101 for predicting classes (4.6% top-5 classification error, Table 4)",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 59855,
+          "end": 59859,
+          "text": "4.6%"
+        }
+      ]
+    },
+    {
+      "key": "method",
+      "raw_key": "method",
+      "value": "Faster R-CNN",
+      "evidence": "One may use the detection network (Fast R-CNN [7]) in Faster R-CNN to improve the results.",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 60077,
+          "end": 60089,
+          "text": "Faster R-CNN"
+        }
+      ]
+    },
+    {
+      "key": "method",
+      "raw_key": "method",
+      "value": "R-CNN",
+      "evidence": "Our R-CNN implementation is as follows.",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 60579,
+          "end": 60584,
+          "text": "R-CNN"
+        }
+      ]
+    },
+    {
+      "key": "result",
+      "raw_key": "result",
+      "value": "10.6%",
+      "evidence": "This method reduces the top-5 localization error to 10.6% (Table 13).",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 61492,
+          "end": 61497,
+          "text": "10.6%"
+        }
+      ]
+    },
+    {
+      "key": "metric",
+      "raw_key": "metric",
+      "value": "relative reduction of error",
+      "evidence": "This number significantly outperforms the ILSVRC 14 results (Table 14), showing a 64% relative reduction of error.",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 61786,
+          "end": 61813,
+          "text": "relative reduction of error"
+        }
+      ]
+    },
+    {
+      "key": "result",
+      "raw_key": "result",
+      "value": "64%",
+      "evidence": "This number significantly outperforms the ILSVRC 14 results (Table 14), showing a 64% relative reduction of error.",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 61782,
+          "end": 61785,
+          "text": "64%"
+        }
+      ]
+    },
+    {
+      "key": "identifier",
+      "raw_key": "identifier",
+      "value": "[36]",
+      "evidence": "on ImageNet [36]",
+      "confidence": "medium",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 5842,
+          "end": 5844,
+          "text": "36"
+        }
+      ]
+    },
+    {
+      "key": "identifier",
+      "raw_key": "identifier",
+      "value": "[20]",
+      "evidence": "on the CIFAR-10 set [20]",
+      "confidence": "medium",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 6297,
+          "end": 6299,
+          "text": "20"
+        }
+      ]
+    },
+    {
+      "key": "method",
+      "raw_key": "method",
+      "value": "multigrid method",
+      "evidence": "the widely used Multigrid method [3]",
+      "confidence": "medium",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 7913,
+          "end": 7929,
+          "text": "Multigrid method"
+        }
+      ]
+    },
+    {
+      "key": "method",
+      "raw_key": "method",
+      "value": "hierarchical basis preconditioning",
+      "evidence": "hierarchical basis preconditioning [45, 46]",
+      "confidence": "medium",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 8124,
+          "end": 8158,
+          "text": "hierarchical basis preconditioning"
+        }
+      ]
     },
     {
       "key": "task",
-      "value": "classification",
-      "evidence": "ILSVRC 2015 classification task",
-      "confidence": "high",
-      "grounded": false
+      "raw_key": "task",
+      "value": "image classification",
+      "evidence": "Error rates (%, 10-crop testing) on ImageNet validation.",
+      "confidence": "medium",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_document",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 1619,
+          "end": 1639,
+          "text": "image classification"
+        }
+      ]
     },
     {
-      "key": "venue",
-      "value": "ILSVRC 2015",
-      "evidence": "ILSVRC 2015 classification task",
+      "key": "publishing_number",
+      "raw_key": "publishing_number",
+      "value": "1408.5093",
+      "evidence": "arXiv:1408.5093",
+      "confidence": "low",
+      "grounded": true,
+      "value_grounded": true,
+      "grounded_by": "value_in_evidence",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 41311,
+          "end": 41320,
+          "text": "1408.5093"
+        }
+      ]
+    },
+    {
+      "key": "email",
+      "raw_key": "email",
+      "value": "kahe@microsoft.com",
+      "evidence": "{kahe, v-xiangz, v-shren, jiansun}@microsoft.com",
       "confidence": "high",
-      "grounded": false
+      "grounded": true,
+      "value_grounded": false,
+      "grounded_by": "evidence_only",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 157,
+          "end": 204,
+          "text": "kahe, v-xiangz, v-shren, jiansun}@microsoft.com"
+        }
+      ]
+    },
+    {
+      "key": "email",
+      "raw_key": "email",
+      "value": "v-xiangz@microsoft.com",
+      "evidence": "{kahe, v-xiangz, v-shren, jiansun}@microsoft.com",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": false,
+      "grounded_by": "evidence_only",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 157,
+          "end": 204,
+          "text": "kahe, v-xiangz, v-shren, jiansun}@microsoft.com"
+        }
+      ]
+    },
+    {
+      "key": "email",
+      "raw_key": "email",
+      "value": "v-shren@microsoft.com",
+      "evidence": "{kahe, v-xiangz, v-shren, jiansun}@microsoft.com",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": false,
+      "grounded_by": "evidence_only",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 157,
+          "end": 204,
+          "text": "kahe, v-xiangz, v-shren, jiansun}@microsoft.com"
+        }
+      ]
     },
     {
       "key": "result",
-      "value": "1st place",
-      "evidence": "won the 1st place on the ILSVRC 2015 classification task",
+      "raw_key": "result",
+      "value": "27.94%",
+      "evidence": "18 layers | 27.94 | 27.88",
       "confidence": "high",
-      "grounded": false
+      "grounded": true,
+      "value_grounded": false,
+      "grounded_by": "evidence_only",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 22102,
+          "end": 22127,
+          "text": "18 layers | 27.94 | 27.88"
+        }
+      ]
     },
     {
-      "key": "flops",
-      "value": "1.8×10^9",
-      "evidence": "FLOPs 1.8×10^9",
+      "key": "result",
+      "raw_key": "result",
+      "value": "28.54%",
+      "evidence": "34 layers | 28.54 | 25.03",
       "confidence": "high",
-      "grounded": false
+      "grounded": true,
+      "value_grounded": false,
+      "grounded_by": "evidence_only",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 22134,
+          "end": 22159,
+          "text": "34 layers | 28.54 | 25.03"
+        }
+      ]
     },
     {
-      "key": "flops",
-      "value": "3.6×10^9",
-      "evidence": "FLOPs 3.6×10^9",
+      "key": "result",
+      "raw_key": "result",
+      "value": "27.88%",
+      "evidence": "18 layers | 27.94 | 27.88",
       "confidence": "high",
-      "grounded": false
+      "grounded": true,
+      "value_grounded": false,
+      "grounded_by": "evidence_only",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 22102,
+          "end": 22127,
+          "text": "18 layers | 27.94 | 27.88"
+        }
+      ]
     },
     {
-      "key": "flops",
-      "value": "3.8×10^9",
-      "evidence": "FLOPs 3.8×10^9",
+      "key": "result",
+      "raw_key": "result",
+      "value": "25.03%",
+      "evidence": "34 layers | 28.54 | 25.03",
       "confidence": "high",
-      "grounded": false
-    },
-    {
-      "key": "flops",
-      "value": "7.6×10^9",
-      "evidence": "FLOPs 7.6×10^9",
-      "confidence": "high",
-      "grounded": false
-    },
-    {
-      "key": "flops",
-      "value": "11.3×10^9",
-      "evidence": "FLOPs 11.3×10^9",
-      "confidence": "high",
-      "grounded": false
-    },
-    {
-      "key": "iterations",
-      "value": "60×10^4",
-      "evidence": "and the models are trained for up to 60×10^4 iterations",
-      "confidence": "high",
-      "grounded": false
-    },
-    {
-      "key": "model",
-      "value": "101-layer ResNet",
-      "evidence": "101-layer ResNets",
-      "confidence": "high",
-      "grounded": false
-    },
-    {
-      "key": "author",
-      "value": "K. Chatfield",
-      "evidence": "K. Chatfield",
-      "confidence": "high",
-      "grounded": false
+      "grounded": true,
+      "value_grounded": false,
+      "grounded_by": "evidence_only",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 22134,
+          "end": 22159,
+          "text": "34 layers | 28.54 | 25.03"
+        }
+      ]
     },
     {
       "key": "metric",
-      "value": "33.1% error",
-      "evidence": "VGG’s paper [41] reports a center-crop error of 33.1%",
+      "raw_key": "metric",
+      "value": "60% error",
+      "evidence": "The error of plain-110 is higher than 60%",
       "confidence": "high",
-      "grounded": false
+      "grounded": true,
+      "value_grounded": false,
+      "grounded_by": "evidence_only",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 34901,
+          "end": 34942,
+          "text": "The error of plain-110 is higher than 60%"
+        }
+      ]
     },
     {
       "key": "metric",
-      "value": "13.3% error",
-      "evidence": "our RPN method using ResNet-101 net significantly reduces the center-crop error to 13.3%",
+      "raw_key": "metric",
+      "value": "6.43% error",
+      "evidence": "among the state-of-the-art results (6.43%, Table 6)",
       "confidence": "high",
-      "grounded": false
+      "grounded": true,
+      "value_grounded": false,
+      "grounded_by": "evidence_only",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 35384,
+          "end": 35434,
+          "text": "among the state-of-the-art results (6.43%, Table 6"
+        }
+      ]
     },
     {
-      "key": "metric",
-      "value": "9.0% error",
-      "evidence": "Using an ensemble of networks for both classification and localization, we achieve a top-5 localization error of 9.0%",
+      "key": "task",
+      "raw_key": "task",
+      "value": "image detection",
+      "evidence": "ImageNet detection",
       "confidence": "high",
-      "grounded": false
+      "grounded": true,
+      "value_grounded": false,
+      "grounded_by": "evidence_only",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 1430,
+          "end": 1448,
+          "text": "ImageNet detection"
+        }
+      ]
     },
     {
-      "key": "organization",
-      "value": "None",
-      "evidence": "None",
-      "confidence": "low",
-      "grounded": false
+      "key": "task",
+      "raw_key": "task",
+      "value": "image localization",
+      "evidence": "ImageNet localization",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": false,
+      "grounded_by": "evidence_only",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 1450,
+          "end": 1471,
+          "text": "ImageNet localization"
+        }
+      ]
     },
     {
-      "key": "author",
-      "value": "None",
-      "evidence": "None",
-      "confidence": "low",
-      "grounded": false
+      "key": "result",
+      "raw_key": "result",
+      "value": ">3% improvement in mAP",
+      "evidence": "ResNet-101 improves the mAP by >3% over VGG-16",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": false,
+      "grounded_by": "evidence_only",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 47442,
+          "end": 47488,
+          "text": "ResNet-101 improves the mAP by >3% over VGG-16"
+        }
+      ]
+    },
+    {
+      "key": "result",
+      "raw_key": "result",
+      "value": "6% increase in mAP@[.5, .95]",
+      "evidence": "ResNet-101 has a 6% increase of mAP@[.5, .95] over VGG-16",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": false,
+      "grounded_by": "evidence_only",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 48293,
+          "end": 48350,
+          "text": "ResNet-101 has a 6% increase of mAP@[.5, .95] over VGG-16"
+        }
+      ]
+    },
+    {
+      "key": "result",
+      "raw_key": "result",
+      "value": "2 points improvement in mAP",
+      "evidence": "Box refinement improves mAP by about 2 points (Table 9)",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": false,
+      "grounded_by": "evidence_only",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 49367,
+          "end": 49421,
+          "text": "Box refinement improves mAP by about 2 points (Table 9"
+        }
+      ]
+    },
+    {
+      "key": "result",
+      "raw_key": "result",
+      "value": "1 point improvement in mAP@.5",
+      "evidence": "Global context improves mAP@.5 by about 1 point (Table 9)",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": false,
+      "grounded_by": "evidence_only",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 49981,
+          "end": 50037,
+          "text": "Global context improves mAP@.5 by about 1 point (Table 9"
+        }
+      ]
+    },
+    {
+      "key": "result",
+      "raw_key": "result",
+      "value": "8.9%",
+      "evidence": "ours (ILSVRC'15) | 8.9 | 9.0",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": false,
+      "grounded_by": "evidence_only",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 59293,
+          "end": 59321,
+          "text": "ours (ILSVRC'15) | 8.9 | 9.0"
+        }
+      ]
+    },
+    {
+      "key": "result",
+      "raw_key": "result",
+      "value": "30.0%",
+      "evidence": "OverFeat [40] (ILSVRC'13) | 30.0 | 29.9",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": false,
+      "grounded_by": "evidence_only",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 59162,
+          "end": 59201,
+          "text": "OverFeat [40] (ILSVRC'13) | 30.0 | 29.9"
+        }
+      ]
+    },
+    {
+      "key": "result",
+      "raw_key": "result",
+      "value": "26.7%",
+      "evidence": "GoogLeNet [44] (ILSVRC'14) | - | 26.7",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": false,
+      "grounded_by": "evidence_only",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 59208,
+          "end": 59245,
+          "text": "GoogLeNet [44] (ILSVRC'14) | - | 26.7"
+        }
+      ]
+    },
+    {
+      "key": "result",
+      "raw_key": "result",
+      "value": "26.9%",
+      "evidence": "VGG [41] (ILSVRC'14) | 26.9 | 25.3",
+      "confidence": "high",
+      "grounded": true,
+      "value_grounded": false,
+      "grounded_by": "evidence_only",
+      "mentions": 1,
+      "spans": [
+        {
+          "start": 59252,
+          "end": 59286,
+          "text": "VGG [41] (ILSVRC'14) | 26.9 | 25.3"
+        }
+      ]
     }
   ]
 }

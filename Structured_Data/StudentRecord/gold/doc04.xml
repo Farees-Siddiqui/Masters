@@ -1,0 +1,8 @@
+<student-record>
+  <name lastname="Kaur" firstname="Simran"/>
+  <address>
+    <street>47 Hillcrest Drive</street>
+    <city>Brampton</city>
+  </address>
+  <evaluation grade="82">Satisfactory</evaluation>
+</student-record>

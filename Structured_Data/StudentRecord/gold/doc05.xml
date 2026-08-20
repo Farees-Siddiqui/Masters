@@ -1,0 +1,8 @@
+<student-record>
+  <name lastname="Martinez" firstname="Elena"/>
+  <address>
+    <street>9 Rosedale Court</street>
+    <city>Oakville</city>
+  </address>
+  <evaluation grade="68">Needs Improvement</evaluation>
+</student-record>

@@ -1,0 +1,187 @@
+%!TEX root=main.tex
+
+% \begin{wrapfigure}{r}{0.6\textwidth}
+% \vspace{-2 ex}
+%       \centering
+%       \includegraphics[width=0.6\textwidth]{figures/denseNet.pdf}
+%       \caption{A \methodnameshort{} architecture with $L=5$ layers and a growth rate of $k=3$ (and one single dense block). Each layer takes all preceding feature-maps as input. }
+%       \label{fig:ccnn}
+%       \vspace{-2 ex}
+% \end{wrapfigure}
+
+
+\renewcommand{\arraystretch}{1.1}
+\begin{table*}[!t]
+% Please add the following required packages to your document preamble:
+% \usepackage{multirow}
+\centering
+\resizebox{0.85\textwidth}{!}{%
+\begin{tabular}{c|c|c|l|l|l}
+\hline
+Layers                                                                          & Output Size     & DenseNet-121                                                                                                               & \multicolumn{1}{c|}{DenseNet-169}                                                                     & \multicolumn{1}{c|}{DenseNet-201}                                                                     & \multicolumn{1}{c}{DenseNet-264}                                                                       \\ \hline
+Convolution                                                                     & \cross{112} & \multicolumn{4}{c}{\cross{7} conv, stride 2}                                                                                                                                                                                                                                                                                                                                                                                                    \\ \hline
+Pooling                                                                         & \cross{56}   & \multicolumn{4}{c}{\cross{3} max pool, stride 2}                                                                                                                                                                                                                                                                                                                                                                                                \\ \hline
+\begin{tabular}[c]{@{}c@{}}Dense Block\\ (1)\end{tabular}                       & \cross{56}   & \multicolumn{1}{l|}{\conv{6}}  & \conv{6}  & \conv{6}  & \conv{6} \\ \hline
+\multirow{2}{*}{\begin{tabular}[c]{@{}c@{}}Transition Layer\\ (1)\end{tabular}} & \cross{56}  & \multicolumn{4}{c}{\cross{1} conv}                                                                                                                                                                                                                                                                                                                                                                                                              \\ \cline{2-6}
+                                                                                & \cross{28}   & \multicolumn{4}{c}{\cross{2} average pool, stride 2}                                                                                                                                                                                                                                                                                                                                                                                             \\ \hline
+\begin{tabular}[c]{@{}c@{}}Dense Block\\ (2)\end{tabular}                       & \cross{28}   & \multicolumn{1}{l|}{\conv{12}} & \conv{12}& \conv{12} & \conv{12} \\ \hline
+\multirow{2}{*}{\begin{tabular}[c]{@{}c@{}}Transition Layer\\ (2)\end{tabular}} & \cross{28}  & \multicolumn{4}{c}{\cross{1} conv}                                                                                                                                                                                                                                                                                                                                                                                                              \\ \cline{2-6}
+                                                                                & \cross{14}   & \multicolumn{4}{c}{\cross{2} average pool, stride 2}                                                                                                                                                                                                                                                                                                                                                                                             \\ \hline
+\begin{tabular}[c]{@{}c@{}}Dense Block\\ (3)\end{tabular}                       & \cross{14}   & \multicolumn{1}{l|}{\conv{24}} & \conv{32} & \conv{48} & \conv{64} \\ \hline
+\multirow{2}{*}{\begin{tabular}[c]{@{}c@{}}Transition Layer\\ (3)\end{tabular}} & \cross{14}   & \multicolumn{4}{c}{\cross{1} conv}                                                                                                                                                                                                                                                                                                                                                                                                              \\ \cline{2-6}
+                                                                                & \cross{7}     & \multicolumn{4}{c}{\cross{2} average pool, stride 2}                                                                                                                                                                                                                                                                                                                                                                                             \\ \hline
+\begin{tabular}[c]{@{}c@{}}Dense Block\\ (4)\end{tabular}                       & \cross{7}   & \multicolumn{1}{l|}{\conv{16}} & \conv{32} & \conv{32} & \conv{48}  \\ \hline
+\multirow{2}{*}{\begin{tabular}[c]{@{}c@{}}Classification\\ Layer\end{tabular}} & \cross{1} & \multicolumn{4}{c}{\cross{7} global average pool}                                                                                                                                                                                                                                                                                                                                                                                            \\ \cline{2-6}
+                                                                                &                 & \multicolumn{4}{c}{1000D fully-connected, softmax}                                                                                                                                                                                                                                                                                                                                                                                               \\ \hline
+\end{tabular}
+}
+\vspace{1 ex}
+\caption{DenseNet architectures for ImageNet. The growth rate for all the networks is $k=32$. Note that each ``conv'' layer shown in the table corresponds the sequence BN-ReLU-Conv.   }
+\label{densenet-imagenet}
+\vspace{-3 ex}
+\end{table*}
+
+
+
+
+
+\section{DenseNets}
+
+Consider a single image $\bx_0$ that is passed through a convolutional network. The network comprises $L$ layers, each of which implements a non-linear transformation $H_\ell(\cdot)$, where $\ell$ indexes the layer. $H_\ell(\cdot)$ can be a composite function of operations such as Batch Normalization (BN) \cite{batch-norm}, rectified linear units (ReLU)~\cite{relu}, Pooling~\cite{lenet5}, or  Convolution (Conv).
+We denote the output of the $\ell^{th}$ layer as $\bx_{\ell}$.
+% and express the composite transformation in the $\ell^{th}$ layer as $H_\ell(\cdot)$.
+
+
+\vspace{-2 ex}
+\paragraph{ResNets.}
+Traditional convolutional feed-forward networks connect the output of the $\ell^{th}$ layer as input to the $(\ell+1)^{th}$ layer~\cite{alexnet}, which gives rise to the following layer transition: $\bx_\ell=H_\ell(\bx_{\ell-1})$. ResNets~\cite{resnet} add a skip-connection that bypasses the non-linear transformations with an identity function:
+\vspace{-1ex}
+\begin{equation}
+\vspace{-1ex}
+\bx_\ell=H_\ell(\bx_{\ell-1})+\bx_{\ell-1}\label{eq:resnet}.
+%\vspace{-1ex}
+\end{equation}
+An advantage of ResNets is that the gradient can flow directly through the identity function from later layers to the earlier layers. However, the identity function and the output of $H_\ell$ are combined by summation, which may impede the information flow in the network.
+
+\vspace{-2 ex}
+\paragraph{Dense connectivity.}
+To further improve the information flow between layers we propose a different connectivity pattern: we introduce direct connections from any layer to all subsequent layers. Figure~\ref{fig:ccnn} illustrates the layout of the resulting \methodnameshort{} schematically.
+Consequently, the $\ell^{th}$ layer receives the feature-maps of all preceding layers, $\bx_0,\dots,\bx_{\ell-1}$, as input:
+\vspace{-1ex}
+\begin{equation}
+\vspace{-1ex}
+\bx_{\ell} = \ H_\ell([\bx_0, \bx_1,\ldots, \bx_{\ell-1}]),
+\label{eqn:densenet}
+\end{equation}
+where $[\bx_0, \bx_1,\ldots, \bx_{\ell-1}]$ refers to the concatenation of the feature-maps produced in layers $0,\dots,\ell-1$. Because of its dense connectivity we refer to this network architecture as \emph{\methodnamecap{} (\methodnameshort{})}.
+For ease of implementation, we concatenate the multiple inputs of $H_\ell(\cdot)$ in eq.~(\ref{eqn:densenet}) into a single tensor.
+%\footnote{For the convenience of easy implementations, we ensure compatibility with existing neural network packages and libraries.}
+
+
+
+\vspace{-2 ex}
+\paragraph{Composite function.}
+Motivated by \cite{identity-mappings}, we define $H_\ell(\cdot)$ as a composite function of three consecutive operations: batch normalization (BN) \cite{batch-norm}, followed by a rectified linear unit (ReLU)~\cite{relu} and a $3\times 3$ convolution (Conv).
+
+
+
+%Other choices may be possible, but for simplicity we only consider the BN-ReLU-Conv version of $H_\ell$ for all layers $\ell$ (except dedicated pooling layers).
+
+\vspace{-2 ex}
+\paragraph{Pooling layers.}
+The concatenation operation used in Eq.~(\ref{eqn:densenet}) is not viable when the size of feature-maps changes. However, an essential part of convolutional networks is down-sampling layers that change the size of feature-maps.  To facilitate down-sampling in our architecture we divide the network into multiple densely connected \emph{dense blocks}; see Figure~\ref{fig:ccnn_all}. We refer to layers between blocks as \emph{transition layers}, which do convolution and pooling. The transition layers used in our experiments consist of a batch normalization layer and an 1$\times$1 convolutional layer followed by a 2$\times$2 average pooling layer.
+
+%For simplicity, we preserve the number of feature-maps across transition layers, \emph{i.e.}, if the first dense block contains $m$ feature-maps, we let the first transition layer generate $m$ output feature-maps. There are no connections across dense blocks other than the transition layer. We typically use three dense blocks in our architectures.
+
+\vspace{-2 ex}
+\paragraph{Growth rate.}
+If each function $H_\ell$ produces $k$ feature-maps, it follows that the $\ell^{th}$ layer has $k_0+k\times (\ell-1)$ input feature-maps, where $k_0$ is the number of channels in the input layer. An important difference between \methodnameshort{} and existing network architectures is that \methodnameshort{} can have very narrow layers, \emph{e.g.}, $k=12$. We refer to the hyper-parameter $k$ as the \emph{\stepsizename{}} of the network. We show in Section~\ref{sec:results} that a relatively small \stepsizename{} is sufficient to obtain state-of-the-art results on the datasets that we tested on. One explanation for this is that each layer has access to all the preceding feature-maps in its block and, therefore, to the network's ``collective knowledge''. One can view the feature-maps as the global state of the network. Each layer adds $k$ feature-maps of its own to this state. The  \stepsizename{} regulates how much new information each layer contributes to the global state.
+The global state, once written, can be accessed from everywhere within the network and, unlike in traditional network architectures, there is no need to replicate it from layer to layer.
+
+
+
+\vspace{-2 ex}
+\paragraph{Bottleneck layers.}
+Although each layer only produces $k$ output feature-maps, it typically has many more inputs. It has been noted in \cite{szegedy2015rethinking,resnet} that a 1$\times$1 convolution can be introduced as \emph{bottleneck} layer before each 3$\times$3 convolution to reduce the number of input feature-maps, and thus to improve computational efficiency. We find this design especially effective for \methodnameshort{} and we refer to our network with such a bottleneck layer, \emph{i.e.}, to the BN-ReLU-Conv(1$\times$ 1)-BN-ReLU-Conv(3$\times$3) version of $H_\ell$, as \methodnameshort{}-B. In our experiments, we let each 1$\times$1 convolution produce $4k$ feature-maps.
+
+\vspace{-2 ex}
+\paragraph{Compression.}
+To further improve model compactness, we can reduce the number of feature-maps at transition layers. If a dense block contains $m$ feature-maps, we let the following transition layer generate $\lfloor \theta m\rfloor$ output feature-maps, where $0<\!\theta\le \!1$ is referred to as the compression factor. When $\theta\!=\!1$, the number of feature-maps across transition layers remains unchanged. We refer the \methodnameshort{} with $\theta\!<\!1$ as DenseNet-C, and we set $\theta=0.5$ in our experiment. When both the bottleneck and transition layers with $\theta\!<1$ are used, we refer to our model as \methodnameshort{}-BC.
+
+\vspace{-2 ex}
+\paragraph{Implementation Details.}
+On all datasets except ImageNet, the \methodnameshort{} used in our experiments has three dense blocks that each has an equal number of layers. Before entering the first dense block, a convolution with 16 (or twice the \stepsizename{} for DenseNet-BC) output channels is performed on the input images. For convolutional layers with kernel size 3$\times$3, each side of the inputs is zero-padded by one pixel to keep the feature-map size fixed. We use 1$\times$1 convolution followed by 2$\times$2 average pooling as transition layers between two contiguous dense blocks. At the end of the last dense block, a global average pooling is performed and then a softmax classifier is attached. The feature-map sizes in the three dense blocks are 32$\times$ 32, 16$\times$16, and 8$\times$8, respectively. We experiment with the basic \methodnameshort{} structure with configurations $\{L\!=\!40, k\!=\!12\}$, $\{L\!=\!100,k\!=\!12\}$ and $\{L\!=\!100,k\!=\!24\}$. For \methodnameshort{}-BC, the networks with configurations $\{L\!=\!100, k\!=\!12\}$, $\{L\!=\!250,k\!=\!24\}$ and $\{L\!=\!190,k\!=\!40\}$ are evaluated.
+
+In our experiments on ImageNet, we use a \methodnameshort{}-BC structure with 4 dense blocks on 224$\times$224 input images. The initial convolution layer comprises $2k$ convolutions of size 7$\times$7 with stride 2; the number of feature-maps in all other layers also follow from setting $k$. The exact network configurations we used on ImageNet are shown in Table~\ref{densenet-imagenet}.
+
+
+%\begin{table*}[t]
+%\caption{\methodnameshort{} for ImageNet.}
+%\label{table:densenet-imagenet}
+%\begin{center}
+%\resizebox{0.9\textwidth}{!}{
+%%\tiny
+%%\scriptsize
+%\begin{tabular}{llllllllll}
+%\hline
+%Network &   Convolution & Dense   & Transition    & Dense   & Transition  & Dense   & Transition  & Dense & Average pool     \\
+%&   Layer 1 & Block 1 & Layer 1       & Block 2 & Layer 1     & Block-3 & Layer 1     & Block-4  & 1000-d fc, softmax\\ \hline
+%&   DenseNet-121 & Block 1 & Layer 1       & Block 2 & Layer 1     & Block-3 & Layer 1     & Block-4  & 1000-d fc, softmax\\ \hline
+%\end{tabular}
+%}
+%\end{center}
+%\end{table*}
+
+
+%where each layer \methodnameshort{} has a very short path (just several transition layers) to the final classifier and can be more directly supervised.
+
+%the final classifier is built on features that are learned across the last group of layers. If the transition layers between groups are simple enough (e.g. $1\times 1$ convolution), actually this final classifier can also influence the layers at eariler groups significantly. Therefore \methodnameshort{} induces \emph{implicit deep supervision}. \methodnameshort{} differs from deeply-supervised net in that only a single loss is attached at the end, thus is much simpler.
+
+%Deep supervision also encourage the gradients to flow more fluently, since every layer in the last group receives the gradient propagated directly from the classifier.
+
+
+
+%In traditional CNN, since the feature-maps' size are often much larger than the filter size, activations often consume much more memory than the parameters, even with a batch size of 1 during test time. However, in \methodnameshort{}, the features are learned in a cascade manner. During testing, except a little overhead for the start and end part of the network, the space needed is only the sum of space for each groups' last layer's activations, since it contains all previous layers' activations with the same group. All activations in one group can be computed in a continguous memory space with the size needed for the last layer of that group, thus a lot of space can be saved.
+
+
+
+
+
+
+
+% , where
+% \begin{equation}
+%       \bx_{\ell}=H_\ell(\bx_{\ell-1}).
+% \end{equation}
+
+% move to discussion?
+%There are two important factors that lead to the success of a deep network architecture, namely, the representational power and ease of optimization. As naively increasing the depth or width of the network could reliably increasing the representational power, the first factor is usually neglected by researchers and most existing works focus on reducing the training difficulty of deep networks \cite{highway,resnet,dsn}. However, the efficiency of using parameters in traditional CNNs is far from optimal, and simply draw the representational power from wider or deeper networks not only waste resources but also increases the difficulty of optimization. \cite{szegedy2015rethinking} noted that there is strong correlation among the features extracted by the filers from the same convolutional layer. An evidence is that one can usually aggregate feature-maps from the same layer into fewer channels without degrading the accuracy. To increase the diversity of the features and reduce their correlation, \cite{szegedy2015rethinking} propose the \emph{Inception module} which concatenate a number of filters of difference sizes and depths. The Inception model which uses a stack of Inception module achieved very competitive results on ImageNet with much lower computational cost compare to the VGGNet \cite{vgg} and its variants \cite{init}.
+
+% move to discussion
+%What we are interested is whether there is a simpler design strategy that simultaneously addresses the representational power issue and the optimization difficulty. An interesting observation we made is that in deep networks, some features extracted by an early layer can be very useful for a deep layer even they are respectively in the two ends of the network \cite{resnet,fractalnet,stochastic,szegedy2015rethinking}. For example, in Stochastic Depth Network \cite{stochastic}, any layer can have easy access to the outputs of a preceding layer during training. The ResNets \cite{resnet} and FractalNet \cite{fractalnet} also create short paths for a later layer to reach earlier layers. Though the observation is to some extent contradict to the popular belief that in deep networks each layer receives the features learned from its preceding layer and outputs more abstract features, it is supported by more and more evidences. Based on this observation, we find a natural way to increase the diversity of features received by an intermediate layer is to directly reuse features extracted by early layers.  On one hand, this will yield better representational power without heavily increasing extra parameters and computational cost; On the other hand, as we show later, by directly connect earlier layers to later layers, the optimization difficult is also greatly reduced.
+
+%By looking into these successful networks, we find there are some basic principles that should be followed in designing deep architectures:
+%\begin{enumerate}
+%  \item Avoid information loss during forward propagation;
+%  \item Ensure earlier layers receive effective gradient;
+%  \item Make the inputs of convolutional layers more diversified.
+%\end{enumerate}
+%
+%This first two principles have been raised in many existing works \cite{highway,szegedy2015rethinking,zhang2016augmenting,stochastic}, and can be well addressed by introducing identity mappings \cite{resnet}, using wider network structures \cite{wide,szegedy2015rethinking} or training with specifical algorithms \cite{stochastic,fractalnet}. The third principle
+
+%ResNet formulates the representational learning problem by a residual learning procedure, with each $H_\ell$ learns some residuals to minimize the difference between
+%drastically reduces the difficulty of training very deep networks, and leads to
+
+%Note that in the above equation, $i$ indexes for residual units rather than layers. As investigated by \cite{identity-mappings}, the transformation $H_\ell$ can take different forms and could yield very different results.
+
+
+
+
+
+%We introduce \methodnameshort{}, a simple architecture with strong representational power yet easy to optimize. In \methodnameshort{} feature-maps learned by a convolutional layers are directly used by later layers. As shown in Fig. \ref{fig:ccnn}, the network has a ``cascade" structure: each layer produces one or more feature-maps, which are then concatenated with preceding feature-maps and passed to the next layer as inputs.
+
+%This architecture encourages a later layer to reuse features extracted by all earlier layers, instead of heavily relying on features produced by the layer right before it.
+
+%The hierarchical structure is less evident in \methodnameshort{}, as a layer with large depth can directly extract features from a very early layer. We will empirically show that this is indeed true in a trained \methodnameshort{}.
+
+%where $[\bx_0, \bx_1,\ldots, \bx_{\ell-1}]$ is the concatenation of the feature-maps $\bx_0, \bx_1,\ldots, \bx_{\ell-1}$, and $\bx_0$ is the features at the input of the cascade. In our experiments, $H_\ell$ is a layer sequence of Batch Normalization (BN) \cite{batch-norm}, ReLU and Convolution (Conv).

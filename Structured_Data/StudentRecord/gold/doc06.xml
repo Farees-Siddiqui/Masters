@@ -1,0 +1,8 @@
+<student-record>
+  <name lastname="Fitzgerald" firstname="Ronan"/>
+  <address>
+    <street>315 Colborne Street</street>
+    <city>Kitchener</city>
+  </address>
+  <evaluation grade="91">Excellent</evaluation>
+</student-record>

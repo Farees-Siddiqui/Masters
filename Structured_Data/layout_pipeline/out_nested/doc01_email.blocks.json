@@ -1,0 +1,352 @@
+{
+  "n_pages": 1,
+  "pages": [
+    {
+      "page": 0,
+      "blocks": [
+        {
+          "block_id": 0,
+          "block_type": "TEXT",
+          "bbox": [
+            193.0,
+            203.0,
+            669.0,
+            273.0
+          ],
+          "parsed_content": "From:r.delacroix@milton-college.ca\nTo:",
+          "crop_path": null,
+          "metadata": {
+            "label": "text",
+            "page": 0,
+            "reading_position": 0,
+            "handler": "_handle_text",
+            "n_lines": 2,
+            "mean_line_confidence": 0.9889,
+            "is_marginal": false,
+            "source_order": 0,
+            "synthetic": true,
+            "status": "extracted"
+          },
+          "raw_lines": [
+            {
+              "text": "From:r.delacroix@milton-college.ca",
+              "bbox": [
+                195.0,
+                203.0,
+                669.0,
+                235.0
+              ],
+              "score": 0.9846
+            },
+            {
+              "text": "To:",
+              "bbox": [
+                193.0,
+                241.0,
+                246.0,
+                273.0
+              ],
+              "score": 0.9932
+            }
+          ]
+        },
+        {
+          "block_id": 1,
+          "block_type": "TEXT",
+          "bbox": [
+            195.0,
+            243.0,
+            761.0,
+            349.0
+          ],
+          "parsed_content": "academic.advising@milton-college.ca\nDate: 12 March 2026\nSubject: year-end file",
+          "crop_path": null,
+          "metadata": {
+            "label": "text",
+            "page": 0,
+            "reading_position": 1,
+            "handler": "_handle_text",
+            "n_lines": 3,
+            "mean_line_confidence": 0.9754,
+            "is_marginal": false,
+            "source_order": 1,
+            "synthetic": true,
+            "status": "extracted"
+          },
+          "raw_lines": [
+            {
+              "text": "academic.advising@milton-college.ca",
+              "bbox": [
+                294.0,
+                243.0,
+                761.0,
+                273.0
+              ],
+              "score": 0.9764
+            },
+            {
+              "text": "Date: 12 March 2026",
+              "bbox": [
+                195.0,
+                280.0,
+                484.0,
+                311.0
+              ],
+              "score": 0.9612
+            },
+            {
+              "text": "Subject: year-end file",
+              "bbox": [
+                197.0,
+                318.0,
+                472.0,
+                349.0
+              ],
+              "score": 0.9885
+            }
+          ]
+        },
+        {
+          "block_id": 2,
+          "block_type": "TITLE",
+          "bbox": [
+            193.0,
+            422.0,
+            323.0,
+            463.0
+          ],
+          "parsed_content": "Hi Dana,",
+          "crop_path": null,
+          "metadata": {
+            "label": "paragraph_title",
+            "page": 0,
+            "reading_position": 2,
+            "handler": "_handle_text",
+            "n_lines": 1,
+            "mean_line_confidence": 0.992,
+            "is_marginal": false,
+            "source_order": 2,
+            "status": "extracted"
+          },
+          "raw_lines": [
+            {
+              "text": "Hi Dana,",
+              "bbox": [
+                194.0,
+                421.0,
+                321.0,
+                460.0
+              ],
+              "score": 0.992
+            }
+          ]
+        },
+        {
+          "block_id": 3,
+          "block_type": "TEXT",
+          "bbox": [
+            190.0,
+            479.0,
+            1142.0,
+            520.0
+          ],
+          "parsed_content": "Closing out the last of the year-end files before the deadline on Friday.",
+          "crop_path": null,
+          "metadata": {
+            "label": "text",
+            "page": 0,
+            "reading_position": 3,
+            "handler": "_handle_text",
+            "n_lines": 1,
+            "mean_line_confidence": 0.9741,
+            "is_marginal": false,
+            "source_order": 3,
+            "status": "extracted"
+          },
+          "raw_lines": [
+            {
+              "text": "Closing out the last of the year-end files before the deadline on Friday.",
+              "bbox": [
+                196.0,
+                479.0,
+                1137.0,
+                515.0
+              ],
+              "score": 0.9741
+            }
+          ]
+        },
+        {
+          "block_id": 4,
+          "block_type": "TEXT",
+          "bbox": [
+            192.0,
+            535.0,
+            1505.0,
+            653.0
+          ],
+          "parsed_content": "The one still outstanding is Farees Siddiqui. The mailing address we have on record is 14 Fake\nStreet, in Milton —Ihave not been able to confirm whether that is still current, so it may be worth\na phone call before anything goes out by post.",
+          "crop_path": null,
+          "metadata": {
+            "label": "text",
+            "page": 0,
+            "reading_position": 4,
+            "handler": "_handle_text",
+            "n_lines": 3,
+            "mean_line_confidence": 0.9695,
+            "is_marginal": false,
+            "source_order": 4,
+            "status": "extracted"
+          },
+          "raw_lines": [
+            {
+              "text": "The one still outstanding is Farees Siddiqui. The mailing address we have on record is 14 Fake",
+              "bbox": [
+                195.0,
+                537.0,
+                1502.0,
+                571.0
+              ],
+              "score": 0.972
+            },
+            {
+              "text": "Street, in Milton —Ihave not been able to confirm whether that is still current, so it may be worth",
+              "bbox": [
+                196.0,
+                575.0,
+                1501.0,
+                608.0
+              ],
+              "score": 0.9647
+            },
+            {
+              "text": "a phone call before anything goes out by post.",
+              "bbox": [
+                196.0,
+                614.0,
+                818.0,
+                647.0
+              ],
+              "score": 0.9718
+            }
+          ]
+        },
+        {
+          "block_id": 5,
+          "block_type": "TEXT",
+          "bbox": [
+            193.0,
+            666.0,
+            1503.0,
+            745.0
+          ],
+          "parsed_content": "They finished the term with a grade of 90, and the evaluation entered against that grade is Satis-\nfactory. Nothing else on the file needs your sign-off.",
+          "crop_path": null,
+          "metadata": {
+            "label": "text",
+            "page": 0,
+            "reading_position": 5,
+            "handler": "_handle_text",
+            "n_lines": 2,
+            "mean_line_confidence": 0.9744,
+            "is_marginal": false,
+            "source_order": 5,
+            "status": "extracted"
+          },
+          "raw_lines": [
+            {
+              "text": "They finished the term with a grade of 90, and the evaluation entered against that grade is Satis-",
+              "bbox": [
+                195.0,
+                669.0,
+                1500.0,
+                702.0
+              ],
+              "score": 0.9823
+            },
+            {
+              "text": "factory. Nothing else on the file needs your sign-off.",
+              "bbox": [
+                195.0,
+                706.0,
+                886.0,
+                739.0
+              ],
+              "score": 0.9665
+            }
+          ]
+        },
+        {
+          "block_id": 6,
+          "block_type": "TEXT",
+          "bbox": [
+            195.0,
+            761.0,
+            312.0,
+            800.0
+          ],
+          "parsed_content": "Thanks,",
+          "crop_path": null,
+          "metadata": {
+            "label": "text",
+            "page": 0,
+            "reading_position": 6,
+            "handler": "_handle_text",
+            "n_lines": 1,
+            "mean_line_confidence": 0.9985,
+            "is_marginal": false,
+            "source_order": 6,
+            "status": "extracted"
+          },
+          "raw_lines": [
+            {
+              "text": "Thanks,",
+              "bbox": [
+                192.0,
+                758.0,
+                311.0,
+                799.0
+              ],
+              "score": 0.9985
+            }
+          ]
+        },
+        {
+          "block_id": 7,
+          "block_type": "TEXT",
+          "bbox": [
+            195.0,
+            818.0,
+            296.0,
+            856.0
+          ],
+          "parsed_content": "Renée",
+          "crop_path": null,
+          "metadata": {
+            "label": "text",
+            "page": 0,
+            "reading_position": 7,
+            "handler": "_handle_text",
+            "n_lines": 1,
+            "mean_line_confidence": 0.9967,
+            "is_marginal": false,
+            "source_order": 7,
+            "status": "extracted"
+          },
+          "raw_lines": [
+            {
+              "text": "Renée",
+              "bbox": [
+                192.0,
+                814.0,
+                294.0,
+                856.0
+              ],
+              "score": 0.9967
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='utf-8'?>
+<document source="doc08_report_card.pdf" model="nielsr/layoutlmv3-finetuned-funsd">
+  <student label="Student:" by="layoutlmv3">Abebe, Selam</student>
+  <mailing_address label="Mailing address:" by="layoutlmv3">1180 Fanshawe Park</mailing_address>
+  <unkeyed by="layoutlmv3">London</unkeyed>
+  <grade label="Grade" by="layoutlmv3">85</grade>
+  <standing label="Standing" by="layoutlmv3">Satisfactory</standing>
+  <surname label="Surname" by="gliner" score="0.60">Abebe</surname>
+  <mailing_address label="Mailing Address" by="gliner" score="0.83">1180 Fanshawe Park Road</mailing_address>
+  <grade label="Grade" by="gliner" score="0.63">Standing</grade>
+</document>

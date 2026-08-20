@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='utf-8'?>
+<document title="doc03_vertical_table" pages="1" blocks="3">
+  <page number="0">
+    <paragraph id="0" bbox="718.0,252.0,982.0,288.0" status="extracted" label="figure_title">Student Record</paragraph>
+    <table format="markdown" rows="7" columns="2" id="1" bbox="612.0,333.0,1087.0,625.0" status="completed" label="table">| Field | Entry |
+|---|---|
+| LastName | Okonkwo |
+| FirstName | Chidi |
+| Street | 2201 Lakeshore Road |
+| City | Burlington |
+| Grade | 94 |
+| Evaluation | Excellent |</table>
+    <paragraph id="2" bbox="245.0,706.0,1209.0,739.0" status="extracted" label="text">Generated from the student information system. Entries are shown exactly as stored.</paragraph>
+  </page>
+</document>

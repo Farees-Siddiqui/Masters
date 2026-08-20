@@ -1,0 +1,528 @@
+{
+  "n_pages": 1,
+  "pages": [
+    {
+      "page": 0,
+      "blocks": [
+        {
+          "block_id": 0,
+          "block_type": "TITLE",
+          "bbox": [
+            558.0,
+            202.0,
+            1139.0,
+            236.0
+          ],
+          "parsed_content": "STUDENT EVALUATION FORM",
+          "crop_path": null,
+          "metadata": {
+            "label": "doc_title",
+            "page": 0,
+            "reading_position": 0,
+            "handler": "_handle_text",
+            "n_lines": 1,
+            "mean_line_confidence": 0.9906,
+            "is_marginal": false,
+            "source_order": 0,
+            "status": "extracted"
+          },
+          "raw_lines": [
+            {
+              "text": "STUDENT EVALUATION FORM",
+              "bbox": [
+                561.0,
+                202.0,
+                1137.0,
+                232.0
+              ],
+              "score": 0.9906
+            }
+          ]
+        },
+        {
+          "block_id": 1,
+          "block_type": "TEXT",
+          "bbox": [
+            468.0,
+            253.0,
+            627.0,
+            280.0
+          ],
+          "parsed_content": "Form SR-114",
+          "crop_path": null,
+          "metadata": {
+            "label": "text",
+            "page": 0,
+            "reading_position": 1,
+            "handler": "_handle_text",
+            "n_lines": 1,
+            "mean_line_confidence": 0.9892,
+            "is_marginal": false,
+            "source_order": 1,
+            "synthetic": true,
+            "status": "extracted"
+          },
+          "raw_lines": [
+            {
+              "text": "Form SR-114",
+              "bbox": [
+                468.0,
+                253.0,
+                627.0,
+                280.0
+              ],
+              "score": 0.9892
+            }
+          ]
+        },
+        {
+          "block_id": 2,
+          "block_type": "TEXT",
+          "bbox": [
+            705.0,
+            255.0,
+            1227.0,
+            281.0
+          ],
+          "parsed_content": "To be completed by the supervising instructor",
+          "crop_path": null,
+          "metadata": {
+            "label": "text",
+            "page": 0,
+            "reading_position": 2,
+            "handler": "_handle_text",
+            "n_lines": 1,
+            "mean_line_confidence": 0.9918,
+            "is_marginal": false,
+            "source_order": 2,
+            "synthetic": true,
+            "status": "extracted"
+          },
+          "raw_lines": [
+            {
+              "text": "To be completed by the supervising instructor",
+              "bbox": [
+                705.0,
+                255.0,
+                1227.0,
+                281.0
+              ],
+              "score": 0.9918
+            }
+          ]
+        },
+        {
+          "block_id": 3,
+          "block_type": "TITLE",
+          "bbox": [
+            196.0,
+            372.0,
+            558.0,
+            403.0
+          ],
+          "parsed_content": "SECTION 1—NAME",
+          "crop_path": null,
+          "metadata": {
+            "label": "paragraph_title",
+            "page": 0,
+            "reading_position": 3,
+            "handler": "_handle_text",
+            "n_lines": 1,
+            "mean_line_confidence": 0.9796,
+            "is_marginal": false,
+            "source_order": 3,
+            "status": "extracted"
+          },
+          "raw_lines": [
+            {
+              "text": "SECTION 1—NAME",
+              "bbox": [
+                197.0,
+                371.0,
+                556.0,
+                402.0
+              ],
+              "score": 0.9796
+            }
+          ]
+        },
+        {
+          "block_id": 4,
+          "block_type": "TEXT",
+          "bbox": [
+            196.0,
+            454.0,
+            888.0,
+            487.0
+          ],
+          "parsed_content": "Family Name\nMartinez",
+          "crop_path": null,
+          "metadata": {
+            "label": "text",
+            "page": 0,
+            "reading_position": 4,
+            "handler": "_handle_text",
+            "n_lines": 2,
+            "mean_line_confidence": 0.9716,
+            "is_marginal": false,
+            "source_order": 4,
+            "status": "extracted"
+          },
+          "raw_lines": [
+            {
+              "text": "Family Name",
+              "bbox": [
+                195.0,
+                451.0,
+                381.0,
+                486.0
+              ],
+              "score": 0.9439
+            },
+            {
+              "text": "Martinez",
+              "bbox": [
+                456.0,
+                452.0,
+                583.0,
+                483.0
+              ],
+              "score": 0.9994
+            }
+          ]
+        },
+        {
+          "block_id": 5,
+          "block_type": "TEXT",
+          "bbox": [
+            197.0,
+            538.0,
+            888.0,
+            572.0
+          ],
+          "parsed_content": "Given Name(s)\nElena",
+          "crop_path": null,
+          "metadata": {
+            "label": "text",
+            "page": 0,
+            "reading_position": 5,
+            "handler": "_handle_text",
+            "n_lines": 2,
+            "mean_line_confidence": 0.9786,
+            "is_marginal": false,
+            "source_order": 5,
+            "status": "extracted"
+          },
+          "raw_lines": [
+            {
+              "text": "Given Name(s)",
+              "bbox": [
+                195.0,
+                532.0,
+                401.0,
+                572.0
+              ],
+              "score": 0.9579
+            },
+            {
+              "text": "Elena",
+              "bbox": [
+                455.0,
+                535.0,
+                541.0,
+                568.0
+              ],
+              "score": 0.9994
+            }
+          ]
+        },
+        {
+          "block_id": 6,
+          "block_type": "TITLE",
+          "bbox": [
+            195.0,
+            648.0,
+            616.0,
+            679.0
+          ],
+          "parsed_content": "SECTION 2—ADDRESS",
+          "crop_path": null,
+          "metadata": {
+            "label": "paragraph_title",
+            "page": 0,
+            "reading_position": 6,
+            "handler": "_handle_text",
+            "n_lines": 1,
+            "mean_line_confidence": 0.9736,
+            "is_marginal": false,
+            "source_order": 6,
+            "status": "extracted"
+          },
+          "raw_lines": [
+            {
+              "text": "SECTION 2—ADDRESS",
+              "bbox": [
+                197.0,
+                648.0,
+                613.0,
+                678.0
+              ],
+              "score": 0.9736
+            }
+          ]
+        },
+        {
+          "block_id": 7,
+          "block_type": "TEXT",
+          "bbox": [
+            195.0,
+            731.0,
+            889.0,
+            762.0
+          ],
+          "parsed_content": "Street\n9 Rosedale Court",
+          "crop_path": null,
+          "metadata": {
+            "label": "text",
+            "page": 0,
+            "reading_position": 7,
+            "handler": "_handle_text",
+            "n_lines": 2,
+            "mean_line_confidence": 0.9853,
+            "is_marginal": false,
+            "source_order": 7,
+            "status": "extracted"
+          },
+          "raw_lines": [
+            {
+              "text": "Street",
+              "bbox": [
+                195.0,
+                727.0,
+                284.0,
+                760.0
+              ],
+              "score": 0.9997
+            },
+            {
+              "text": "9 Rosedale Court",
+              "bbox": [
+                453.0,
+                727.0,
+                694.0,
+                757.0
+              ],
+              "score": 0.9708
+            }
+          ]
+        },
+        {
+          "block_id": 8,
+          "block_type": "TEXT",
+          "bbox": [
+            195.0,
+            813.0,
+            889.0,
+            847.0
+          ],
+          "parsed_content": "Municipality\nOakville",
+          "crop_path": null,
+          "metadata": {
+            "label": "text",
+            "page": 0,
+            "reading_position": 8,
+            "handler": "_handle_text",
+            "n_lines": 2,
+            "mean_line_confidence": 0.9714,
+            "is_marginal": false,
+            "source_order": 8,
+            "status": "extracted"
+          },
+          "raw_lines": [
+            {
+              "text": "Municipality",
+              "bbox": [
+                194.0,
+                809.0,
+                369.0,
+                847.0
+              ],
+              "score": 0.9989
+            },
+            {
+              "text": "Oakville",
+              "bbox": [
+                455.0,
+                810.0,
+                574.0,
+                842.0
+              ],
+              "score": 0.9439
+            }
+          ]
+        },
+        {
+          "block_id": 9,
+          "block_type": "TEXT",
+          "bbox": [
+            198.0,
+            923.0,
+            680.0,
+            953.0
+          ],
+          "parsed_content": "SECTION 3— EVALUATION",
+          "crop_path": null,
+          "metadata": {
+            "label": "text",
+            "page": 0,
+            "reading_position": 9,
+            "handler": "_handle_text",
+            "n_lines": 1,
+            "mean_line_confidence": 0.979,
+            "is_marginal": false,
+            "source_order": 9,
+            "synthetic": true,
+            "status": "extracted"
+          },
+          "raw_lines": [
+            {
+              "text": "SECTION 3— EVALUATION",
+              "bbox": [
+                198.0,
+                923.0,
+                680.0,
+                953.0
+              ],
+              "score": 0.979
+            }
+          ]
+        },
+        {
+          "block_id": 10,
+          "block_type": "TEXT",
+          "bbox": [
+            195.0,
+            1006.0,
+            888.0,
+            1038.0
+          ],
+          "parsed_content": "Numeric Grade\n68",
+          "crop_path": null,
+          "metadata": {
+            "label": "text",
+            "page": 0,
+            "reading_position": 10,
+            "handler": "_handle_text",
+            "n_lines": 2,
+            "mean_line_confidence": 0.9993,
+            "is_marginal": false,
+            "source_order": 10,
+            "status": "extracted"
+          },
+          "raw_lines": [
+            {
+              "text": "Numeric Grade",
+              "bbox": [
+                196.0,
+                1003.0,
+                406.0,
+                1034.0
+              ],
+              "score": 0.9989
+            },
+            {
+              "text": "68",
+              "bbox": [
+                448.0,
+                1000.0,
+                498.0,
+                1036.0
+              ],
+              "score": 0.9997
+            }
+          ]
+        },
+        {
+          "block_id": 11,
+          "block_type": "TEXT",
+          "bbox": [
+            198.0,
+            1090.0,
+            889.0,
+            1124.0
+          ],
+          "parsed_content": "Assessment\nNeeds Improvement",
+          "crop_path": null,
+          "metadata": {
+            "label": "text",
+            "page": 0,
+            "reading_position": 11,
+            "handler": "_handle_text",
+            "n_lines": 2,
+            "mean_line_confidence": 0.9968,
+            "is_marginal": false,
+            "source_order": 11,
+            "status": "extracted"
+          },
+          "raw_lines": [
+            {
+              "text": "Assessment",
+              "bbox": [
+                196.0,
+                1086.0,
+                353.0,
+                1120.0
+              ],
+              "score": 0.9999
+            },
+            {
+              "text": "Needs Improvement",
+              "bbox": [
+                455.0,
+                1086.0,
+                727.0,
+                1121.0
+              ],
+              "score": 0.9937
+            }
+          ]
+        },
+        {
+          "block_id": 12,
+          "block_type": "TEXT",
+          "bbox": [
+            197.0,
+            1242.0,
+            716.0,
+            1270.0
+          ],
+          "parsed_content": "Retain the completed form in the student file.",
+          "crop_path": null,
+          "metadata": {
+            "label": "text",
+            "page": 0,
+            "reading_position": 12,
+            "handler": "_handle_text",
+            "n_lines": 1,
+            "mean_line_confidence": 0.9832,
+            "is_marginal": false,
+            "source_order": 12,
+            "status": "extracted"
+          },
+          "raw_lines": [
+            {
+              "text": "Retain the completed form in the student file.",
+              "bbox": [
+                198.0,
+                1240.0,
+                713.0,
+                1264.0
+              ],
+              "score": 0.9832
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
