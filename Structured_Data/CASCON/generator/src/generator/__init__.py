@@ -17,9 +17,11 @@ resulting :class:`InstanceGraph` in ``instances.json`` is ground truth by
 construction.
 
 :class:`LaTeXRenderer` (Stage 5) renders that graph into compiled PDFs — one per
-root record and its descendants, in one of three layouts — and writes
-``benchmark_manifest.json``, which states for each PDF the exact records,
-attribute values and foreign key tuples it contains.
+root record and its descendants — and writes ``benchmark_manifest.json``, which
+states for each PDF the exact records, attribute values and foreign key tuples it
+contains, along with the layout that PDF turned out to have. There is no list of
+layouts: each document's is invented for it from the records it carries, or from
+a freeform ``layout_hint`` describing the look wanted.
 
 The LaTeX itself is written by the model, not by a template
 (:class:`LLMLaTeXGenerator`), and repaired from the compiler's own error log when
@@ -28,19 +30,21 @@ one, the generated source is read back against the records before it is
 compiled, and anything missing is reported per document in the manifest.
 """
 
+from .config import BACKENDS, GeneratorConfig
 from .instance_generator import (INSTANCE_GENERATION_SYSTEM_PROMPT,
                                  InstanceGenerationError,
                                  ParametricInstanceGenerator,
                                  topological_order, write_instances)
 from .instance_types import InstanceGraph, Record
-from .latex_generator import (LATEX_GENERATION_SYSTEM_PROMPT,
+from .latex_generator import (AUTO_LAYOUT, LATEX_GENERATION_SYSTEM_PROMPT,
                               LATEX_REPAIR_SYSTEM_PROMPT,
                               LaTeXGenerationError, LLMLaTeXGenerator,
-                              escape_latex, extract_latex,
-                              leaked_examples, missing_values)
-from .renderer import (LAYOUT_STYLES, MANIFEST_FILENAME, CompileResult,
-                       DocumentScope, LaTeXRenderer, RenderError,
-                       document_scopes)
+                              escape_latex, extract_latex, layout_declaration,
+                              layout_directive, variant_directive,
+                              leaked_examples,
+                              missing_values, normalize_layout_hint)
+from .renderer import (MANIFEST_FILENAME, CompileResult, DocumentScope,
+                       LaTeXRenderer, RenderError, document_scopes)
 from .schema_generator import (SCHEMA_GENERATION_SYSTEM_PROMPT,
                                ParametricSchemaGenerator,
                                SchemaGenerationError, build_user_prompt,
@@ -51,6 +55,8 @@ from .schema_types import (CARDINALITY, PRIMITIVE_TYPES, Attribute,
                            snake_case)
 
 __all__ = [
+    "GeneratorConfig",
+    "BACKENDS",
     "ParametricSchemaGenerator",
     "ParametricInstanceGenerator",
     "InstanceGenerationError",
@@ -72,7 +78,11 @@ __all__ = [
     "LaTeXGenerationError",
     "LATEX_GENERATION_SYSTEM_PROMPT",
     "LATEX_REPAIR_SYSTEM_PROMPT",
-    "LAYOUT_STYLES",
+    "AUTO_LAYOUT",
+    "layout_directive",
+    "variant_directive",
+    "layout_declaration",
+    "normalize_layout_hint",
     "MANIFEST_FILENAME",
     "SchemaGenerationError",
     "SCHEMA_GENERATION_SYSTEM_PROMPT",

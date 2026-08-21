@@ -27,14 +27,17 @@ from typer.testing import CliRunner  # noqa: E402
 from src.generator import cli as cli_module  # noqa: E402
 from src.generator.instance_types import InstanceGraph, Record  # noqa: E402
 from src.generator.latex_generator import (  # noqa: E402
-    ALLOWED_PACKAGES, HYPHENATION_GUARD, LATEX_GENERATION_SYSTEM_PROMPT,
-    LATEX_REPAIR_SYSTEM_PROMPT, LATEX_RESTORE_SYSTEM_PROMPT, NULL_GLYPH,
+    ALLOWED_PACKAGES, AUTO_LAYOUT, DESIGN_AXES, DESIGN_DEVICES,
+    HYPHENATION_GUARD, LATEX_GENERATION_SYSTEM_PROMPT,
+    LATEX_REPAIR_SYSTEM_PROMPT, LATEX_RESTORE_SYSTEM_PROMPT,
+    LAYOUT_DECLARATION_PREFIX, MAX_DECLARATION_LENGTH, NULL_GLYPH,
     LatexText, LaTeXGenerationError, LLMLaTeXGenerator, escape_latex,
-    extract_latex, harden_source, humanize, layout_instruction,
-    leaked_examples, missing_values, normalize_for_comparison,
-    PROMPT_EXAMPLE_VALUES, recorded_values, unescape_latex)
-from src.generator.renderer import (CONCRETE_LAYOUTS,  # noqa: E402
-                                    LAYOUT_STYLES, MANIFEST_FILENAME,
+    extract_latex, harden_source, humanize, is_auto, layout_declaration,
+    layout_directive, leaked_examples, missing_values,
+    normalize_for_comparison, normalize_layout_hint, PROMPT_EXAMPLE_VALUES,
+    recorded_values, strip_comments, unescape_latex)
+from src.generator.renderer import (AUTO_LAYOUT as RENDERER_AUTO,  # noqa: E402
+                                    MANIFEST_FILENAME,
                                     CompileResult, DocumentScope, LaTeXRenderer,
                                     RenderError, document_scopes, log_errors)
 from src.generator.schema_types import SchemaGraph  # noqa: E402
@@ -124,12 +127,27 @@ def standard_graph() -> InstanceGraph:
         order(4, "customer-__orphan_4__", "$12.00", orphan=True))
 
 
-def faithful_document(records, preamble: str = "") -> str:
+#: Layout hints a caller might actually type. Not one of them is a value the
+#: generator knows about, which is the whole point: there is no list to be off.
+FREEFORM_HINTS = (
+    "1990s technical spec sheet with dense grid lines",
+    "a hand-annotated field inspection sheet, carbon copy",
+    "wide-margin municipal notice, two columns, heavy rules",
+    "terse internal memo on headed paper",
+)
+
+#: What a page declares itself to be. Stands in for a sentence the model wrote.
+DECLARATION = "A ruled dispatch note with a shaded status panel."
+
+
+def faithful_document(records, preamble: str = "",
+                      declaration: str = DECLARATION) -> str:
     """A compilable document carrying every recorded value, properly escaped.
 
     Stands in for a well-behaved model: what the real one is asked for, minus
     the layout flair, so fidelity and compilation can both be checked against a
-    known-good baseline.
+    known-good baseline. It carries a ``% LAYOUT:`` line because a real response
+    is asked for one; pass ``declaration=""`` for a page that did not bother.
     """
     body = []
     for record in records:
@@ -141,10 +159,54 @@ def faithful_document(records, preamble: str = "") -> str:
             else:
                 body.append(r"%s: %s\\" % (escape_latex(humanize(name)),
                                            escape_latex(value)))
-    return ("\\documentclass{article}\n"
+    declared = f"{LAYOUT_DECLARATION_PREFIX} {declaration}\n" if declaration \
+        else ""
+    return ("\\documentclass{article}\n" + declared +
             "\\usepackage[T1]{fontenc}\n" + preamble +
             "\\begin{document}\n" + "\n".join(body) +
             "\n\\end{document}\n")
+
+
+def invented_document(records, declaration: str = DECLARATION) -> str:
+    """A page of the kind the dynamic prompt actually asks for.
+
+    Nothing about its shape is drawn from a known layout: a shaded panel, a
+    two-column body, a ruled grid of line items and a run of prose, all in one
+    document, with the values threaded through wherever they happen to land.
+    The fidelity checks have to hold against *this* as firmly as against a
+    tidy list of labelled fields, because this is what an invented layout looks
+    like and there is no longer a tidy list to fall back on.
+    """
+    root, children = records[0], records[1:]
+    panel = "\n".join(
+        r"\textsc{%s} & %s\\" % (escape_latex(humanize(name)),
+                                escape_latex(value))
+        for name, value in root.attributes.items())
+    rows = []
+    for child in children:
+        cells = " & ".join(escape_latex(v) for v in child.attributes.values())
+        rows.append(cells + r" \\")
+    columns = max(1, max((len(c.attributes) for c in children), default=1))
+    grid = ("\\begin{tabular}{|" + "l|" * columns + "}\n\\hline\n"
+            + "\n\\hline\n".join(rows) + "\n\\hline\n\\end{tabular}\n"
+            ) if rows else ""
+    prose = " ".join(
+        "Logged %s as %s." % (humanize(name), escape_latex(value))
+        for name, value in root.attributes.items() if value is not None)
+    declared = f"{LAYOUT_DECLARATION_PREFIX} {declaration}\n" if declaration \
+        else ""
+    return ("\\documentclass{article}\n" + declared +
+            "\\usepackage[T1]{fontenc}\n"
+            "\\usepackage{multicol}\n\\usepackage{xcolor}\n"
+            "\\usepackage{geometry}\n"
+            "\\begin{document}\n"
+            "\\colorbox{gray!15}{\\parbox{0.9\\linewidth}{\\Large "
+            + escape_latex(root.id) + "}}\n\n"
+            "\\begin{tabular}{ll}\n" + panel + "\n\\end{tabular}\n\n"
+            + grid + "\n"
+            "\\begin{multicols}{2}\n" + prose + "\n\\end{multicols}\n"
+            + "\n".join(r"\fbox{%s}" % escape_latex(c.id) for c in children)
+            + "\n\\end{document}\n")
 
 
 def unescaped_document(records) -> str:
@@ -221,24 +283,49 @@ class TestPromptLeakage(unittest.TestCase):
         tmp = tempfile.mkdtemp()
         self.addCleanup(shutil.rmtree, tmp)
         engine = scripted(responses=[source, source])
-        engine.render_documents(instance, Path(tmp), layout_style="form")
+        engine.render_documents(instance, Path(tmp), layout_hint=AUTO_LAYOUT)
         return engine.manifest, engine
 
     # -- the prompt itself ---------------------------------------------- #
-    def test_no_layout_instruction_hands_over_a_ready_made_value(self):
-        """A complete example sentence with a value in it invites a copy."""
-        for style in CONCRETE_LAYOUTS:
-            instruction = layout_instruction(style)
+    def sample_directives(self):
+        """A directive per hint and per rotation, since all of them vary now."""
+        for hint in (AUTO_LAYOUT,) + FREEFORM_HINTS:
+            for variation in range(len(DESIGN_DEVICES)):
+                yield hint, variation, layout_directive(hint,
+                                                        variation=variation)
+
+    def test_no_layout_directive_hands_over_a_ready_made_value(self):
+        """A complete example sentence with a value in it invites a copy.
+
+        Wider than it was: the directive is now assembled per document out of a
+        rotating device list and a rotating axis, so "the prompt" is a family of
+        prompts and every member of it has to be clean.
+        """
+        for hint, variation, directive in self.sample_directives():
             for example in PROMPT_EXAMPLE_VALUES:
-                with self.subTest(style=style, example=example):
-                    self.assertNotIn(example, instruction)
+                with self.subTest(hint=hint, variation=variation,
+                                  example=example):
+                    self.assertNotIn(example, directive)
+
+    def test_the_device_list_names_no_facts(self):
+        """A device is a shape. A shape cannot be copied onto a page as data.
+
+        This is what makes it safe to widen the list: three named layouts became
+        twelve named devices, and the leak the corpus actually suffered came
+        from a *value* in an example, not from the number of examples.
+        """
+        for device in DESIGN_DEVICES + DESIGN_AXES:
+            with self.subTest(device=device):
+                self.assertFalse(re.search(r"\d", device),
+                                 "a number in a device reads as data")
+                self.assertNotIn("$", device)
 
     def test_generation_prompt_forbids_reusing_its_own_examples(self):
         prompt = LATEX_GENERATION_SYSTEM_PROMPT.lower()
         self.assertIn("show form only", prompt)
         self.assertIn("they are not data", prompt)
 
-    def test_no_layout_instruction_offers_a_form_to_fill_in(self):
+    def test_no_layout_directive_offers_a_form_to_fill_in(self):
         """A fill-in-the-blank sentence gets filled in literally.
 
         The first attempt at fixing the leak replaced the worked example with a
@@ -246,11 +333,18 @@ class TestPromptLeakage(unittest.TestCase):
         llama3.1:8b wrote the angle brackets onto the page HTML-escaped
         (``\\&lt;2021-02-15\\&gt;``) and filled the slots with the wrong
         values. A template is an instruction to copy; the wording has to
-        describe the requirement instead.
+        describe the requirement instead. The same holds for the invention
+        directive, which describes a *task* rather than showing a page.
         """
-        for style in CONCRETE_LAYOUTS:
-            with self.subTest(style=style):
-                self.assertNotIn("<", layout_instruction(style))
+        for hint, variation, directive in self.sample_directives():
+            with self.subTest(hint=hint, variation=variation):
+                self.assertNotIn("<", directive)
+
+    def test_the_declaration_instruction_is_not_a_slot_to_fill(self):
+        """"% LAYOUT: ..." with a bracketed placeholder would be pasted back."""
+        self.assertIn(LAYOUT_DECLARATION_PREFIX,
+                      LATEX_GENERATION_SYSTEM_PROMPT)
+        self.assertIn("not a slot to fill in", LATEX_GENERATION_SYSTEM_PROMPT)
 
     # -- the detector ---------------------------------------------------- #
     def test_a_value_no_record_holds_is_a_leak(self):
@@ -483,9 +577,43 @@ class TestExtractLatex(unittest.TestCase):
 # --------------------------------------------------------------------------- #
 class TestPrompts(unittest.TestCase):
 
+    DOC = "\\documentclass{article}\n\\begin{document}\nx\n\\end{document}"
+
     def records(self):
         return [customer(1, "Halvorsen Freight"),
                 order(1, "customer-001", "$1,240.50")]
+
+    def test_no_prompt_carries_a_stray_line_continuation(self):
+        """A soft-wrapped raw string must not leak its own backslashes.
+
+        The prompts are raw strings, because they are largely LaTeX and every
+        backslash in them has to reach the model intact. A raw string does not
+        honour backslash-newline as a line continuation, so a prompt wrapped for
+        readability and used as written keeps a literal "\\" mid-sentence -- in
+        a prompt whose whole subject is LaTeX, where a stray backslash reads as
+        the start of a command. It also breaks every sentence in two, which is
+        why the fidelity rules could not be matched on. _unfold is what joins
+        them; this is the guard that it ran.
+        """
+        for name, prompt in (
+                ("generation", LATEX_GENERATION_SYSTEM_PROMPT),
+                ("repair", LATEX_REPAIR_SYSTEM_PROMPT),
+                ("restore", LATEX_RESTORE_SYSTEM_PROMPT)):
+            with self.subTest(prompt=name):
+                folded = [line for line in prompt.split("\n")
+                          if re.search(r"(?<!\\)\\$", line)]
+                self.assertEqual(folded, [])
+                # Whole sentences, not fragments ending in a wrap.
+                self.assertNotIn("\\\n", prompt)
+
+    def test_unfolding_keeps_the_latex_the_prompt_is_teaching(self):
+        """The fix must not cost the backslashes the raw string was for."""
+        prompt = LATEX_GENERATION_SYSTEM_PROMPT
+        for literal in (r"\documentclass", r"\&", r"\%", r"\_",
+                        r"\textbackslash{}", r"\toprule", r"\begin{letter}",
+                        r"\\"):
+            with self.subTest(literal=literal):
+                self.assertIn(literal, prompt)
 
     def test_records_are_described_with_names_types_and_values(self):
         described = generator().describe_records(self.records())
@@ -521,26 +649,97 @@ class TestPrompts(unittest.TestCase):
         self.assertIn("customer-__orphan_4__", described)
         self.assertIn("matches no record", described)
 
-    def test_layout_instruction_differs_per_style(self):
-        table, form, letter = (layout_instruction(s) for s in CONCRETE_LAYOUTS)
-        self.assertIn("booktabs", table)
-        self.assertIn("form", form.lower())
-        self.assertIn("prose", letter)
-        self.assertNotIn("tabular", letter.replace("Do not use a tabular", ""))
+    def test_auto_asks_the_model_to_invent_rather_than_choose(self):
+        directive = layout_directive(AUTO_LAYOUT)
+        self.assertIn("invent", directive.lower())
+        self.assertIn("not a menu", directive)
+        # The three shapes the corpus used to have. None of them is named now,
+        # because naming one is what made every corpus contain it.
+        for gone in ("Layout: a tabular document", "Layout: a completed form",
+                     "Layout: a formal letter"):
+            self.assertNotIn(gone, directive)
 
-    def test_unknown_layout_is_rejected(self):
-        with self.assertRaises(ValueError):
-            layout_instruction("origami")
-        with self.assertRaises(ValueError):
-            generator().generate_latex_source([customer(1, "A")], "origami", "d")
+    def test_a_freeform_hint_reaches_the_model_verbatim(self):
+        for hint in FREEFORM_HINTS:
+            with self.subTest(hint=hint):
+                self.assertIn(hint, layout_directive(hint))
+
+    def test_a_freeform_hint_is_marked_as_form_not_fact(self):
+        """A brief mentioning "1990s" must not put 1990 on the page as data."""
+        directive = layout_directive(FREEFORM_HINTS[0])
+        self.assertIn("describes form only", directive)
+        self.assertIn("unless a record below supplies it", directive)
+
+    def test_a_multiline_hint_survives_as_one_quoted_block(self):
+        hint = "spec sheet\n  dense grid lines\n\nno colour"
+        directive = layout_directive(hint)
+        for line in ("spec sheet", "dense grid lines", "no colour"):
+            self.assertIn(f"    {line}", directive)
+
+    def test_no_hint_is_rejected_however_odd(self):
+        """There is no list to be off. That is the point of the refactor."""
+        for hint in ("origami", "", "   ", None, "table", "!!", "x" * 500):
+            with self.subTest(hint=hint):
+                self.assertIsInstance(layout_directive(
+                    normalize_layout_hint(hint)), str)
+        generator(self.DOC).generate_latex_source(
+            [customer(1, "A")], "origami", "d")
+
+    def test_a_blank_hint_means_auto(self):
+        for blank in (None, "", "   ", "\n"):
+            with self.subTest(blank=blank):
+                self.assertEqual(normalize_layout_hint(blank), AUTO_LAYOUT)
+                self.assertTrue(is_auto(blank))
+        self.assertFalse(is_auto(FREEFORM_HINTS[0]))
+        self.assertTrue(is_auto("AUTO"))
+
+    def test_consecutive_documents_are_asked_for_different_pages(self):
+        """--seed forces greedy decoding, so variety has to come from here.
+
+        An identical prompt returns an identical page. If every document in a
+        run were sent the same directive, a seeded corpus would be one layout
+        repeated however many times, which is the failure the fixed enum had.
+        """
+        directives = [layout_directive(AUTO_LAYOUT, variation=i)
+                      for i in range(len(DESIGN_DEVICES))]
+        self.assertEqual(len(set(directives)), len(directives))
+
+    def test_the_rotation_is_stable_for_a_given_document(self):
+        """Same document index, same wording: a rerun reproduces the corpus."""
+        self.assertEqual(layout_directive(AUTO_LAYOUT, variation=3),
+                         layout_directive(AUTO_LAYOUT, variation=3))
+
+    def test_the_rotation_wraps_rather_than_running_out(self):
+        wide = layout_directive(AUTO_LAYOUT, variation=len(DESIGN_DEVICES) * 4)
+        self.assertEqual(wide, layout_directive(AUTO_LAYOUT, variation=0))
+        for device in DESIGN_DEVICES:
+            self.assertIn(device, wide)
 
     def test_user_prompt_carries_domain_layout_and_records(self):
-        prompt = generator().build_user_prompt(self.records(), "table",
+        prompt = generator().build_user_prompt(self.records(),
+                                               FREEFORM_HINTS[0],
                                                "small_business")
         self.assertIn("Domain: small_business", prompt)
-        self.assertIn("booktabs", prompt)
+        self.assertIn(FREEFORM_HINTS[0], prompt)
         self.assertIn("Halvorsen Freight", prompt)
         self.assertIn("2 in total", prompt)
+
+    def test_the_generators_own_hint_is_the_default_for_every_document(self):
+        gen = LLMLaTeXGenerator(client=FakeLatexClient(self.DOC),
+                                schema=schema(),
+                                layout_hint=FREEFORM_HINTS[1])
+        self.assertIn(FREEFORM_HINTS[1],
+                      gen.build_user_prompt(self.records()))
+        self.assertIn(FREEFORM_HINTS[2],
+                      gen.build_user_prompt(self.records(), FREEFORM_HINTS[2]))
+
+    def test_the_directive_sent_is_kept_for_the_manifest(self):
+        gen = generator(self.DOC)
+        gen.generate_latex_source([customer(1, "A")], FREEFORM_HINTS[0], "d",
+                                  variation=2)
+        self.assertEqual(gen.last_layout_directive,
+                         layout_directive(FREEFORM_HINTS[0], variation=2))
+        self.assertIn(gen.last_layout_directive, gen.client.calls[0][1])
 
     def test_observed_compile_failures_are_named_in_both_prompts(self):
         """Each rule here is a failure seen on a real run, not a precaution."""
@@ -558,6 +757,57 @@ class TestPrompts(unittest.TestCase):
         for package in ("geometry", "booktabs", "longtable"):
             self.assertIn(package, prompt)
         self.assertIn("Do not use \\write18", prompt)
+
+    def test_fidelity_is_stated_as_surviving_the_invented_layout(self):
+        """The design is free; what is on the page is not.
+
+        A model told to invent a page will invent one that suits the space it
+        has, and the cheapest way to make a design fit is to leave a field out.
+        The rule has to say so in the same breath as the licence to design.
+        """
+        prompt = LATEX_GENERATION_SYSTEM_PROMPT
+        self.assertIn("100% of what you were given has to be on it", prompt)
+        self.assertIn("EVERY record you are given appears on the page", prompt)
+        self.assertIn("the layout is wrong", prompt)
+        self.assertIn("A linked child record does not lose fields", prompt)
+
+    def test_forbidden_inventions_are_named_not_implied(self):
+        prompt = LATEX_GENERATION_SYSTEM_PROMPT
+        for invention in ("totals", "reference numbers", "signatures",
+                          "legal wording"):
+            with self.subTest(invention=invention):
+                self.assertIn(invention, prompt)
+        self.assertIn("Headings, captions, column titles", prompt)
+
+    def test_the_prompt_licenses_a_design_rather_than_a_template(self):
+        prompt = LATEX_GENERATION_SYSTEM_PROMPT
+        self.assertIn("You are not filling in a template", prompt)
+        self.assertIn("document designer", prompt)
+
+    def test_the_page_is_asked_to_declare_its_own_layout(self):
+        self.assertIn(LAYOUT_DECLARATION_PREFIX,
+                      LATEX_GENERATION_SYSTEM_PROMPT)
+        self.assertIn("straight after \\documentclass",
+                      LATEX_GENERATION_SYSTEM_PROMPT)
+
+    def test_a_comment_is_named_as_not_being_the_page(self):
+        """Twice over: a value in a comment is a dropped value, not a kept one."""
+        self.assertIn("not on the page", LATEX_GENERATION_SYSTEM_PROMPT)
+        self.assertIn("comments are not", LATEX_RESTORE_SYSTEM_PROMPT.lower())
+
+    def test_the_widened_package_set_is_the_one_offered(self):
+        """A model told to shade a box needs the package that shades boxes."""
+        for package in ("multicol", "xcolor", "colortbl", "ragged2e",
+                        "setspace"):
+            with self.subTest(package=package):
+                self.assertIn(package, ALLOWED_PACKAGES)
+                self.assertIn(package, LATEX_GENERATION_SYSTEM_PROMPT)
+                self.assertIn(package, LATEX_REPAIR_SYSTEM_PROMPT)
+
+    def test_repair_is_told_not_to_redesign_the_page(self):
+        """The layout is the document's own; simplifying it is not a fix."""
+        self.assertIn("Do not redesign the page", LATEX_REPAIR_SYSTEM_PROMPT)
+        self.assertIn(LAYOUT_DECLARATION_PREFIX, LATEX_REPAIR_SYSTEM_PROMPT)
 
     def test_allowed_packages_are_the_ones_named_in_the_prompt(self):
         for package in ALLOWED_PACKAGES:
@@ -718,7 +968,7 @@ class TestFidelityLoop(unittest.TestCase):
         tmp = tempfile.mkdtemp()
         self.addCleanup(shutil.rmtree, tmp)
         engine = scripted(responses=responses, **kwargs)
-        engine.render_documents(instance, Path(tmp), layout_style="form")
+        engine.render_documents(instance, Path(tmp), layout_hint=AUTO_LAYOUT)
         return engine.manifest, Path(tmp), engine
 
     def test_complete_document_needs_no_restoration(self):
@@ -784,7 +1034,7 @@ class TestRepairLoop(unittest.TestCase):
         self.addCleanup(shutil.rmtree, tmp)
         engine = scripted(outcomes=outcomes, records=records, **kwargs)
         pdfs = engine.render_documents(instance, Path(tmp),
-                                       layout_style="form",
+                                       layout_hint=AUTO_LAYOUT,
                                        max_retries=kwargs.pop("max_retries", 2))
         return engine.manifest, Path(tmp), engine, pdfs
 
@@ -834,7 +1084,7 @@ class TestRepairLoop(unittest.TestCase):
         self.addCleanup(shutil.rmtree, tmp)
         engine = scripted(outcomes=["Bad", True], records=records)
         pdfs = engine.render_documents(instance, Path(tmp),
-                                       layout_style="form", max_retries=0)
+                                       layout_hint=AUTO_LAYOUT, max_retries=0)
         self.assertEqual(pdfs, [])
         self.assertEqual(engine.manifest["documents"][0]["attempts"], 1)
         self.assertNotIn("repairs", engine.manifest["documents"][0])
@@ -849,7 +1099,7 @@ class TestRepairLoop(unittest.TestCase):
         engine = scripted(outcomes=["Bad", True],
                           responses=[faithful_document(records), marker],
                           records=records)
-        engine.render_documents(instance, Path(tmp), layout_style="form")
+        engine.render_documents(instance, Path(tmp), layout_hint=AUTO_LAYOUT)
         self.assertEqual(len(engine.compiled_sources), 2)
         self.assertNotIn("% REPAIRED", engine.compiled_sources[0])
         self.assertIn("% REPAIRED", engine.compiled_sources[1])
@@ -861,7 +1111,7 @@ class TestRepairLoop(unittest.TestCase):
         self.addCleanup(shutil.rmtree, tmp)
         engine = scripted(outcomes=["Missing $ inserted.", True],
                           records=records)
-        engine.render_documents(instance, Path(tmp), layout_style="form")
+        engine.render_documents(instance, Path(tmp), layout_hint=AUTO_LAYOUT)
         repair_call = [c for c in engine.generator.client.calls
                        if c[0] == LATEX_REPAIR_SYSTEM_PROMPT]
         self.assertEqual(len(repair_call), 1)
@@ -878,7 +1128,7 @@ class TestRepairLoop(unittest.TestCase):
                           responses=[faithful_document(records), None, None],
                           records=records)
         pdfs = engine.render_documents(instance, Path(tmp),
-                                       layout_style="form", max_retries=2)
+                                       layout_hint=AUTO_LAYOUT, max_retries=2)
         self.assertEqual(pdfs, [])
         entry = engine.manifest["documents"][0]
         self.assertEqual(entry["attempts"], 1)
@@ -892,7 +1142,7 @@ class TestRepairLoop(unittest.TestCase):
         engine = scripted(outcomes=[True],
                           responses=["not latex", "still not", "nope"],
                           records=records)
-        pdfs = engine.render_documents(instance, Path(tmp), layout_style="form")
+        pdfs = engine.render_documents(instance, Path(tmp), layout_hint=AUTO_LAYOUT)
         entry = engine.manifest["documents"][0]
         self.assertEqual(pdfs, [])
         self.assertEqual(entry["status"], "failed")
@@ -907,7 +1157,7 @@ class TestRepairLoop(unittest.TestCase):
         self.addCleanup(shutil.rmtree, tmp)
         engine = scripted(outcomes=["Bad", "Bad", "Bad", True], records=records)
         pdfs = engine.render_documents(instance, Path(tmp),
-                                       layout_style="form", max_retries=2)
+                                       layout_hint=AUTO_LAYOUT, max_retries=2)
         statuses = [d["status"] for d in engine.manifest["documents"]]
         self.assertEqual(statuses, ["failed", "compiled"])
         self.assertEqual(len(pdfs), 1)
@@ -990,44 +1240,154 @@ class TestDocumentScopes(unittest.TestCase):
 
 
 # --------------------------------------------------------------------------- #
-# 8. Layout selection
+# 8. Open-ended layout hints
 # --------------------------------------------------------------------------- #
-class TestLayoutSelection(unittest.TestCase):
+class TestLayoutHints(unittest.TestCase):
+    """There is no layout to select any more, only a hint to pass on."""
 
-    def test_explicit_style_is_used_everywhere(self):
-        engine = scripted()
-        for style in CONCRETE_LAYOUTS:
-            for scope in document_scopes(standard_graph()):
-                self.assertEqual(engine._select_layout(scope, style), style)
+    def render(self, hint, records=None, **kwargs):
+        records = records or [customer(1, "A")]
+        instance = graph(*records)
+        tmp = tempfile.mkdtemp()
+        self.addCleanup(shutil.rmtree, tmp)
+        engine = scripted(records=records, **kwargs)
+        engine.render_documents(instance, Path(tmp), layout_hint=hint)
+        return engine
 
-    def test_auto_mixes_layouts_across_a_corpus(self):
-        engine = scripted()
-        chosen = {engine._select_layout(s, "auto")
-                  for s in document_scopes(standard_graph())}
-        self.assertGreater(len(chosen), 1, "auto rendered everything the same")
+    def test_a_freeform_hint_reaches_the_prompt_verbatim(self):
+        for hint in FREEFORM_HINTS:
+            with self.subTest(hint=hint):
+                engine = self.render(hint)
+                self.assertIn(hint, engine.generator.client.calls[0][1])
 
-    def test_auto_never_tables_a_childless_scope(self):
-        engine = scripted()
-        for scope in document_scopes(graph(customer(1, "A"), customer(2, "B"))):
-            self.assertIn(engine._select_layout(scope, "auto"),
-                          ("form", "letter"))
+    def test_an_arbitrary_hint_is_not_rejected(self):
+        """"origami" used to be the test for an invalid style. It is now valid."""
+        engine = self.render("origami, folded, printed on one side")
+        self.assertEqual(engine.manifest["documents"][0]["status"], "compiled")
+        self.assertEqual(engine.manifest["metadata"]["layout_hint"],
+                         "origami, folded, printed on one side")
 
-    def test_layout_reaches_the_prompt(self):
+    def test_a_blank_hint_is_recorded_as_auto(self):
+        engine = self.render("   ")
+        self.assertEqual(engine.manifest["metadata"]["layout_hint"],
+                         AUTO_LAYOUT)
+        self.assertEqual(engine.manifest["metadata"]["layout_mode"],
+                         "invented")
+
+    def test_a_brief_is_marked_as_a_brief_not_an_invention(self):
+        engine = self.render(FREEFORM_HINTS[0])
+        self.assertEqual(engine.manifest["metadata"]["layout_mode"], "brief")
+
+    def test_a_hint_that_is_not_text_is_rejected(self):
+        """The one mistake left: passing the old enum as a list or a dict."""
+        with tempfile.TemporaryDirectory() as tmp:
+            for bad in (["form"], {"style": "form"}, 3):
+                with self.subTest(bad=bad):
+                    with self.assertRaises(ValueError):
+                        scripted().render_documents(standard_graph(), Path(tmp),
+                                                    layout_hint=bad)
+
+    def test_each_document_in_a_corpus_gets_a_different_directive(self):
+        """Three scopes, three prompts. Under a seed this is the only variety."""
+        instance = standard_graph()
+        tmp = tempfile.mkdtemp()
+        self.addCleanup(shutil.rmtree, tmp)
+        engine = scripted(records=list(instance.records))
+        engine.render_documents(instance, Path(tmp))
+        prompts = [entry["layout_prompt"]
+                   for entry in engine.manifest["documents"]]
+        self.assertEqual(len(prompts), 3)
+        self.assertEqual(len(set(prompts)), 3, "every document asked the same")
+        for entry, prompt in zip(engine.manifest["documents"], prompts):
+            sent = [u for _, u in engine.generator.client.calls if prompt in u]
+            self.assertTrue(sent, f"{entry['document_id']} was sent something "
+                                  f"other than the directive recorded for it")
+
+    def test_the_variation_follows_the_document_not_the_call_order(self):
+        """A rerun reproduces the corpus, document by document."""
+        instance = standard_graph()
+        first = scripted(records=list(instance.records))
+        second = scripted(records=list(instance.records))
+        for engine in (first, second):
+            tmp = tempfile.mkdtemp()
+            self.addCleanup(shutil.rmtree, tmp)
+            engine.render_documents(instance, Path(tmp))
+        self.assertEqual([e["layout_prompt"] for e in first.manifest["documents"]],
+                         [e["layout_prompt"] for e in second.manifest["documents"]])
+
+
+class TestLayoutDeclaration(unittest.TestCase):
+    """Reading back the layout the model invented, since nothing else knows it."""
+
+    def test_a_declaration_is_read_off_the_page(self):
+        source = faithful_document([customer(1, "A")],
+                                   declaration="A tinted two-column docket.")
+        self.assertEqual(layout_declaration(source),
+                         "A tinted two-column docket.")
+
+    def test_it_is_found_however_the_model_spaced_it(self):
+        for line in ("%LAYOUT:A docket.", "%%  layout :  A docket.",
+                     "   % Layout:   A docket.   "):
+            with self.subTest(line=line):
+                self.assertEqual(
+                    layout_declaration(f"\\documentclass{{article}}\n{line}\n"),
+                    "A docket.")
+
+    def test_a_page_that_never_declared_itself_is_not_an_error(self):
+        source = faithful_document([customer(1, "A")], declaration="")
+        self.assertIsNone(layout_declaration(source))
+        self.assertIsNone(layout_declaration(""))
+        self.assertIsNone(layout_declaration(None))
+
+    def test_an_essay_is_trimmed_rather_than_stored_whole(self):
+        long = "A docket " * 200
+        source = f"\\documentclass{{article}}\n% LAYOUT: {long}\n"
+        declared = layout_declaration(source)
+        self.assertLessEqual(len(declared), MAX_DECLARATION_LENGTH + 3)
+        self.assertTrue(declared.endswith("..."))
+
+    def test_the_declaration_is_what_the_manifest_records(self):
+        records = [customer(1, "Halvorsen Freight")]
+        instance = graph(*records)
+        tmp = tempfile.mkdtemp()
+        self.addCleanup(shutil.rmtree, tmp)
+        source = invented_document(records,
+                                   declaration="A shaded dispatch panel.")
+        engine = scripted(responses=[source, source])
+        engine.render_documents(instance, Path(tmp))
+        entry = engine.manifest["documents"][0]
+        self.assertEqual(entry["layout_declared"], "A shaded dispatch panel.")
+        self.assertEqual(entry["layout"], "A shaded dispatch panel.")
+        self.assertEqual(entry["layout_hint"], AUTO_LAYOUT)
+
+    def test_an_undeclared_page_falls_back_to_the_hint_and_says_so(self):
+        records = [customer(1, "Halvorsen Freight")]
+        instance = graph(*records)
+        tmp = tempfile.mkdtemp()
+        self.addCleanup(shutil.rmtree, tmp)
+        source = faithful_document(records, declaration="")
+        engine = scripted(responses=[source, source])
+        engine.render_documents(instance, Path(tmp))
+        entry = engine.manifest["documents"][0]
+        self.assertIsNone(entry["layout_declared"])
+        self.assertEqual(entry["layout"], AUTO_LAYOUT)
+        self.assertTrue(any("did not declare its layout" in w
+                            for w in engine.warnings))
+
+    def test_a_failed_document_still_records_what_it_was_asked_to_be(self):
         records = [customer(1, "A")]
         instance = graph(*records)
-        with tempfile.TemporaryDirectory() as tmp:
-            engine = scripted(records=records)
-            engine.render_documents(instance, Path(tmp), layout_style="letter")
-        self.assertIn("formal letter", engine.generator.client.calls[0][1])
-
-    def test_unknown_style_is_rejected(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            with self.assertRaises(ValueError):
-                scripted().render_documents(standard_graph(), Path(tmp),
-                                            layout_style="origami")
-
-    def test_style_list_matches_the_layouts(self):
-        self.assertEqual(set(LAYOUT_STYLES), {"auto"} | set(CONCRETE_LAYOUTS))
+        tmp = tempfile.mkdtemp()
+        self.addCleanup(shutil.rmtree, tmp)
+        engine = scripted(outcomes=[True],
+                          responses=["not latex", "still not", "nope"],
+                          records=records)
+        engine.render_documents(instance, Path(tmp),
+                                layout_hint=FREEFORM_HINTS[0])
+        entry = engine.manifest["documents"][0]
+        self.assertEqual(entry["status"], "failed")
+        self.assertEqual(entry["layout_hint"], FREEFORM_HINTS[0])
+        self.assertIn(FREEFORM_HINTS[0], entry["layout_prompt"])
 
 
 # --------------------------------------------------------------------------- #
@@ -1048,7 +1408,7 @@ class TestRealCompilation(unittest.TestCase):
                                         schema=schema(), seed=1),
             **kwargs)
         pdfs = engine.render_documents(instance, Path(tmp),
-                                      layout_style="form")
+                                      layout_hint=AUTO_LAYOUT)
         return engine, Path(tmp), pdfs
 
     def test_a_good_document_compiles(self):
@@ -1247,7 +1607,11 @@ class TestManifest(unittest.TestCase):
         meta = manifest["metadata"]
         self.assertEqual(meta["stage"], "5:rendered_documents")
         self.assertEqual(meta["source"], "llm_generated_latex")
-        self.assertEqual(meta["layout_style"], "auto")
+        # What the run asked for, not a style it chose from: "auto" is the one
+        # hint that is not a brief, and it means the layout was invented per
+        # document. `layout_mode` is what tells the two apart.
+        self.assertEqual(meta["layout_hint"], "auto")
+        self.assertEqual(meta["layout_mode"], "invented")
         self.assertEqual(meta["max_retries"], 2)
         self.assertTrue(meta["keep_tex"])
         self.assertEqual(meta["model"], "llama3.3:70b")
@@ -1272,6 +1636,293 @@ class TestManifest(unittest.TestCase):
         summary = engine.summary()
         self.assertIn("value-complete", summary)
         self.assertIn("compiled=3", summary)
+
+
+# --------------------------------------------------------------------------- #
+# 10b. Several layouts of one subgraph (--layouts-per-graph)
+# --------------------------------------------------------------------------- #
+class PerScopeClient(FakeLatexClient):
+    """A well-behaved model: answers with the records it was actually given.
+
+    ``CyclingLatexClient`` echoes one fixed record list into every document,
+    which is fine when every test renders the whole graph as one page but wrong
+    here: a variant of subgraph 2 that printed subgraph 1's values would be a
+    leak, and the leak check would be measuring the fake rather than the code.
+    So this reads the identifiers and values back out of the prompt it was sent,
+    which is also what makes it faithful *per variant*.
+    """
+
+    #: One declaration per call, so the variants of one subgraph do not all
+    #: declare themselves identically and `layouts` stays a meaningful tally.
+    def __init__(self):
+        super().__init__()
+        self.prompts = []
+
+    def complete(self, system, user):
+        self.calls.append((system, user))
+        self.prompts.append(user)
+        body = []
+        for identifier in re.findall(r"\[identifier: ([^\],]+)", user):
+            body.append(r"\section*{%s}" % escape_latex(identifier.strip()))
+        for label, value in re.findall(r"^  (.+?) = (.*)$", user, re.MULTILINE):
+            printed = NULL_GLYPH if value.startswith("(blank") \
+                else escape_latex(value)
+            body.append(r"%s: %s\\" % (escape_latex(label), printed))
+        declaration = f"Variant {len(self.prompts)} of one subgraph."
+        return ("\\documentclass{article}\n"
+                f"{LAYOUT_DECLARATION_PREFIX} {declaration}\n"
+                "\\usepackage[T1]{fontenc}\n"
+                "\\begin{document}\n" + "\n".join(body) +
+                "\n\\end{document}\n")
+
+
+class TestLayoutsPerGraph(unittest.TestCase):
+    """One relational subgraph, several pages, identical ground truth.
+
+    The point of the flag is that the records are held fixed while the layout
+    moves, so an extractor that recovers the tree from every variant has read
+    the data and one that manages it for a single variant has learnt a shape.
+    Every test here therefore checks the invariant *and* that the variants are
+    actually different.
+    """
+
+    #: Two subgraphs: a customer with one order, and a childless customer.
+    def two_subgraphs(self) -> InstanceGraph:
+        return graph(customer(1, "Halvorsen Freight"),
+                     order(1, "customer-001", "$1,240.50"),
+                     customer(2, "Kestrel Supplies", "k@example.invalid"))
+
+    def render(self, layouts_per_graph, instance=None, **kwargs):
+        instance = instance or self.two_subgraphs()
+        tmp = tempfile.mkdtemp()
+        self.addCleanup(shutil.rmtree, tmp)
+        client = PerScopeClient()
+        engine = ScriptedRenderer(
+            generator=LLMLaTeXGenerator(client=client, schema=schema(), seed=1),
+            seed=1, **kwargs)
+        pdfs = engine.render_documents(
+            instance, Path(tmp), layouts_per_graph=layouts_per_graph)
+        return engine.manifest, engine, client, pdfs, Path(tmp)
+
+    # -- the count ---------------------------------------------------------- #
+    def test_three_layouts_of_two_subgraphs_is_six_generations(self):
+        """The headline arithmetic: 2 subgraphs x 3 layouts = 6 documents."""
+        manifest, _, client, pdfs, _ = self.render(3)
+        self.assertEqual(len(client.prompts), 6)
+        self.assertEqual(len(manifest["documents"]), 6)
+        self.assertEqual(len(pdfs), 6)
+        self.assertEqual(manifest["summary"]["documents"], 6)
+        self.assertEqual(manifest["summary"]["documents_expected"], 6)
+        self.assertEqual(manifest["metadata"]["layouts_per_graph"], 3)
+        self.assertEqual(manifest["metadata"]["subgraphs"], 2)
+
+    def test_corpus_size_is_the_product_for_any_setting(self):
+        """Predictable scaling is the other half of what the flag is for."""
+        for per_graph in (1, 2, 4):
+            with self.subTest(layouts_per_graph=per_graph):
+                manifest, _, client, _, _ = self.render(per_graph)
+                self.assertEqual(len(manifest["documents"]), 2 * per_graph)
+                self.assertEqual(len(client.prompts), 2 * per_graph)
+
+    def test_one_layout_renders_exactly_what_it_always_did(self):
+        """The default has to be a no-op, filenames included."""
+        manifest, _, _, pdfs, _ = self.render(1)
+        self.assertEqual([e["document_id"] for e in manifest["documents"]],
+                         ["doc-001-customer_001", "doc-002-customer_002"])
+        self.assertEqual([p.name for p in pdfs],
+                         ["doc-001-customer_001.pdf",
+                          "doc-002-customer_002.pdf"])
+        for entry in manifest["documents"]:
+            with self.subTest(document=entry["document_id"]):
+                self.assertEqual(entry["layout_variant_index"], 0)
+                self.assertEqual(entry["layout_variants"], 1)
+
+    # -- the manifest ------------------------------------------------------- #
+    def test_manifest_logs_every_variant_with_its_subgraph_and_index(self):
+        manifest, _, _, _, _ = self.render(3)
+        seen = [(e["subgraph_id"], e["layout_variant_index"])
+                for e in manifest["documents"]]
+        self.assertEqual(seen, [("subgraph-001", 0), ("subgraph-001", 1),
+                                ("subgraph-001", 2), ("subgraph-002", 0),
+                                ("subgraph-002", 1), ("subgraph-002", 2)])
+        for entry in manifest["documents"]:
+            with self.subTest(document=entry["document_id"]):
+                self.assertEqual(entry["layout_variants"], 3)
+                self.assertEqual(entry["status"], "compiled")
+
+    def test_document_ids_and_files_stay_unique_across_variants(self):
+        manifest, _, _, pdfs, out = self.render(3)
+        ids = [e["document_id"] for e in manifest["documents"]]
+        self.assertEqual(len(ids), len(set(ids)))
+        self.assertEqual(ids, ["doc-001-customer_001-v1",
+                               "doc-001-customer_001-v2",
+                               "doc-001-customer_001-v3",
+                               "doc-002-customer_002-v1",
+                               "doc-002-customer_002-v2",
+                               "doc-002-customer_002-v3"])
+        self.assertEqual(len({p.name for p in pdfs}), 6)
+        for entry in manifest["documents"]:
+            with self.subTest(document=entry["document_id"]):
+                self.assertTrue((out / entry["pdf"]).is_file())
+
+    def test_variants_of_one_subgraph_carry_identical_ground_truth(self):
+        """The invariant the whole feature rests on."""
+        manifest, _, _, _, _ = self.render(3)
+        by_subgraph = {}
+        for entry in manifest["documents"]:
+            by_subgraph.setdefault(entry["subgraph_id"], []).append(entry)
+        self.assertEqual(len(by_subgraph), 2)
+        for subgraph_id, variants in by_subgraph.items():
+            with self.subTest(subgraph=subgraph_id):
+                self.assertEqual(len(variants), 3)
+                # Same records, same root, same joins - only the page differs.
+                self.assertEqual({tuple(v["record_ids"]) for v in variants},
+                                 {tuple(variants[0]["record_ids"])})
+                self.assertEqual({v["root_record"] for v in variants},
+                                 {variants[0]["root_record"]})
+                self.assertEqual(
+                    {json.dumps(v["joins"], sort_keys=True) for v in variants},
+                    {json.dumps(variants[0]["joins"], sort_keys=True)})
+
+    def test_records_are_covered_once_per_variant_not_once_overall(self):
+        """Coverage counts records, not pages, however many pages carry them."""
+        manifest, _, _, _, _ = self.render(3)
+        self.assertEqual(manifest["summary"]["records_covered"], 3)
+        self.assertEqual(manifest["summary"]["records_total"], 3)
+
+    def test_a_failed_variant_does_not_take_its_siblings_with_it(self):
+        """Sibling independence, and why the count is not a division.
+
+        The first subgraph's second variant fails every attempt; its two
+        siblings and the whole of the second subgraph still render, so five of
+        six documents survive — but subgraph 1 is no longer usable as an
+        invariance case, which is what `subgraphs_fully_rendered` says.
+        """
+        outcomes = [True,                    # sg1 v1
+                    "! Undefined control sequence.",  # sg1 v2, and its repairs
+                    "! Undefined control sequence.",
+                    "! Undefined control sequence.",
+                    True, True, True]        # sg1 v3, sg2 v1-v3
+        manifest, _, _, pdfs, _ = self.render(3, outcomes=outcomes)
+        statuses = {e["document_id"]: e["status"]
+                    for e in manifest["documents"]}
+        self.assertEqual(statuses["doc-001-customer_001-v2"], "failed")
+        self.assertEqual(len(pdfs), 5)
+        self.assertEqual(manifest["summary"]["compiled"], 5)
+        self.assertEqual(manifest["summary"]["failed"], 1)
+        # 5 // 3 would claim 1; only subgraph 2 is actually complete.
+        self.assertEqual(manifest["summary"]["subgraphs_fully_rendered"], 1)
+
+    # -- the prompts -------------------------------------------------------- #
+    def test_each_variant_is_asked_for_a_different_page(self):
+        """Distinct prompts are the mechanism, not a nicety.
+
+        ``--seed`` forces greedy decoding, so two variants sent the same prompt
+        come back as the same page and the invariance test is vacuous.
+        """
+        manifest, _, client, _, _ = self.render(3)
+        self.assertEqual(len(set(client.prompts)), 6)
+        prompts = [e["layout_prompt"] for e in manifest["documents"]]
+        self.assertEqual(len(set(prompts)), 6)
+
+    def test_the_prompt_tells_the_model_it_is_one_of_several(self):
+        _, _, client, _, _ = self.render(3)
+        first = client.prompts[0]
+        self.assertIn("This is layout 1 of 3", first)
+        self.assertIn("must not resemble its siblings", first)
+        # And that the shared records are not negotiable.
+        self.assertIn("as completely as on any other variant", first)
+        self.assertIn("This is layout 2 of 3", client.prompts[1])
+
+    def test_a_single_layout_run_is_told_nothing_about_variants(self):
+        _, _, client, _, _ = self.render(1)
+        for prompt in client.prompts:
+            with self.subTest():
+                self.assertNotIn("This is layout", prompt)
+                self.assertNotIn("siblings", prompt)
+
+    def test_no_variant_is_handed_a_named_layout(self):
+        """The flag must not smuggle the old enum back in one level down.
+
+        Naming variant 1 an invoice and variant 2 a memo would cap the corpus at
+        as many shapes as the list had names, which is the failure Stage 5 was
+        rewritten to remove.
+        """
+        _, _, client, _, _ = self.render(3)
+        for position, prompt in enumerate(client.prompts, start=1):
+            with self.subTest(variant=position):
+                variant_clause = prompt.split("For a sense of the range")[0]
+                for named in ("invoice", "memo", "letter", "form",
+                              "spec sheet", "receipt", "statement"):
+                    # Whole words: "memo" must not match "memorised", which is
+                    # a sentence about what the corpus is for, not a layout.
+                    self.assertIsNone(
+                        re.search(rf"\b{named}\b", variant_clause,
+                                  re.IGNORECASE),
+                        f"variant clause names a layout: {named!r}")
+
+    # -- fidelity, per variant ---------------------------------------------- #
+    def test_fidelity_is_checked_independently_for_every_variant(self):
+        manifest, _, _, _, _ = self.render(3)
+        for entry in manifest["documents"]:
+            with self.subTest(document=entry["document_id"]):
+                fidelity = entry["fidelity"]
+                self.assertEqual(fidelity["values_missing"], 0)
+                self.assertEqual(fidelity["examples_leaked"], 0)
+                # Every variant was measured, not just the first of the set.
+                self.assertGreater(fidelity["values_expected"], 0)
+        self.assertEqual(manifest["summary"]["values_missing"], 0)
+        self.assertEqual(manifest["summary"]["examples_leaked"], 0)
+        self.assertEqual(manifest["summary"]["documents_value_complete"], 6)
+
+    def test_a_leak_in_one_variant_is_reported_against_that_variant(self):
+        """``leaked_examples`` runs per page, so one bad variant is one report.
+
+        The leaking client copies a prompt example onto every page it writes;
+        only the subgraph whose records do not hold that value can leak it, and
+        each of its variants is charged separately.
+        """
+        leaked = PROMPT_EXAMPLE_VALUES[0]
+
+        class LeakingClient(PerScopeClient):
+            def complete(self, system, user):
+                source = super().complete(system, user)
+                sentence = (r"\par The balance on file is %s.\par"
+                            % escape_latex(leaked))
+                return source.replace(r"\end{document}",
+                                      sentence + "\n" + r"\end{document}")
+
+        tmp = tempfile.mkdtemp()
+        self.addCleanup(shutil.rmtree, tmp)
+        client = LeakingClient()
+        engine = ScriptedRenderer(
+            generator=LLMLaTeXGenerator(client=client, schema=schema(), seed=1),
+            seed=1)
+        engine.render_documents(self.two_subgraphs(), Path(tmp),
+                                layouts_per_graph=3)
+        charged = {e["document_id"]: e["fidelity"]["examples_leaked"]
+                   for e in engine.manifest["documents"]}
+        # customer-001's subgraph holds $1,240.50 on its order, so printing it
+        # is data. customer-002's does not, so all three of its variants leak.
+        for variant in ("v1", "v2", "v3"):
+            with self.subTest(variant=variant):
+                self.assertEqual(charged[f"doc-001-customer_001-{variant}"], 0)
+                self.assertEqual(charged[f"doc-002-customer_002-{variant}"], 1)
+        self.assertEqual(engine.manifest["summary"]["examples_leaked"], 3)
+
+    # -- validation --------------------------------------------------------- #
+    def test_zero_or_negative_is_rejected(self):
+        for bad in (0, -1):
+            with self.subTest(layouts_per_graph=bad):
+                with self.assertRaises(ValueError) as caught:
+                    self.render(bad)
+                self.assertIn("layouts_per_graph", str(caught.exception))
+
+    def test_a_non_integer_is_rejected(self):
+        for bad in ("3", 2.5, None, True):
+            with self.subTest(layouts_per_graph=bad):
+                with self.assertRaises(ValueError):
+                    self.render(bad)
 
 
 # --------------------------------------------------------------------------- #
@@ -1390,7 +2041,8 @@ class TestCLI(unittest.TestCase):
         self.assertEqual(lines[0], str(out / "schema.json"))
         self.assertEqual(lines[1], str(out / "instances.json"))
         self.assertEqual(lines[2], str(out / MANIFEST_FILENAME))
-        self.assertEqual(len(lines), 3 + len(pdfs))
+        self.assertEqual(lines[3], str(out / cli_module.RUN_CONFIG_FILENAME))
+        self.assertEqual(len(lines), 4 + len(pdfs))
 
     @needs_tex
     def test_one_llm_call_per_document(self):
@@ -1406,12 +2058,47 @@ class TestCLI(unittest.TestCase):
         self.assertEqual(manifest["metadata"]["max_retries"], 5)
 
     @needs_tex
-    def test_layout_style_flag_is_honoured(self):
-        result, out, _ = self.run_generate("--layout-style", "letter")
+    def test_freeform_layout_brief_reaches_every_document(self):
+        """An arbitrary sentence is a brief, and each PDF records it.
+
+        The flag no longer names a template, so "honoured" cannot mean "the
+        letter branch ran". It means the brief was passed through unaltered and
+        quoted into the directive that produced each page.
+        """
+        brief = FREEFORM_HINTS[0]
+        result, out, _ = self.run_generate("--layout-style", brief)
         self.assertEqual(result.exit_code, 0, stderr_of(result))
         manifest = json.loads((out / MANIFEST_FILENAME).read_text())
-        self.assertEqual(manifest["metadata"]["layout_style"], "letter")
-        self.assertEqual(list(manifest["metadata"]["layouts"]), ["letter"])
+        meta = manifest["metadata"]
+        self.assertEqual(meta["layout_hint"], brief)
+        self.assertEqual(meta["layout_mode"], "brief")
+        self.assertTrue(manifest["documents"])
+        for entry in manifest["documents"]:
+            with self.subTest(document=entry["document_id"]):
+                self.assertEqual(entry["layout_hint"], brief)
+                # The brief itself, verbatim, inside the prompt that was sent.
+                self.assertIn(brief, entry["layout_prompt"])
+
+    @needs_tex
+    def test_run_config_records_the_layout_of_each_pdf(self):
+        """``run_config.json`` answers "how does each of these PDFs look?".
+
+        The manifest carries it too, but run_config is the file that describes
+        the *run*, and a run whose every document has an invented layout records
+        nothing useful about them if it only keeps the word "auto".
+        """
+        result, out, _ = self.run_generate()
+        self.assertEqual(result.exit_code, 0, stderr_of(result))
+        config = json.loads((out / cli_module.RUN_CONFIG_FILENAME).read_text())
+        self.assertEqual(config["parameters"]["layout_hint"], AUTO_LAYOUT)
+        manifest = json.loads((out / MANIFEST_FILENAME).read_text())
+        self.assertEqual(len(config["documents"]), len(manifest["documents"]))
+        for entry in config["documents"]:
+            with self.subTest(document=entry["document_id"]):
+                self.assertEqual(entry["layout_hint"], AUTO_LAYOUT)
+                # The directive actually sent for this one PDF, not the hint.
+                self.assertIn("Layout:", entry["layout_prompt"])
+                self.assertTrue(entry["layout"])
 
     @needs_tex
     def test_keep_tex_flag_retains_sources(self):
@@ -1442,10 +2129,27 @@ class TestCLI(unittest.TestCase):
         self.assertFalse((out / MANIFEST_FILENAME).exists())
         self.assertEqual(client.latex_calls, 0)
 
-    def test_unknown_layout_style_is_rejected(self):
-        result, _, _ = self.run_generate("--layout-style", "origami")
-        self.assertEqual(result.exit_code, 2)
-        self.assertIn("origami", stderr_of(result))
+    def test_any_layout_text_is_accepted_not_validated(self):
+        """The inverse of the test this replaces.
+
+        "origami" used to be exit code 2, because the flag was a choice of
+        three. There is no list to be off any more: a hint is a description, a
+        description cannot be invalid, and the run records the word it was
+        given. Rendering is skipped so this holds without a TeX engine.
+        """
+        result, out, _ = self.run_generate("--no-render",
+                                          "--layout-style", "origami")
+        self.assertEqual(result.exit_code, 0, stderr_of(result))
+        config = json.loads((out / cli_module.RUN_CONFIG_FILENAME).read_text())
+        self.assertEqual(config["parameters"]["layout_hint"], "origami")
+
+    def test_blank_layout_text_means_auto(self):
+        """Whitespace states no preference, which is what "auto" asks for."""
+        result, out, _ = self.run_generate("--no-render",
+                                          "--layout-style", "   ")
+        self.assertEqual(result.exit_code, 0, stderr_of(result))
+        config = json.loads((out / cli_module.RUN_CONFIG_FILENAME).read_text())
+        self.assertEqual(config["parameters"]["layout_hint"], AUTO_LAYOUT)
 
     def test_negative_retries_is_rejected(self):
         result, _, _ = self.run_generate("--max-retries", "-1")

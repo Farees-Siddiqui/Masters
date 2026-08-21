@@ -40,7 +40,8 @@ Writes `schema.json`, `instances.json`, one PDF per document and
 | `--records-per-entity` | `5` | Data instances to generate per entity type |
 | `--null-probability` | `0.05` | Chance an optional non-key field is null |
 | `--orphan-rate` | `0.0` | Fraction of child foreign keys left dangling |
-| `--layout-style` | `auto` | `auto`, `table`, `form` or `letter` |
+| `--layout-hint` | `auto` | Freeform. `auto` invents a layout per document; any other text is a stylistic brief (`--layout-hint '1990s technical spec sheet with dense grid lines'`). No list of accepted values; `--layout-style` is kept as an alias |
+| `--layouts-per-graph` | `1` | Distinct visual layouts to render for each join subgraph. The records are identical across a subgraph's variants and only the page differs, so each set is a layout-invariance case and the corpus size is a product: 20 subgraphs at 3 is exactly 60 documents |
 | `--keep-tex` | off | Retain the `.tex` beside each PDF |
 | `--max-retries` | `2` | Compilation repair attempts per document |
 | `--schema-only` | off | Stop after Stages 1 & 2 |
@@ -154,6 +155,43 @@ values (not the escaped LaTeX for them), and the foreign-key join tuples
 with `status: "failed"`, so the corpus is auditable rather than quietly short;
 filter on `status == "compiled"` to get the usable set.
 
+### Several layouts of one subgraph
+
+`--layouts-per-graph N` renders each scope `N` times. The records handed to the
+model are byte-identical across the variants; only the page changes. That buys
+two things:
+
+* **Layout invariance.** A set of variants shares one ground truth, so an
+  extractor that recovers the same tree from all of them is reading the data,
+  and one that manages it for a single variant has learnt the shape of a table.
+  Group on `subgraph_id` to get the set.
+* **Predictable size.** The corpus is subgraphs × variants, known before the
+  first model call — 20 subgraphs at 3 is exactly 60 documents.
+
+Per PDF the manifest adds `subgraph_id`, `subgraph_index`,
+`layout_variant_index` (zero-based) and `layout_variants`; `document_id`,
+`root_record`, `record_ids` and `layout` keep their existing meanings, so a
+consumer written against a single-layout corpus still reads. `summary` gains
+`documents_expected` and `subgraphs_fully_rendered` — the latter counted rather
+than divided, because failures are not spread evenly and three subgraphs that
+each lost one variant leave *no* usable invariance case while
+`compiled // N` would claim two.
+
+Filenames only gain the variant when there is one to disambiguate:
+`doc-001-customer_001.pdf` at `N=1`, and
+`doc-001-customer_001-v1.pdf` … `-v3.pdf` at `N=3`. An existing corpus does not
+have to be regenerated to be read.
+
+What makes the variants actually differ is worth stating, because a seeded run
+would otherwise defeat the whole idea: `--seed` forces greedy decoding, so two
+variants sent the same prompt come back as the *same page*. Each variant is
+therefore given a distinct rotation of the lead-off device and the axis to push
+on, plus a clause saying it is layout *n* of *N* for one set of records and must
+not resemble its siblings. No variant is handed a named layout — telling variant
+1 to be an invoice and variant 2 a memo would be the fixed enum this stage was
+rewritten to remove, reappearing one level down and capped at however many names
+the list held. There is a test asserting the variant clause names none.
+
 ## The LaTeX is written by the model, not by a template
 
 Stage 5 used to render three fixed Jinja templates. It now asks Llama 3 for the
@@ -218,9 +256,12 @@ sentence with a fabricated amount in it.
 
 Two changes, both needed:
 
-* The prompts no longer contain a usable sentence. The `letter` instruction now
-  *describes* what a sentence has to do — name a field in ordinary words and
-  give its exact value — instead of showing one. The escaping rules still need
+* The prompts no longer contain a usable sentence. The per-layout instructions
+  that carried one are gone entirely — there are no named layouts left to hold
+  an example — and what replaced them names *devices* ("a shaded inspection
+  box", "a line-item financial table") with no value, name or amount in any of
+  them, so there is nothing in the layout half of the prompt that could be
+  pasted onto a page as a fact. The escaping rules still need
   concrete characters to demonstrate, so an explicit rule carries the rest: the
   examples show form only, and none of their values may appear on the page. The
   schema prompt has had a de-priming test since Stage 1; the LaTeX prompt now
@@ -268,11 +309,15 @@ reshuffles which documents succeed. These numbers say the named failure stopped
 happening; they are not a controlled comparison.
 
 - **Only these packages exist**: geometry, array, booktabs, longtable, tabularx,
-  parskip, enumitem, fontenc, inputenc. The repair loop cannot install one.
+  parskip, enumitem, multicol, xcolor, colortbl, ragged2e, setspace, fontenc,
+  inputenc. The repair loop cannot install one. The list is wider than the
+  compile constraint strictly needs, and deliberately: a model told to invent a
+  page and then denied columns, rules and shading can only invent variations on
+  one column of text. All of them ship with a standard TeX Live install.
 - **No letter-class commands.** `\begin{letter}`, `\opening`, `\closing` need
   `\documentclass{letter}`; in an article they give *Environment letter
-  undefined*. The 8b reached for them for the letter layout and two repairs did
-  not talk it out of them.
+  undefined*. The 8b reached for them whenever it decided the document was a
+  piece of correspondence, and two repairs did not talk it out of them.
 - **Every table row ends with `\\`, rules go on their own line.** A row missing
   its `\\` before `\bottomrule` gives *Misplaced \noalign*.
 - **`&` only separates columns inside a tabular.** Outside one it must be written

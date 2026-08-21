@@ -21,12 +21,30 @@ import sys
 from types import ModuleType
 from typing import Any, Dict, Optional, Tuple
 
-#: Where ``llm_client.py`` sits relative to this file:
-#: ``Structured_Data/generator/src/generator/`` -> ``Structured_Data/``.
-_STRUCTURED_DATA = os.path.dirname(os.path.dirname(os.path.dirname(
-    os.path.dirname(os.path.abspath(__file__)))))
-_CLIENT_PATH = os.path.join(_STRUCTURED_DATA, "layout_pipeline", "src",
-                            "ie_engine", "llm_client.py")
+#: Where ``llm_client.py`` sits inside ``Structured_Data/``.
+_CLIENT_RELPATH = os.path.join("layout_pipeline", "src", "ie_engine",
+                               "llm_client.py")
+
+
+def _find_structured_data() -> str:
+    """Walk up from this file to the ancestor that holds ``layout_pipeline/``.
+
+    This package used to sit directly inside ``Structured_Data/``, so a fixed
+    four-level climb found it. It now lives under ``CASCON/``, and searching
+    upwards keeps the import working wherever the package is moved next.
+    """
+    here = os.path.dirname(os.path.abspath(__file__))
+    while True:
+        if os.path.isfile(os.path.join(here, _CLIENT_RELPATH)):
+            return here
+        parent = os.path.dirname(here)
+        if parent == here:  # filesystem root: let the caller report the miss
+            return ""
+        here = parent
+
+
+_STRUCTURED_DATA = _find_structured_data()
+_CLIENT_PATH = os.path.join(_STRUCTURED_DATA, _CLIENT_RELPATH)
 #: Private module name: not importable as ``src.ie_engine.llm_client`` here, and
 #: must not collide with anything the host process already imported.
 _MODULE_NAME = "_generator_vendored_llm_client"

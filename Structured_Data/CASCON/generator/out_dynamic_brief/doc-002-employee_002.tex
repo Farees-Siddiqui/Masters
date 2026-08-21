@@ -1,0 +1,139 @@
+\documentclass{article}
+% LAYOUT: A dense grid of small labelled cells with a shaded inspection box for the main record, and a narrow margin column carrying labels beside a wide one carrying values.
+
+\usepackage[margin=1in]{geometry}
+\usepackage{array, booktabs, longtable, tabularx, multicol, xcolor, colortbl, ragged2e, setspace, parskip, enumitem, fontenc, inputenc}
+
+\newcolumntype{C}[1]{>{\centering}m{#1}<{\centering}}
+\newcolumntype{L}[1]{>{\raggedright}m{#1}<{\raggedright}}
+
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.2}
+
+% Inserted by the generator: a hyphen LaTeX adds to a data value cannot be
+% recovered by an extractor, and would make the manifest wrong about this page.
+\hyphenpenalty=10000
+\exhyphenpenalty=10000
+\emergencystretch=3em
+\sloppy
+
+\begin{document}
+
+\begin{multicols}{3}
+\textbf{Employee Details}\\
+\vspace{-10pt}
+\end{multicols}
+
+\noindent
+\begin{minipage}[t]{0.45\linewidth}
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline
+\textbf{Label} & \textbf{Value} \\
+\hline
+First Name: & Liam \\
+Last Name: & Brown \\
+Email: & liam.brown@smallbiz.com \\
+Job Title: & Developer \\
+Hire Date: & 2020-09-22 \\
+\hline
+\end{tabularx}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.45\linewidth}
+\colorbox{lightgray}{%
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline
+\textbf{Label} & \textbf{Value} \\
+\hline
+First Name: & Liam \\
+Last Name: & Brown \\
+Email: & liam.brown@smallbiz.com \\
+Job Title: & Developer \\
+Hire Date: & 2020-09-22 \\
+\hline
+\end{tabularx}
+}
+\end{minipage}
+
+\vspace{-10pt}
+
+\begin{multicols}{3}
+\textbf{Timesheet Details}\\
+\vspace{-10pt}
+\end{multicols}
+
+\noindent
+\begin{minipage}[t]{0.45\linewidth}
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline
+\textbf{Label} & \textbf{Value} \\
+\hline
+Week Start: & 2023-01-09 \\
+Total Hours: & 41.2 \\
+\hline
+\end{tabularx}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.45\linewidth}
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline
+\textbf{Label} & \textbf{Value} \\
+\hline
+Week Start: & 2023-01-09 \\
+Total Hours: & 41.2 \\
+\hline
+\end{tabularx}
+\end{minipage}
+
+\vspace{-10pt}
+
+\begin{multicols}{3}
+\textbf{Linked Record}\\
+\vspace{-10pt}
+\end{multicols}
+
+\noindent
+\begin{minipage}[t]{0.45\linewidth}
+This record is linked to employee-002.
+\end{minipage}\hfill
+\begin{minipage}[t]{0.45\linewidth}
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline
+\textbf{Label} & \textbf{Value} \\
+\hline
+Week Start: & 2023-01-09 \\
+Total Hours: & 41.2 \\
+\hline
+\end{tabularx}
+\end{minipage}
+
+\vfill
+
+\noindent
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Label} & \textbf{Value} \\
+\hline
+Employee ID: & employee-002 \\
+Timesheet ID: & timesheet-002 \\
+\hline
+\end{tabular}
+
+\vfill
+
+\noindent
+\begin{minipage}[t]{0.45\linewidth}
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline
+\textbf{Label} & \textbf{Value} \\
+\hline
+Week Start: & 2023-01-09 \\
+Total Hours: & 41.2 \\
+\hline
+\end{tabularx}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.45\linewidth}
+This record is linked to employee-002.
+\end{minipage}
+
+\vspace{-10pt}
+
+\end{document}

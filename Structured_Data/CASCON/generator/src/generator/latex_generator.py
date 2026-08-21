@@ -1,6 +1,6 @@
 """Stage 5a: ask local Llama 3 to write the LaTeX for one document.
 
-    List[Record] + layout_style -> LLMLaTeXGenerator -> LaTeX source
+    List[Record] + layout_hint -> LLMLaTeXGenerator -> LaTeX source
 
 This replaces the fixed Jinja templates that used to render Stage 5. The trade
 is deliberate and worth stating, because it changes what can go wrong:
@@ -19,6 +19,30 @@ value that is not in it, and the renderer feeds that back to the model as a
 repair. Escaping is likewise no longer guaranteed by construction — it is
 instructed in the system prompt and enforced by the compiler, which is why the
 repair loop exists at all.
+
+There is no list of layouts. There used to be — ``table``, ``form``, ``letter``,
+three paragraphs of hand-written instruction each — and a corpus generated from
+it had three shapes however many documents it held, which is the same failure the
+Jinja templates had with an extra step. The layout is now *invented per
+document*: :func:`layout_directive` tells the model to read the subgraph it has
+been given and work out what document those records would really live on in that
+domain, then design that page. A caller who wants a particular look passes the
+look as a sentence — ``"1990s technical spec sheet with dense grid lines"`` — and
+it is handed to the model as a stylistic brief, not matched against anything.
+
+Two consequences are dealt with here rather than left to the caller:
+
+* **Variety has to be provoked.** ``--seed`` pins the decoder and forces greedy
+  decoding, so the same prompt returns the same page every time. The directive
+  therefore varies per document — a rotating lead-off device and a rotating axis
+  to push on — which is what makes a seeded run reproducible *and* varied
+  instead of reproducible and uniform.
+* **What the model invented has to be recoverable.** The page is asked to
+  declare its own layout in a ``% LAYOUT:`` comment, which :func:`layout_declaration`
+  reads back so the manifest can state, per PDF, the layout that was actually
+  produced rather than the hint that was requested. Comments are stripped before
+  the fidelity check for the same reason a value must be *on the page*: text in a
+  comment is not typeset, so it cannot stand in for a value that is missing.
 """
 
 from __future__ import annotations
@@ -32,13 +56,22 @@ from .schema_types import SchemaGraph
 
 log = logging.getLogger(__name__)
 
-#: Layouts the generator can be asked for. ``auto`` is resolved by the caller.
-LAYOUT_STYLES = ("auto", "table", "form", "letter")
+#: The one hint that is not a stylistic brief: it asks the model to invent the
+#: layout from the records themselves. Every other value of ``layout_hint`` is
+#: freeform text and is passed through to the model verbatim.
+AUTO_LAYOUT = "auto"
 
 #: Packages the model may use. Anything else is a compile failure on a machine
 #: with a minimal TeX install, and the repair loop cannot install packages.
+#:
+#: Wider than it was, and deliberately: a model told to invent a page and then
+#: denied columns, rules and shading can only invent variations on a single
+#: column of text. ``multicol``, ``xcolor``, ``colortbl``, ``ragged2e`` and
+#: ``setspace`` are what "a shaded inspection box beside a two-column body" needs
+#: to exist at all. All of them ship with a standard TeX Live installation.
 ALLOWED_PACKAGES = ("geometry", "array", "booktabs", "longtable", "parskip",
-                    "tabularx", "enumitem", "fontenc", "inputenc")
+                    "tabularx", "enumitem", "multicol", "xcolor", "colortbl",
+                    "ragged2e", "setspace", "fontenc", "inputenc")
 
 #: Kept in the preamble of every document whatever the model wrote. LaTeX
 #: hyphenating a data value ("Othertown" -> "Other-town") inserts a character
@@ -131,19 +164,36 @@ _WRAPPERS = re.compile(
 #: for one of them.
 _BREAKS = re.compile(r"\\\\\*?|\\(?:newline|linebreak|par|hfill|hspace|"
                      r"vspace|quad|qquad)\b")
+#: A LaTeX comment: an unescaped ``%`` to the end of its line. The capture group
+#: is the run of backslash-pairs before it, which are real backslashes rather
+#: than an escape of the ``%``, and so must survive the removal. ``\%`` is an
+#: escaped percent sign in a value and is not a comment, which is why the
+#: lookbehind is there.
+#:
+#: Stripped before anything else, and before unescaping, because a value only
+#: counts as present when it is *typeset*: the generator asks each page to
+#: declare its invented layout in a ``% LAYOUT:`` comment, and a comment naming a
+#: record would otherwise satisfy a fidelity check for a value that is nowhere on
+#: the page.
+_COMMENT = re.compile(r"(?<!\\)((?:\\\\)*)%[^\n]*")
+
+
+def strip_comments(source: str) -> str:
+    """Drop every LaTeX comment from ``source``, keeping escaped ``\\%``."""
+    return _COMMENT.sub(lambda m: m.group(1), str(source))
 
 
 def normalize_for_comparison(source: str) -> str:
     """Flatten a LaTeX source into something a raw value can be searched in.
 
-    Turns page breaks into spaces, de-escapes, drops the formatting commands a
-    value might be wrapped in, turns ``~`` and ``\\,`` into spaces, and collapses
-    whitespace — because a value the model broke across a line, bolded, or
-    spaced with a tie is still that value on the page. What survives all that
-    and still does not match is a value that was actually reworded, rounded,
-    truncated or dropped.
+    Drops comments, turns page breaks into spaces, de-escapes, drops the
+    formatting commands a value might be wrapped in, turns ``~`` and ``\\,`` into
+    spaces, and collapses whitespace — because a value the model broke across a
+    line, bolded, or spaced with a tie is still that value on the page. What
+    survives all that and still does not match is a value that was actually
+    reworded, rounded, truncated or dropped.
     """
-    text = _BREAKS.sub(" ", str(source))
+    text = _BREAKS.sub(" ", strip_comments(source))
     text = unescape_latex(text)
     text = _WRAPPERS.sub("", text)
     text = text.replace("~", " ").replace(r"\,", " ").replace(r"\ ", " ")
@@ -298,18 +348,69 @@ def leaked_examples(records: Sequence[Record], source: str) -> List[str]:
 # --------------------------------------------------------------------------- #
 # Prompts
 # --------------------------------------------------------------------------- #
-LATEX_GENERATION_SYSTEM_PROMPT = r"""\
-You write LaTeX. You are given the records that belong on one document and the \
-layout it should take, and you return the complete source for that document.
+#: A line in a prompt below that ends in a single backslash is soft-wrapped
+#: source, not content. See :func:`_unfold`.
+_FOLD = re.compile(r"[ \t]*(?<!\\)\\\n[ \t]*")
+
+
+def _unfold(text: str) -> str:
+    r"""Join the lines a raw string left broken by a trailing backslash.
+
+    The prompts are raw strings because they are largely LaTeX: ``\&`` and
+    ``\documentclass`` have to reach the model exactly as written, and in an
+    ordinary string every one of those backslashes would have to be doubled.
+    The cost is that a raw string does *not* honour a backslash-newline as a
+    line continuation, so source wrapped at a readable width keeps a literal
+    backslash and a newline in the middle of each sentence. That is worse than
+    untidy: the prompt tells a model to write LaTeX, and a stray ``\`` in it
+    reads as the start of a command.
+
+    Unfolding here keeps the source wrapped and the prompt in whole sentences.
+    A *single* trailing backslash is always a wrap; ``\\`` is LaTeX's own
+    line break and is left alone, which is what the lookbehind is for.
+    """
+    return _FOLD.sub(" ", text).lstrip()
+
+
+LATEX_GENERATION_SYSTEM_PROMPT = _unfold(r"""\
+You are a document designer who writes LaTeX. You are given the records that \
+belong on one document and a brief for how it should look, and you design that \
+document and return the complete source for it.
+
+You are not filling in a template. Nothing you are given names a layout for you \
+to reproduce; the shape of the page is yours to decide, and deciding it well -- \
+so that the page looks like a real document of its kind rather than a dump of \
+the data it carries -- is the job.
 
 Output rules:
 - Return ONLY LaTeX source. No prose before or after it, no markdown fences.
 - Start at \documentclass and end at \end{document}. Include the preamble.
+- The line straight after \documentclass is a single comment beginning \
+"% LAYOUT:" and then one plain sentence, written by you, naming the kind of \
+document you decided to write and the visual structure you gave it. It is a \
+description of what you did, not a slot to fill in, and it is the only comment \
+that has to be there.
 - Use only these packages: geometry, array, booktabs, longtable, tabularx, \
-parskip, enumitem, fontenc, inputenc. Nothing else is installed.
+multicol, xcolor, colortbl, ragged2e, setspace, parskip, enumitem, fontenc, \
+inputenc. Nothing else is installed.
 - Use \documentclass{article}. Do not use tikz, minted, hyperref, fancyhdr, \
-tcolorbox, xcolor or any package not listed above.
-- Do not use \write18, \input or \include.
+tcolorbox, graphicx or any package not listed above.
+- Do not use \write18, \input or \include. Do not reference an external file, \
+an image or a logo: nothing outside this source exists.
+
+What you may build the page out of. This is what is installed, not a menu of \
+layouts -- combine these however the document you are designing needs:
+- multicol for a two- or three-column body, and minipages side by side for \
+panels that sit next to each other.
+- xcolor and colortbl for a shaded box, a tinted table row, a rule in a colour, \
+a reversed heading bar. \colorbox, \fcolorbox, \rowcolors and >{\columncolor{...}} \
+all work. Keep any shade light enough for black text to stay readable.
+- booktabs, array and tabularx for rules and column widths; \hline and vertical \
+bars in the column spec for a dense ruled grid where that is the look you want.
+- geometry for the page size and margins, setspace for line spacing, ragged2e \
+for justification, and font-size and font-shape commands for typographic \
+contrast.
+- \fbox, \framebox, \parbox, \rule and \hrule for boxes, stamps and separators.
 
 Mistakes that make the document fail to build. Each of these was a real failure:
 - \begin{letter}, \opening, \closing, \address, \signature and \makelabels belong to \documentclass{letter}, which is not available. Write a letter as ordinary paragraphs in an article document. Using them gives "Environment letter undefined".
@@ -330,15 +431,25 @@ written as shown when it appears in a value:
 An unescaped one of these will not compile, or will silently typeset the wrong \
 thing. "Bell & Co. 50% off_now" must be written "Bell \& Co. 50\% off\_now".
 
-Fidelity. This is the part that matters most:
+Fidelity. This is the part that matters most, and it does not bend for the \
+design. Whatever page you invent, 100% of what you were given has to be on it:
+- EVERY record you are given appears on the page. Every field of every record \
+appears on the page, under a label a reader can tell it by. Every record's \
+identifier is printed as well as its fields. A linked child record does not lose \
+fields for being a child, and the last child is as complete as the first.
 - Reproduce every value EXACTLY as given, character for character. Do not \
 reword, abbreviate, expand, round, reformat, translate or correct anything. \
 "$1,240.50" stays "$1,240.50" -- escaped as "\$1,240.50" -- and does not \
 become "1240.50" or "$1,240.5" or "USD 1240.50".
-- Include every record and every field you are given. Print each record's \
-identifier as well as its fields.
+- If the layout you designed has no room for a field, the layout is wrong. \
+Change the design; do not drop the field, summarise it away, replace it with \
+"et al.", "and others", "(see attached)" or an ellipsis, or cut a table short.
 - Do not invent a value, a field or a record that you were not given. Do not \
-add totals, subtotals, counts or dates of your own.
+add totals, subtotals, counts, dates, addresses, reference numbers, signatures, \
+prices, contact details or legal wording of your own. Headings, captions, column \
+titles and connecting words are yours to write; facts are not. If a real \
+document of this kind would carry a fact you were not given, leave it out -- an \
+absent field is a gap, an invented one is a lie the ground truth cannot see.
 - The examples in these instructions show form only. No amount, name, wording \
 or value from them may appear in your document -- they are not data. Every fact \
 on the page comes from the records you were given and from nowhere else.
@@ -346,46 +457,220 @@ on the page comes from the records you were given and from nowhere else.
 filled in.
 - Where a record is marked as linked to another, show it inside or beneath that \
 record's section. Do not print the linking id itself.
+- A value written in a LaTeX comment is not on the page. Comments are not \
+typeset, so a field mentioned only in one has been dropped.
 
 The document must be a plausible real-world document in the stated domain -- \
 give it a heading and whatever caption, label or wording a real one would carry \
 -- but every fact on it must come from the records you were given.
-"""
+""")
 
-_LAYOUT_INSTRUCTIONS = {
-    "table": """\
-Layout: a tabular document, of the kind an invoice or statement uses.
-- Put the root record's fields in a header block at the top: a two-column \
-tabular of label and value, or a simple run of labelled lines.
-- Put the linked records in a table, one row per record, one column per field, \
-with a header row. Use booktabs rules (\\toprule, \\midrule, \\bottomrule).
-- Right-align columns holding money, percentages or counts.
-- If a table would need more than five columns, break it into one small block \
-per record instead of a wide table, so nothing runs off the page.""",
-    "form": """\
-Layout: a completed form, of the kind an office keeps on file.
-- One section per record, each with a heading naming the record and its \
-identifier.
-- Inside a section, one labelled field per line or per table row: the label in \
-bold, the value beside it.
-- Draw a frame or a rule around each section so the sections read as boxes. Use \
-\\fbox with a minipage, or \\hrule between sections.
-- No prose. Labels and values only.""",
-    "letter": """\
-Layout: a formal letter, of the kind an organisation sends out.
-- A letterhead, a date line and a reference line at the top, then a salutation, \
-then body paragraphs, then a sign-off.
-- State the values in running prose, in complete sentences. Each sentence names \
-a field in ordinary words and gives that field's exact value. Compose the \
-sentences yourself from the records you were given; do not copy a sentence out \
-of these instructions and do not write a list of labelled fields.
-- Linked records are described in the body, one short paragraph or one sentence \
-each, naming each record's identifier as you go.
-- Do not use a tabular. The whole point of this layout is that the same facts \
-are in sentences.""",
-}
+#: Devices a real document might be built out of, named as *devices* and not as
+#: documents. The list is shown to the model as evidence of how wide the range
+#: is, with a standing instruction that it is not a menu — naming three finished
+#: layouts is what produced a corpus with three shapes, and naming ten would
+#: produce one with ten. Nothing here carries a value, a name or an amount, so
+#: nothing here can be copied onto a page as a fact (see PROMPT_EXAMPLE_VALUES).
+DESIGN_DEVICES = (
+    "a body set in two or three columns",
+    "a shaded inspection or verification box",
+    "a line-item financial table that rules off between groups",
+    "a run of prose -- a log entry, a narrative note, a summary paragraph",
+    "a formal masthead with a reference block ruled off beneath it",
+    "metric panels sitting side by side across the page",
+    "correspondence, written to somebody, signed off at the end",
+    "a stamped or boxed status flag set against the heading",
+    "a dense grid of small labelled cells",
+    "a signature and countersignature block",
+    "a tinted header row over a plain body, or the reverse",
+    "a narrow margin column carrying labels beside a wide one carrying values",
+)
 
-LATEX_REPAIR_SYSTEM_PROMPT = r"""\
+#: One axis to push on per document. Paired with the rotation over
+#: DESIGN_DEVICES, this is what makes a *seeded* run varied: --seed forces
+#: greedy decoding, so an identical prompt returns an identical page, and the
+#: only way to get twelve different documents out of a deterministic decoder is
+#: to send it twelve different prompts.
+DESIGN_AXES = (
+    "the page geometry -- margins, page shape, how much white space there is",
+    "the number of columns and how the page divides horizontally",
+    "typographic contrast -- size, weight, small caps, letter spacing",
+    "how rules, frames and shading separate one part of the page from another",
+    "the balance between prose and tabular material",
+    "the order things are presented in, and what the eye is meant to reach first",
+)
+
+LAYOUT_INVENTION_DIRECTIVE = """\
+Layout: yours to invent, for this document, now.
+
+Read the records below before you decide anything: the domain, the entity names, \
+the field names, and the kind of value each field holds. Work out what document \
+these particular records would really live on in that domain -- what it would be \
+called, who would issue it, who would read it, what a filed copy of it looks \
+like -- and then design that document. Give it the heading, the sections, the \
+captions and the page shape a real one would have.
+
+Do not reach for the obvious shape. If the records suggest one arrangement \
+immediately, that is the arrangement every generic rendering of this data would \
+use; find the one an organisation in this domain would actually print. Two \
+documents built from similar records should not come out looking like each \
+other."""
+
+_DEVICE_PREAMBLE = """\
+For a sense of the range available -- these are devices, not documents, and not \
+a menu to choose from. Mix them, ignore them, or build something that is not \
+here:"""
+
+_FREEFORM_DIRECTIVE = """\
+Layout: follow the brief below. It was written by the person requesting this \
+document and is quoted to you exactly as they wrote it.
+
+{brief}
+
+Read it as a description of how the page should look and feel, and invent the \
+LaTeX structure that realises it -- the sections, the rules, the columns, the \
+typography. The brief says what the document should be like; it does not say \
+where anything goes, and that is your decision.
+
+The brief describes form only. Nothing in it is a fact about these records: no \
+wording, name, number or date from it may appear on the page unless a record \
+below supplies it."""
+
+#: Added when one subgraph is being rendered more than once. Deliberately names
+#: no layout for any variant: handing variant 1 "an invoice" and variant 2 "a
+#: memo" would be the fixed enum this stage was rewritten to remove, reappearing
+#: one level down and capped at however many names the list held. What makes the
+#: variants differ instead is the same thing that makes neighbouring documents
+#: differ -- a rotated lead-off device and axis, driven by a distinct
+#: ``variation`` per variant -- plus the standing instruction below that
+#: resembling a sibling is a failure.
+_VARIANT_DIRECTIVE = """\
+This is layout {index} of {total} for one single set of records.
+
+The other {others} in this set carry exactly the same records as this one, field \
+for field and value for value, and differ only in how they are laid out. They \
+exist so that a corpus can tell an extractor that has understood the data apart \
+from one that has memorised a shape, which only works if the shapes really are \
+different.
+
+So this page must not resemble its siblings, and the difference has to be \
+structural rather than cosmetic. Change what kind of document this is, how the \
+page divides, what the eye reaches first, and whether the material is set as \
+prose, as panels or as a table. Two variants that differ only in their heading, \
+their wording or their choice of rule are one variant and a wasted page.
+
+None of this touches the data. Every record and every field is on this page as \
+completely as on any other variant -- a different shape is not licence to carry \
+less."""
+
+
+def variant_directive(variant: int, variant_count: int) -> str:
+    """The "this is one of several layouts" clause, or ``""`` for a lone page.
+
+    ``variant`` is zero-based, matching the loop that renders it; the wording
+    counts from one, matching what the filenames say.
+    """
+    total = max(1, int(variant_count))
+    if total < 2:
+        return ""
+    index = min(max(0, int(variant)), total - 1) + 1
+    others = (f"{total - 1} document" if total == 2
+              else f"{total - 1} documents")
+    return _VARIANT_DIRECTIVE.format(index=index, total=total, others=others)
+
+
+def normalize_layout_hint(layout_hint: Any) -> str:
+    """The hint as the rest of the module wants it: stripped, never empty.
+
+    ``None``, ``""`` and whitespace all mean "no preference stated", which is
+    :data:`AUTO_LAYOUT` — the same thing the default asks for. There is nothing
+    to validate beyond that: any other string is a brief, and a brief cannot be
+    wrong.
+    """
+    text = "" if layout_hint is None else str(layout_hint).strip()
+    return text or AUTO_LAYOUT
+
+
+def is_auto(layout_hint: Any) -> bool:
+    """Whether ``layout_hint`` asks the model to invent the layout itself."""
+    return normalize_layout_hint(layout_hint).lower() == AUTO_LAYOUT
+
+
+def layout_directive(layout_hint: str = AUTO_LAYOUT, *,
+                     variation: int = 0, variant: int = 0,
+                     variant_count: int = 1) -> str:
+    """The layout half of the prompt, built for one document.
+
+    ``variation`` is the document's index in the run. It rotates which device
+    leads the list and which axis is called out, so consecutive documents in one
+    corpus are asked for visibly different pages even under a pinned seed. It
+    changes the *prompt*, never the records, so the ground truth is untouched by
+    it and a rerun at the same seed reproduces the same corpus.
+
+    ``variant`` and ``variant_count`` describe this page's place among the
+    layouts of *one* subgraph, under ``--layouts-per-graph``. They add the
+    clause that says so; the visible difference between variants comes from
+    ``variation``, which the caller varies per variant for exactly that reason.
+    A ``variant_count`` of 1 adds nothing, so a single-layout run sends the same
+    prompt it always did.
+    """
+    hint = normalize_layout_hint(layout_hint)
+    parts = [LAYOUT_INVENTION_DIRECTIVE if is_auto(hint)
+             else _FREEFORM_DIRECTIVE.format(brief=_quote_brief(hint))]
+
+    siblings = variant_directive(variant, variant_count)
+    if siblings:
+        parts.append(siblings)
+
+    offset = max(0, int(variation)) % len(DESIGN_DEVICES)
+    devices = DESIGN_DEVICES[offset:] + DESIGN_DEVICES[:offset]
+    parts.append(_DEVICE_PREAMBLE + "\n"
+                 + "\n".join(f"  - {device}" for device in devices))
+
+    axis = DESIGN_AXES[max(0, int(variation)) % len(DESIGN_AXES)]
+    parts.append(f"For this document in particular, push hardest on {axis}. "
+                 f"Whatever you settle on, the page has to stay legible and "
+                 f"has to fit the paper: no column so narrow that a value "
+                 f"breaks up inside it, no table wider than the page.")
+    return "\n\n".join(parts)
+
+
+def _quote_brief(hint: str) -> str:
+    """A freeform brief, indented so the model can see where it ends."""
+    return "\n".join(f"    {line.strip()}"
+                     for line in hint.splitlines() if line.strip())
+
+
+#: How a page states the layout it turned out to be. Asked for in the system
+#: prompt, read back by :func:`layout_declaration`, and recorded per PDF in the
+#: manifest — the hint says what was requested, this says what was produced.
+LAYOUT_DECLARATION_PREFIX = "% LAYOUT:"
+_DECLARATION = re.compile(r"^[ \t]*%+[ \t]*LAYOUT[ \t]*:[ \t]*(\S[^\n]*?)[ \t]*$",
+                          re.MULTILINE | re.IGNORECASE)
+#: Long enough for a sentence, short enough that a model which ignored the
+#: instruction and wrote an essay cannot bloat every manifest entry.
+MAX_DECLARATION_LENGTH = 300
+
+
+def layout_declaration(source: Optional[str]) -> Optional[str]:
+    """The layout the page says it is, or ``None`` if it never said.
+
+    ``None`` is a normal outcome, not an error: the declaration is a comment the
+    model was asked to write, and a page that compiles and carries its data is
+    correct whether or not it introduced itself. The caller falls back to the
+    hint that was sent.
+    """
+    if not source:
+        return None
+    match = _DECLARATION.search(str(source))
+    if match is None:
+        return None
+    declared = _WHITESPACE.sub(" ", match.group(1)).strip()
+    if len(declared) > MAX_DECLARATION_LENGTH:
+        declared = declared[:MAX_DECLARATION_LENGTH].rstrip() + "..."
+    return declared or None
+
+LATEX_REPAIR_SYSTEM_PROMPT = _unfold(r"""\
 You fix LaTeX that failed to compile. You are given the source and the errors \
 pdflatex reported, and you return the corrected source.
 
@@ -399,8 +684,9 @@ How to fix it:
 - The commonest cause by far is an unescaped reserved character in a value: \
 &, %, $, #, _, { or }. Escape it: \&, \%, \$, \#, \_, \{, \}.
 - The next commonest is a package that is not installed. Only geometry, array, \
-booktabs, longtable, tabularx, parskip, enumitem, fontenc and inputenc are \
-available -- remove any other \usepackage line and whatever needed it.
+booktabs, longtable, tabularx, multicol, xcolor, colortbl, ragged2e, setspace, \
+parskip, enumitem, fontenc and inputenc are available -- remove any other \
+\usepackage line and whatever needed it.
 - Then: a tabular whose row has the wrong number of & separators for its column \
 specification, a missing \\ at the end of a row, an \end that does not match \
 its \begin, or a command that does not exist.
@@ -420,9 +706,13 @@ What NOT to change:
 are the point of the document; only the LaTeX around them is broken.
 - Do not remove content to make it compile. Every record and field in the \
 broken source must still be in the fixed one.
-"""
+- Do not redesign the page. The layout is this document's own -- keep its \
+columns, boxes, shading, headings and section order, and keep the "% LAYOUT:" \
+comment line exactly as it is. Simplifying the design is not a fix; it is a \
+different document.
+""")
 
-LATEX_RESTORE_SYSTEM_PROMPT = r"""\
+LATEX_RESTORE_SYSTEM_PROMPT = _unfold(r"""\
 You correct LaTeX documents whose data does not match its source records.
 
 You are given a LaTeX document, and a list of values that are supposed to appear \
@@ -441,18 +731,12 @@ reformatted -- replace what is there with the exact value given.
 style as the records that are there.
 - Write the value character for character as given, escaping only LaTeX's \
 reserved characters (& % $ # _ { } as \& \% \$ \# \_ \{ \}).
+- A value written into a LaTeX comment has not been put back: comments are not \
+typeset. Put it where it will print.
+- Keep the page as it is designed. Add the missing value in the style of the \
+section it belongs to; do not restructure the document around it.
 - Change nothing else. Every other value in the document must survive untouched.
-"""
-
-
-def layout_instruction(layout_style: str) -> str:
-    """The layout half of the prompt, for one style."""
-    try:
-        return _LAYOUT_INSTRUCTIONS[layout_style]
-    except KeyError:
-        raise ValueError(
-            f"unknown layout style {layout_style!r}; expected one of "
-            f"{', '.join(sorted(_LAYOUT_INSTRUCTIONS))}") from None
+""")
 
 
 class LaTeXGenerationError(RuntimeError):
@@ -465,10 +749,18 @@ class LLMLaTeXGenerator:
     ``schema`` is optional and only sharpens the prompt: knowing that ``total``
     is a currency and ``status`` an enum lets the model be told, which is what
     stops "$1,240.50" arriving as "1240.5".
+
+    ``layout_hint`` is freeform and is the default for every document this
+    generator writes; a per-call hint overrides it. ``"auto"`` — the default —
+    asks the model to invent a layout from the records themselves. Anything else
+    is a stylistic brief ("1990s technical spec sheet with dense grid lines")
+    and is passed through verbatim. There is no set of accepted values, so
+    nothing here rejects a hint.
     """
 
     def __init__(self, client: Any = None, *,
                  schema: Optional[SchemaGraph] = None,
+                 layout_hint: str = AUTO_LAYOUT,
                  seed: Optional[int] = None,
                  max_attempts: int = 3) -> None:
         if client is None:
@@ -478,10 +770,15 @@ class LLMLaTeXGenerator:
             client = build_client(seed=seed, json_mode=False, max_tokens=6144)
         self.client = client
         self.schema = schema
+        self.layout_hint = normalize_layout_hint(layout_hint)
         self.seed = seed
         self.max_attempts = max(1, int(max_attempts))
         #: Raw text of the last response, for diagnosing a bad generation.
         self.last_response: Optional[str] = None
+        #: The layout half of the last prompt sent, verbatim. Read by the
+        #: renderer so the manifest can record what each PDF was actually asked
+        #: for, which under a rotating directive differs document to document.
+        self.last_layout_directive: Optional[str] = None
 
     # -- prompt construction ------------------------------------------------ #
     def _attribute_type(self, entity_name: str, attribute: str) -> str:
@@ -536,30 +833,66 @@ class LLMLaTeXGenerator:
             lines.append("")
         return "\n".join(lines).rstrip()
 
+    def resolve_layout_hint(self, layout_hint: Any = None) -> str:
+        """The hint for one call: the one passed, else this generator's own."""
+        if layout_hint is None:
+            return self.layout_hint
+        return normalize_layout_hint(layout_hint)
+
+    def build_layout_directive(self, layout_hint: Any = None, *,
+                               variation: int = 0, variant: int = 0,
+                               variant_count: int = 1) -> str:
+        """The exact layout wording one document will be sent."""
+        return layout_directive(self.resolve_layout_hint(layout_hint),
+                                variation=variation, variant=variant,
+                                variant_count=variant_count)
+
     def build_user_prompt(self, document_records: Sequence[Record],
-                          layout_style: str, domain: str) -> str:
+                          layout_hint: Any = None, domain: str = "", *,
+                          variation: int = 0, variant: int = 0,
+                          variant_count: int = 1) -> str:
         count = len(document_records)
+        directive = self.build_layout_directive(
+            layout_hint, variation=variation, variant=variant,
+            variant_count=variant_count)
         return (
             f"Domain: {domain}\n"
-            f"{layout_instruction(layout_style)}\n\n"
+            f"{directive}\n\n"
             f"Records for this document ({count} in total):\n\n"
             f"{self.describe_records(document_records)}\n\n"
-            f"Write the complete LaTeX source for one document containing every "
-            f"record above. Return the source only."
+            f"Design one document that carries every record above, and write "
+            f"its complete LaTeX source. Return the source only."
         )
 
     # -- public api --------------------------------------------------------- #
     def generate_latex_source(self, document_records: List[Record],
-                              layout_style: str, domain: str) -> str:
+                              layout_hint: Any = None, domain: str = "", *,
+                              variation: int = 0, variant: int = 0,
+                              variant_count: int = 1) -> str:
         """Complete, compilable LaTeX for one document.
+
+        ``layout_hint`` is freeform and unvalidated — ``"auto"`` to have the
+        model invent the page, any other text as a stylistic brief.
+        ``variation`` distinguishes this document from its neighbours in the
+        same run, which is what stops a seeded corpus coming out uniform.
+
+        ``variant`` and ``variant_count`` say that this page is one of several
+        layouts of the *same* records, under ``--layouts-per-graph``. They only
+        change the wording; the records are handed over unchanged, because a
+        variant that carried different data would not be a layout variant.
 
         Raises :class:`LaTeXGenerationError` when no attempt produced something
         that even looks like a document — a response with no ``\\documentclass``
         is not worth handing to pdflatex.
         """
-        layout_instruction(layout_style)  # validates the style
         system = LATEX_GENERATION_SYSTEM_PROMPT
-        user = self.build_user_prompt(document_records, layout_style, domain)
+        hint = self.resolve_layout_hint(layout_hint)
+        self.last_layout_directive = self.build_layout_directive(
+            hint, variation=variation, variant=variant,
+            variant_count=variant_count)
+        user = self.build_user_prompt(document_records, hint, domain,
+                                      variation=variation, variant=variant,
+                                      variant_count=variant_count)
         reasons: List[str] = []
 
         for attempt in range(1, self.max_attempts + 1):
@@ -581,7 +914,7 @@ class LLMLaTeXGenerator:
 
     def repair_latex_source(self, source: str, error_log: str,
                             document_records: Sequence[Record] = (),
-                            layout_style: str = "", domain: str = "") -> str:
+                            layout_hint: Any = None, domain: str = "") -> str:
         """A corrected version of ``source``, given what pdflatex complained of.
 
         Returns the original source unchanged if the model produced nothing
@@ -652,17 +985,26 @@ __all__ = [
     "LATEX_GENERATION_SYSTEM_PROMPT",
     "LATEX_REPAIR_SYSTEM_PROMPT",
     "LATEX_RESTORE_SYSTEM_PROMPT",
-    "LAYOUT_STYLES",
+    "AUTO_LAYOUT",
     "ALLOWED_PACKAGES",
+    "DESIGN_DEVICES",
+    "DESIGN_AXES",
+    "LAYOUT_INVENTION_DIRECTIVE",
+    "LAYOUT_DECLARATION_PREFIX",
     "HYPHENATION_GUARD",
     "NULL_GLYPH",
     "LatexText",
     "escape_latex",
     "unescape_latex",
+    "strip_comments",
     "normalize_for_comparison",
     "extract_latex",
     "harden_source",
-    "layout_instruction",
+    "layout_directive",
+    "variant_directive",
+    "layout_declaration",
+    "normalize_layout_hint",
+    "is_auto",
     "recorded_values",
     "missing_values",
     "leaked_examples",

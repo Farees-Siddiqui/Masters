@@ -1,0 +1,119 @@
+{
+  "domain": "small_business",
+  "metadata": {
+    "stage": "1-2:parametric_schema",
+    "domain": "small_business",
+    "requested_entities": 2,
+    "max_depth": 2,
+    "seed": 11,
+    "attempts": 1,
+    "model": "llama3.1:8b",
+    "base_url": "http://127.0.0.1:11434",
+    "backend": "ollama",
+    "temperature": 0.0,
+    "generated_at": "2026-08-21T00:00:08+00:00"
+  },
+  "depth": 2,
+  "roots": [
+    "Employee"
+  ],
+  "entity_depths": {
+    "Employee": 1,
+    "Timesheet": 2
+  },
+  "entities": [
+    {
+      "name": "Employee",
+      "primary_key": "id",
+      "description": "A person employed by the business.",
+      "attributes": [
+        {
+          "name": "id",
+          "type": "id",
+          "required": true,
+          "unique": true,
+          "description": "Key."
+        },
+        {
+          "name": "first_name",
+          "type": "string",
+          "required": true,
+          "description": "First name."
+        },
+        {
+          "name": "last_name",
+          "type": "string",
+          "required": true,
+          "description": "Last name."
+        },
+        {
+          "name": "email",
+          "type": "email",
+          "required": true,
+          "description": "Contact email."
+        },
+        {
+          "name": "job_title",
+          "type": "enum",
+          "required": true,
+          "description": "Job role.",
+          "values": [
+            "Manager",
+            "Developer",
+            "Designer"
+          ]
+        },
+        {
+          "name": "hire_date",
+          "type": "date",
+          "required": true,
+          "description": "Date of hire."
+        }
+      ]
+    },
+    {
+      "name": "Timesheet",
+      "primary_key": "id",
+      "description": "A record of hours worked by an employee.",
+      "attributes": [
+        {
+          "name": "id",
+          "type": "id",
+          "required": true,
+          "unique": true,
+          "description": "Key."
+        },
+        {
+          "name": "employee_id",
+          "type": "id",
+          "required": true,
+          "description": "Employee who submitted this timesheet."
+        },
+        {
+          "name": "week_start",
+          "type": "date",
+          "required": true,
+          "description": "Start of the week for which hours are recorded."
+        },
+        {
+          "name": "total_hours",
+          "type": "decimal",
+          "required": true,
+          "description": "Total hours worked."
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "name": "timesheet_to_employee",
+      "parent_entity": "Employee",
+      "parent_attribute": "id",
+      "child_entity": "Timesheet",
+      "child_attribute": "employee_id",
+      "cardinality": "1:m",
+      "fk": "Timesheet.employee_id -> Employee.id"
+    }
+  ],
+  "warnings": []
+}

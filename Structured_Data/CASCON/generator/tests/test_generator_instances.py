@@ -817,9 +817,14 @@ class TestCLI(unittest.TestCase):
             self.assertEqual(result.exit_code, 0, stderr_of(result))
             schema_payload = read_json(out, "schema.json")
             instances = read_json(out, "instances.json")
+            # run_config.json is written on every run, including one that
+            # stops before Stage 5: it is what records how the run was asked
+            # for, and a half-finished directory is when that matters most.
             self.assertEqual(result.stdout.split(),
                              [os.path.join(out, "schema.json"),
-                              os.path.join(out, "instances.json")])
+                              os.path.join(out, "instances.json"),
+                              os.path.join(out,
+                                           cli_module.RUN_CONFIG_FILENAME)])
         self.assertEqual(instances["total_records"], 6)
         self.assertEqual(instances["metadata"]["records_per_entity"], 2)
         TestSerialization.assert_complies_with(self, instances, schema_payload)
@@ -868,8 +873,10 @@ class TestCLI(unittest.TestCase):
             self.assertTrue(os.path.isfile(os.path.join(out, "schema.json")))
             self.assertFalse(os.path.exists(os.path.join(out,
                                                          "instances.json")))
-            self.assertEqual(result.stdout.strip(),
-                             os.path.join(out, "schema.json"))
+            self.assertEqual(result.stdout.split(),
+                             [os.path.join(out, "schema.json"),
+                              os.path.join(out,
+                                           cli_module.RUN_CONFIG_FILENAME)])
 
     def test_rejects_out_of_range_rates(self):
         for args in (["--null-probability", "1.5"], ["--orphan-rate", "-0.2"],

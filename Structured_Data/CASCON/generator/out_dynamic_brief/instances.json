@@ -1,0 +1,82 @@
+{
+  "schema_domain": "small_business",
+  "total_records": 4,
+  "metadata": {
+    "stage": "3-4:instance_graph",
+    "domain": "small_business",
+    "records_per_entity": 2,
+    "null_probability": 0.05,
+    "orphan_rate": 0.0,
+    "seed": 7,
+    "topological_order": [
+      "Employee",
+      "Timesheet"
+    ],
+    "model": "llama3.1:8b",
+    "base_url": "http://127.0.0.1:11434",
+    "backend": "ollama",
+    "generated_at": "2026-08-20T23:39:50+00:00"
+  },
+  "counts_by_entity": {
+    "Employee": 2,
+    "Timesheet": 2
+  },
+  "foreign_keys": {
+    "declared": 2,
+    "resolved": 2,
+    "orphaned": 0
+  },
+  "records": [
+    {
+      "id": "employee-001",
+      "entity_name": "Employee",
+      "attributes": {
+        "id": "employee-001",
+        "first_name": "Emily",
+        "last_name": "Taylor",
+        "email": "emily.taylor@smallbiz.com",
+        "job_title": "Manager",
+        "hire_date": "2018-02-15"
+      },
+      "foreign_keys": {}
+    },
+    {
+      "id": "employee-002",
+      "entity_name": "Employee",
+      "attributes": {
+        "id": "employee-002",
+        "first_name": "Liam",
+        "last_name": "Brown",
+        "email": "liam.brown@smallbiz.com",
+        "job_title": "Developer",
+        "hire_date": "2020-09-22"
+      },
+      "foreign_keys": {}
+    },
+    {
+      "id": "timesheet-001",
+      "entity_name": "Timesheet",
+      "attributes": {
+        "id": "timesheet-001",
+        "week_start": "2023-02-06",
+        "total_hours": "32.5"
+      },
+      "foreign_keys": {
+        "employee_id": "employee-001"
+      }
+    },
+    {
+      "id": "timesheet-002",
+      "entity_name": "Timesheet",
+      "attributes": {
+        "id": "timesheet-002",
+        "week_start": "2023-01-09",
+        "total_hours": "41.2"
+      },
+      "foreign_keys": {
+        "employee_id": "employee-002"
+      }
+    }
+  ],
+  "warnings": []
+}

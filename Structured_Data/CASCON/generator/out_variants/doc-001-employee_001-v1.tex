@@ -1,0 +1,107 @@
+\documentclass{article}
+% LAYOUT: A formal employee timesheet report with a shaded verification box and a narrow margin column carrying labels beside a wide one carrying values.
+
+\usepackage[margin=1in]{geometry}
+\usepackage{array, booktabs, longtable, tabularx, multicol, xcolor, colortbl, ragged2e, setspace, parskip, enumitem, fontenc, inputenc}
+
+% Inserted by the generator: a hyphen LaTeX adds to a data value cannot be
+% recovered by an extractor, and would make the manifest wrong about this page.
+\hyphenpenalty=10000
+\exhyphenpenalty=10000
+\emergencystretch=3em
+\sloppy
+
+\begin{document}
+
+\begin{center}
+{\Large \textbf{Employee Timesheet Report}}
+\vspace{-0.5cm}
+\end{center}
+
+\noindent
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline
+\textbf{Label} & \textbf{Value} \\
+\hline
+Employee ID & employee-001 \\
+First Name & Emily \\
+Last Name & Taylor \\
+Email & emily.taylor@smallbusiness.com \\
+Job Title & Developer \\
+Hire Date & 2018-02-15 \\
+\hline
+\end{tabularx}
+
+\vspace{1cm}
+
+\noindent
+{\colorbox{lightgray}{%
+\begin{minipage}[t]{0.4\textwidth}
+\raggedright
+Verification: This timesheet has been verified by the employee's supervisor.
+\end{minipage}%
+}}
+
+\vspace{1cm}
+
+\noindent
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline
+\textbf{Label} & \textbf{Value} \\
+\hline
+Week Start & 2022-07-18 \\
+Total Hours & 32.5 \\
+\hline
+\end{tabularx}
+
+\vspace{1cm}
+
+\noindent
+{\Large \textbf{Verification Box:}}
+\vspace{-0.5cm}
+{\colorbox{lightgray}{%
+\begin{minipage}[t]{0.4\textwidth}
+\raggedright
+Verification: This timesheet has been verified by the employee's supervisor.
+\end{minipage}%
+}}
+
+\vfill
+
+\noindent
+{\Large \textbf{Employee Signature:}} \\
+Emily Taylor \\
+\vspace{-1cm}
+
+\noindent
+{\Large \textbf{Supervisor Signature:}} \\
+John Smith \\
+\vspace{-1cm}
+
+\noindent
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline
+\textbf{Label} & \textbf{Value} \\
+\hline
+Timesheet ID & timesheet-001 \\
+\hline
+\end{tabularx}
+
+\vspace{1cm}
+
+\noindent
+{\Large \textbf{Employee Information:}}
+\vspace{-0.5cm}
+{\colorbox{lightgray}{%
+\begin{minipage}[t]{0.4\textwidth}
+\raggedright
+Verification: This timesheet has been verified by the employee's supervisor.
+\end{minipage}%
+}}
+
+\noindent
+{\Large \textbf{Supervisor Information:}} \\
+John Smith \\
+\vspace{-1cm}
+
+\end{document}

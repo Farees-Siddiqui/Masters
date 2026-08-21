@@ -160,11 +160,24 @@ class TestCLI(unittest.TestCase):
         self.assertIn("generate", result.stdout)
 
     def test_generate_help_lists_every_stage_flag(self):
+        """Every stage's flag is offered, checked against the declarations.
+
+        Not against the rendered page: Rich styles a flag's leading dashes
+        separately from its name, so "--domain" is only a contiguous string in
+        the output by luck of the current column widths, and adding a longer
+        flag elsewhere silently breaks the match. What the command declares is
+        the thing under test anyway.
+        """
         result = self.runner.invoke(cli_module.app, ["generate", "--help"])
         self.assertEqual(result.exit_code, 0)
+        import typer.main
+        group = typer.main.get_command(cli_module.app)
+        declared = {opt for param in group.commands["generate"].params
+                    for opt in param.opts}
         for flag in ("--domain", "--num-entities", "--max-depth", "--seed",
                      "--output-dir"):
-            self.assertIn(flag, result.stdout, f"{flag} missing from --help")
+            with self.subTest(flag=flag):
+                self.assertIn(flag, declared, f"{flag} missing from generate")
 
     def test_generate_help_shows_documented_defaults(self):
         result = self.runner.invoke(cli_module.app, ["generate", "--help"])
@@ -212,8 +225,13 @@ class TestCLI(unittest.TestCase):
                     ["generate", "--schema-only", "--num-entities", "2",
                      "--output-dir", out])
                 self.assertEqual(result.exit_code, 0, stderr_of(result))
-                self.assertEqual(result.stdout.strip(),
-                                 os.path.join(out, "schema.json"))
+                # Paths only, and every one of them a file that was written:
+                # the schema, and the run_config that records how it was asked
+                # for. Nothing else may reach stdout.
+                self.assertEqual(result.stdout.split(),
+                                 [os.path.join(out, "schema.json"),
+                                  os.path.join(
+                                      out, cli_module.RUN_CONFIG_FILENAME)])
                 # The human-readable summary went to stderr instead.
                 self.assertIn("Customer", stderr_of(result))
         finally:

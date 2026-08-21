@@ -11,6 +11,13 @@ document; a Product with nothing under it becomes one document of its own. Every
 record lands in exactly one scope, which is what lets the manifest state, per
 PDF, the exact records an extractor is supposed to recover from it.
 
+The *layout* is written by the model too, and per document: there is no list of
+styles to pick from, only a ``layout_hint`` that is either ``"auto"`` — invent a
+page that suits these records in this domain — or a freeform brief describing a
+look. So the manifest cannot state a layout up front; it records, per PDF, the
+hint that was sent, the exact directive that was built for that document, and
+the layout the finished page declares itself to be.
+
 The source is written by the model rather than by a template, so three kinds of
 thing can now go wrong:
 
@@ -54,17 +61,16 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Set, Tuple
 
 from .instance_types import InstanceGraph, Record
-from .latex_generator import (LAYOUT_STYLES, LaTeXGenerationError,
-                              LLMLaTeXGenerator, escape_latex,
-                              leaked_examples, missing_values,
+from .latex_generator import (AUTO_LAYOUT, LaTeXGenerationError,
+                              LLMLaTeXGenerator, escape_latex, is_auto,
+                              layout_declaration, leaked_examples,
+                              missing_values, normalize_layout_hint,
                               recorded_values)
 from .schema_types import SchemaGraph, snake_case
 
 log = logging.getLogger(__name__)
 
 MANIFEST_FILENAME = "benchmark_manifest.json"
-#: Concrete layouts ``auto`` chooses between.
-CONCRETE_LAYOUTS = ("table", "form", "letter")
 #: Engines tried, in order, when ``engine="auto"``.
 ENGINE_PREFERENCE = ("pdflatex", "xelatex", "lualatex")
 DEFAULT_TIMEOUT = 120.0
@@ -222,20 +228,47 @@ class LaTeXRenderer:
     # -- public api --------------------------------------------------------- #
     def render_documents(self, instance_graph: InstanceGraph,
                          output_dir: Path,
-                         layout_style: str = "auto",
-                         max_retries: int = 2) -> List[Path]:
-        """Render one document per scope and write the manifest.
+                         layout_hint: Any = AUTO_LAYOUT,
+                         max_retries: int = 2,
+                         layouts_per_graph: int = 1) -> List[Path]:
+        """Render ``layouts_per_graph`` documents per scope, write the manifest.
+
+        ``layout_hint`` is freeform. ``"auto"`` — the default — has the model
+        invent a layout per document from the records themselves; any other text
+        is a stylistic brief handed to the model as written. There is no set of
+        accepted values, so the only thing rejected here is a hint that is not
+        text at all: a caller who passes a list or a dict has made a mistake
+        that would otherwise reach the model as ``"['form']"``.
+
+        ``layouts_per_graph`` renders each subgraph more than once, the same
+        records laid out differently each time. One is the default and behaves
+        exactly as a single-layout run always did, filenames included. Above one,
+        the corpus size is the product — 20 subgraphs at 3 is 60 documents,
+        known before the first model call — and each set of variants is a
+        layout-invariance test: identical ground truth, different page.
 
         Returns the PDFs that compiled. A document that failed every attempt is
         still recorded in the manifest with ``status="failed"``, so the corpus is
-        auditable rather than quietly short.
+        auditable rather than quietly short. A failed variant does not cancel its
+        siblings; each is generated, checked and compiled on its own.
         """
-        if layout_style not in LAYOUT_STYLES:
+        if layout_hint is not None and not isinstance(layout_hint, str):
             raise ValueError(
-                f"unknown layout_style {layout_style!r}; expected one of "
-                f"{', '.join(LAYOUT_STYLES)}")
+                f"layout_hint must be text, got {type(layout_hint).__name__}; "
+                f"pass 'auto' to have the layout invented, or a sentence "
+                f"describing the look you want")
+        layout_hint = normalize_layout_hint(layout_hint)
         if max_retries < 0:
             raise ValueError(f"max_retries must be >= 0, got {max_retries}")
+        if not isinstance(layouts_per_graph, int) or \
+                isinstance(layouts_per_graph, bool):
+            raise ValueError(
+                f"layouts_per_graph must be an integer, got "
+                f"{type(layouts_per_graph).__name__}")
+        if layouts_per_graph < 1:
+            raise ValueError(
+                f"layouts_per_graph must be >= 1, got {layouts_per_graph}; "
+                f"1 renders each subgraph once")
 
         output_dir = Path(output_dir)
         output_dir.mkdir(parents=True, exist_ok=True)
@@ -252,28 +285,56 @@ class LaTeXRenderer:
         entries: List[Dict[str, Any]] = []
         rendered: List[Path] = []
         for scope in scopes:
-            entry, pdf_path = self._render_one(
-                instance_graph, scope, output_dir, layout_style, max_retries,
-                engine)
-            entries.append(entry)
-            if pdf_path is not None:
-                rendered.append(pdf_path)
+            for variant in range(layouts_per_graph):
+                entry, pdf_path = self._render_one(
+                    instance_graph, scope, output_dir, layout_hint,
+                    max_retries, engine, variant=variant,
+                    variant_count=layouts_per_graph)
+                entries.append(entry)
+                if pdf_path is not None:
+                    rendered.append(pdf_path)
 
         self.manifest = self._build_manifest(instance_graph, entries,
-                                             layout_style, engine, max_retries)
+                                             layout_hint, engine, max_retries,
+                                             layouts_per_graph, len(scopes))
         self._write_manifest(output_dir)
         return rendered
 
     # -- one document ------------------------------------------------------- #
     def _render_one(self, graph: InstanceGraph, scope: DocumentScope,
-                    output_dir: Path, layout_style: str, max_retries: int,
-                    engine: Optional[str]
+                    output_dir: Path, layout_hint: str, max_retries: int,
+                    engine: Optional[str], *, variant: int = 0,
+                    variant_count: int = 1
                     ) -> Tuple[Dict[str, Any], Optional[Path]]:
-        layout = self._select_layout(scope, layout_style)
-        stem = self._document_stem(scope)
+        stem = self._document_stem(scope, variant, variant_count)
+        # Distinct per (subgraph, variant), which is the whole mechanism behind
+        # --layouts-per-graph: --seed forces greedy decoding, so two variants
+        # sent the same prompt come back as the same page. Rotating the device
+        # and axis per variant is what makes them differ while the records stay
+        # byte-identical.
+        variation = scope.index * max(1, variant_count) + variant
+        # The wording this document is asked for, built before the call and kept
+        # whatever the call does: a document that failed still has to say what it
+        # was asked to be, or a failed run cannot be diagnosed.
+        directive = self.generator.build_layout_directive(
+            layout_hint, variation=variation, variant=variant,
+            variant_count=variant_count)
         entry: Dict[str, Any] = {
             "document_id": stem,
-            "layout": layout,
+            "layout_hint": layout_hint,
+            "layout_prompt": directive,
+            # Overwritten with what the page declares itself to be, once there
+            # is a page. Until then the hint is the best statement available.
+            "layout": layout_hint,
+            # Which relational subgraph this page is about, and which of its
+            # layouts this one is. Every variant of one subgraph carries the
+            # same subgraph_id and the same record_ids, and differs only in
+            # layout_variant_index -- that pairing is what a layout-invariance
+            # check groups on.
+            "subgraph_id": self._subgraph_id(scope),
+            "subgraph_index": scope.index,
+            "layout_variant_index": variant,
+            "layout_variants": variant_count,
             "root_record": scope.root.id,
             "root_entity": scope.root.entity_name,
             "record_ids": scope.record_ids,
@@ -288,12 +349,27 @@ class LaTeXRenderer:
 
         try:
             source = self.generator.generate_latex_source(
-                scope.records, layout, graph.schema_domain)
+                scope.records, layout_hint, graph.schema_domain,
+                variation=variation, variant=variant,
+                variant_count=variant_count)
         except LaTeXGenerationError as exc:
             entry.update(status="failed", failure=str(exc), attempts=0)
             self.warnings.append(f"{stem}: {exc}")
             log.warning("%s: %s", stem, exc)
             return entry, None
+
+        # What the page says it turned out to be, which is the only statement of
+        # the layout that exists once the model invents one per document. A page
+        # that never declared itself keeps the hint, and is flagged: with "auto"
+        # that leaves the manifest saying nothing about how the PDF looks.
+        entry["layout_declared"] = layout_declaration(source)
+        if entry["layout_declared"]:
+            entry["layout"] = entry["layout_declared"]
+        elif is_auto(layout_hint):
+            self.warnings.append(
+                f"{stem}: the page did not declare its layout, so the manifest "
+                f"records the hint ('{layout_hint}') rather than the invented "
+                f"layout")
 
         source, fidelity = self._enforce_fidelity(scope, source, stem)
         entry["fidelity"] = fidelity
@@ -304,7 +380,7 @@ class LaTeXRenderer:
             return entry, None
 
         pdf_path, attempts, repairs, diagnostic = self._compile_with_repair(
-            source, scope, stem, output_dir, engine, layout,
+            source, scope, stem, output_dir, engine, layout_hint,
             graph.schema_domain, max_retries)
         entry["attempts"] = attempts
         if repairs:
@@ -396,7 +472,7 @@ class LaTeXRenderer:
 
     # -- compile / repair loop ---------------------------------------------- #
     def _compile_with_repair(self, source: str, scope: DocumentScope, stem: str,
-                             output_dir: Path, engine: str, layout: str,
+                             output_dir: Path, engine: str, layout_hint: str,
                              domain: str, max_retries: int
                              ) -> Tuple[Optional[Path], int, List[Dict[str, Any]],
                                         Optional[str]]:
@@ -425,7 +501,7 @@ class LaTeXRenderer:
                          stem, attempts, diagnostic)
                 repaired = self.generator.repair_latex_source(
                     source, self._repair_excerpt(result), scope.records,
-                    layout, domain)
+                    layout_hint, domain)
                 repairs.append({"attempt": attempts, "errors": diagnostic,
                                 "changed": repaired != source})
                 if repaired == source:
@@ -517,27 +593,24 @@ class LaTeXRenderer:
             parts.append("\n".join(lines[-40:]))
         return "\n\n".join(parts)[:limit] or "pdflatex produced no log output"
 
-    # -- layout selection --------------------------------------------------- #
-    def _select_layout(self, scope: DocumentScope, layout_style: str) -> str:
-        """Pick a layout for one scope.
-
-        ``auto`` is not "pick the nicest": the corpus is meant to prove that
-        extraction survives *layout* change, so a run that rendered every
-        document the same way would test nothing. It alternates between the
-        layouts that suit the scope's shape — a scope with child records can be
-        a line-item table or a letter that lists them, a scope without children
-        can be a form or a letter — so a normal run contains all three.
-        """
-        if layout_style != "auto":
-            return layout_style
-        if scope.children:
-            return ("table", "letter")[scope.index % 2]
-        return ("form", "letter")[scope.index % 2]
+    @staticmethod
+    def _subgraph_id(scope: DocumentScope) -> str:
+        """A stable name for the join subgraph, shared by all of its variants."""
+        return f"subgraph-{scope.index + 1:03d}"
 
     @staticmethod
-    def _document_stem(scope: DocumentScope) -> str:
-        """A filesystem-safe, collision-free name derived from the root record."""
-        return f"doc-{scope.index + 1:03d}-{snake_case(scope.root.id)}"
+    def _document_stem(scope: DocumentScope, variant: int = 0,
+                       variant_count: int = 1) -> str:
+        """A filesystem-safe, collision-free name derived from the root record.
+
+        The ``-vN`` suffix appears only when there is more than one layout to
+        tell apart, so a single-layout run writes the filenames it always wrote
+        and an existing corpus does not have to be regenerated to be read.
+        """
+        stem = f"doc-{scope.index + 1:03d}-{snake_case(scope.root.id)}"
+        if max(1, int(variant_count)) < 2:
+            return stem
+        return f"{stem}-v{int(variant) + 1}"
 
     # -- files -------------------------------------------------------------- #
     def _write_tex(self, source: str, stem: str, output_dir: Path) -> str:
@@ -554,22 +627,33 @@ class LaTeXRenderer:
     # -- manifest ----------------------------------------------------------- #
     def _build_manifest(self, graph: InstanceGraph,
                         entries: Sequence[Dict[str, Any]],
-                        layout_style: str, engine: Optional[str],
-                        max_retries: int) -> Dict[str, Any]:
+                        layout_hint: str, engine: Optional[str],
+                        max_retries: int, layouts_per_graph: int = 1,
+                        subgraphs: int = 0) -> Dict[str, Any]:
         compiled = [e for e in entries if e["status"] == "compiled"]
         covered = {rid for e in entries for rid in e["record_ids"]}
         complete = [e for e in compiled
                     if not e.get("fidelity", {}).get("values_missing")]
+        # A tally rather than a count of three named layouts: with the layout
+        # invented per document these keys are sentences and mostly unique, and
+        # a key appearing twice is the thing worth seeing — it means two pages
+        # came out the same, which is the failure this stage exists to avoid.
         layouts: Dict[str, int] = {}
         for entry in entries:
             layouts[entry["layout"]] = layouts.get(entry["layout"], 0) + 1
+        declared = [e for e in entries if e.get("layout_declared")]
         return {
             "schema_domain": graph.schema_domain,
             "metadata": {
                 "stage": "5:rendered_documents",
                 "source": "llm_generated_latex",
-                "layout_style": layout_style,
+                "layout_hint": layout_hint,
+                "layout_mode": "invented" if is_auto(layout_hint) else "brief",
                 "layouts": layouts,
+                "distinct_layouts": len(layouts),
+                "layouts_declared": len(declared),
+                "layouts_per_graph": layouts_per_graph,
+                "subgraphs": subgraphs,
                 "engine": engine,
                 "max_retries": max_retries,
                 "keep_tex": self.keep_tex,
@@ -580,8 +664,14 @@ class LaTeXRenderer:
             },
             "summary": {
                 "documents": len(entries),
+                "documents_expected": subgraphs * layouts_per_graph,
                 "compiled": len(compiled),
                 "failed": len(entries) - len(compiled),
+                # A subgraph is only usable as a layout-invariance case when
+                # every one of its variants compiled: comparing an extractor
+                # across two shapes needs both shapes to exist.
+                "subgraphs_fully_rendered": _fully_rendered(entries,
+                                                            layouts_per_graph),
                 "repaired": sum(1 for e in entries if e.get("repairs")),
                 "compilations": sum(e.get("attempts", 0) for e in entries),
                 "records_total": graph.total_records,
@@ -617,11 +707,12 @@ class LaTeXRenderer:
             return "no documents rendered"
         info = self.manifest["summary"]
         meta = self.manifest["metadata"]
-        layouts = ", ".join(f"{k}={v}" for k, v in
-                            sorted(meta["layouts"].items()))
         lines = [f"documents={info['documents']} compiled={info['compiled']} "
                  f"failed={info['failed']} repaired={info['repaired']} "
-                 f"engine={meta['engine']} layouts=[{layouts}]",
+                 f"engine={meta['engine']} "
+                 f"layout_hint={meta['layout_hint']!r} "
+                 f"distinct_layouts={meta['distinct_layouts']} of "
+                 f"{info['documents']}",
                  f"  {info['compilations']} compilation(s) for "
                  f"{info['documents']} document(s); records covered "
                  f"{info['records_covered']} of {info['records_total']}, "
@@ -639,10 +730,30 @@ class LaTeXRenderer:
             repairs = entry.get("repairs")
             fixed = f", {len(repairs)} repair(s)" if repairs else ""
             lines.append(f"  [{mark}] {entry['document_id']}.pdf "
-                         f"({entry['layout']}, {len(entry['record_ids'])} "
-                         f"record(s), {len(entry['joins'])} join(s)"
-                         f"{fixed}{note})")
+                         f"({len(entry['record_ids'])} record(s), "
+                         f"{len(entry['joins'])} join(s){fixed}{note})")
+            # The invented layout on its own line and untruncated: it is a
+            # sentence, and it is the only record of what the page looks like.
+            lines.append(f"         layout: {entry['layout']}")
         return "\n".join(lines)
+
+
+def _fully_rendered(entries: Sequence[Dict[str, Any]],
+                    layouts_per_graph: int) -> int:
+    """Subgraphs whose every layout variant compiled.
+
+    Counted rather than assumed equal to ``compiled // layouts_per_graph``: the
+    failures are not spread evenly, and three subgraphs that each lost one
+    variant leave zero usable invariance cases while the division claims two.
+    """
+    wanted = max(1, int(layouts_per_graph))
+    compiled: Dict[str, int] = {}
+    for entry in entries:
+        if entry.get("status") != "compiled":
+            continue
+        key = entry.get("subgraph_id") or entry.get("root_record") or ""
+        compiled[key] = compiled.get(key, 0) + 1
+    return sum(1 for count in compiled.values() if count >= wanted)
 
 
 def log_errors(log_text: str) -> Optional[str]:
@@ -675,7 +786,6 @@ __all__ = [
     "document_scopes",
     "log_errors",
     "escape_latex",
-    "LAYOUT_STYLES",
-    "CONCRETE_LAYOUTS",
+    "AUTO_LAYOUT",
     "MANIFEST_FILENAME",
 ]

@@ -1,0 +1,75 @@
+\documentclass{article}
+% LAYOUT: A two-column document with a shaded inspection box at the top, listing employee details on the left and timesheet information on the right.
+
+\usepackage[margin=1in]{geometry}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{multicol}
+\usepackage{ragged2e}
+\usepackage{setspace}
+\usepackage{parskip}
+\usepackage{enumitem}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+% Inserted by the generator: a hyphen LaTeX adds to a data value cannot be
+% recovered by an extractor, and would make the manifest wrong about this page.
+\hyphenpenalty=10000
+\exhyphenpenalty=10000
+\emergencystretch=3em
+\sloppy
+
+\begin{document}
+
+\begin{center}
+\colorbox{lightgray}{%
+  \parbox{\textwidth}{%
+    \raggedright
+    Employee Details: Emily Taylor\\
+    Job Title: Developer\\
+    Hire Date: 2018-02-15
+  }%
+}
+\end{center}
+
+\setlength{\multicolsep}{0pt}
+\begin{multicols}{2}
+\raggedcolumns
+
+\section*{Employee Information}
+
+\begin{tabularx}{\columnwidth}{lX}
+First Name & Emily \\
+Last Name & Taylor \\
+Email & emily.taylor@smallbusiness.com \\
+Job Title & Developer \\
+Hire Date & 2018-02-15
+\end{tabularx}
+
+\vspace{\parskip}
+
+\section*{Timesheet Information}
+
+\begin{tabularx}{\columnwidth}{lX}
+Week Start & 2022-07-18 \\
+Total Hours & 32.5
+\end{tabularx}
+
+\section*{Employee Details: employee-001}
+
+\begin{tabularx}{\columnwidth}{lX}
+id & employee-001
+\end{tabularx}
+
+\vspace{\parskip}
+
+\section*{Timesheet Information: timesheet-001}
+
+\begin{tabularx}{\columnwidth}{lX}
+id & timesheet-001
+\end{tabularx}
+
+\end{multicols}
+
+\end{document}

@@ -1,0 +1,162 @@
+\documentclass{article}
+% LAYOUT: A dense grid of small labelled cells with a shaded inspection box for employee details, a line-item financial table for timesheet data, and a narrow margin column carrying labels beside a wide one carrying values.
+
+\usepackage[margin=1in]{geometry}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{tabularx}
+\usepackage{multicol}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{ragged2e}
+\usepackage{setspace}
+\usepackage{parskip}
+\usepackage{enumitem}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+\newcolumntype{C}[1]{>{\centering}m{#1}<{\centering}}
+\newcolumntype{L}[1]{>{\raggedright}m{#1}<{\raggedright}}
+
+% Inserted by the generator: a hyphen LaTeX adds to a data value cannot be
+% recovered by an extractor, and would make the manifest wrong about this page.
+\hyphenpenalty=10000
+\exhyphenpenalty=10000
+\emergencystretch=3em
+\sloppy
+
+\begin{document}
+
+\singlespacing
+
+\begin{multicols}{2}
+\textbf{Employee Details}\\
+\fcolorbox{black}{lightgray}{%
+  \begin{tabularx}{\linewidth}{|C{0.15\linewidth}|L{0.85\linewidth}|}
+    \hline
+    \textbf{Field} & \textbf{Value} \\
+    \hline
+    First Name & Emily \\
+    Last Name & Taylor \\
+    Email & emily.taylor@smallbiz.com \\
+    Job Title & Manager \\
+    Hire Date & 2018-02-15 \\
+    \hline
+  \end{tabularx}
+}
+
+\begin{minipage}[t]{0.5\textwidth}
+\vspace*{-1em}
+\textbf{Timesheet}\\
+\rowcolors{2}{white}{lightgray}
+\begin{longtable}{|C{0.15\linewidth}|L{0.85\linewidth}|}
+  \hline
+  \textbf{Field} & \textbf{Value} \\
+  \hline
+  Week Start & 2023-02-06 \\
+  Total Hours & 32.5 \\
+  \hline
+  \end{longtable}
+\vspace*{-1em}
+\end{minipage}
+
+\begin{minipage}[t]{0.45\textwidth}
+\vspace*{-1em}
+\textbf{Labels} & \textbf{Values}\\
+\rowcolors{2}{white}{lightgray}
+\begin{tabularx}{\linewidth}{|C{0.15\linewidth}|L{0.85\linewidth}|}
+  \hline
+  \textbf{Field} & \textbf{Value} \\
+  \hline
+  Employee ID & employee-001 \\
+  Job Title & Manager \\
+  Hire Date & 2018-02-15 \\
+  Week Start & 2023-02-06 \\
+  Total Hours & 32.5 \\
+  \hline
+  \end{tabularx}
+\vspace*{-1em}
+\end{minipage}
+
+\columnbreak
+
+\textbf{Employee Details}\\
+\fcolorbox{black}{lightgray}{%
+  \begin{tabularx}{\linewidth}{|C{0.15\linewidth}|L{0.85\linewidth}|}
+    \hline
+    \textbf{Field} & \textbf{Value} \\
+    \hline
+    First Name & Emily \\
+    Last Name & Taylor \\
+    Email & emily.taylor@smallbiz.com \\
+    Job Title & Manager \\
+    Hire Date & 2018-02-15 \\
+    \hline
+  \end{tabularx}
+}
+
+\begin{minipage}[t]{0.5\textwidth}
+\vspace*{-1em}
+\textbf{Timesheet}\\
+\rowcolors{2}{white}{lightgray}
+\begin{longtable}{|C{0.15\linewidth}|L{0.85\linewidth}|}
+  \hline
+  \textbf{Field} & \textbf{Value} \\
+  \hline
+  Week Start & 2023-02-06 \\
+  Total Hours & 32.5 \\
+  \hline
+  \end{longtable}
+\vspace*{-1em}
+\end{minipage}
+
+\begin{minipage}[t]{0.45\textwidth}
+\vspace*{-1em}
+\textbf{Labels} & \textbf{Values}\\
+\rowcolors{2}{white}{lightgray}
+\begin{tabularx}{\linewidth}{|C{0.15\linewidth}|L{0.85\linewidth}|}
+  \hline
+  \textbf{Field} & \textbf{Value} \\
+  \hline
+  Employee ID & employee-001 \\
+  Job Title & Manager \\
+  Hire Date & 2018-02-15 \\
+  Week Start & 2023-02-06 \\
+  Total Hours & 32.5 \\
+  \hline
+  \end{tabularx}
+\vspace*{-1em}
+\end{minipage}
+
+\begin{minipage}[t]{0.45\textwidth}
+\vspace*{-1em}
+\textbf{Timesheet}\\
+\rowcolors{2}{white}{lightgray}
+\begin{longtable}{|C{0.15\linewidth}|L{0.85\linewidth}|}
+  \hline
+  \textbf{Field} & \textbf{Value} \\
+  \hline
+  Week Start & 2023-02-06 \\
+  Total Hours & 32.5 \\
+  ID & timesheet-001 \\
+  \hline
+  \end{longtable}
+\vspace*{-1em}
+\begin{tabularx}{\linewidth}{|C{0.15\textwidth}|L{0.85\textwidth}|} % <--- ADDED \\ 
+  \hline
+  \multicolumn{2}{c}{ } \\
+  \hline
+  \end{tabularx}
+\vspace*{-1em}
+\end{minipage}
+
+\begin{tabularx}{\linewidth}{|C{0.15\textwidth}|L{0.85\textwidth}|} % <--- ADDED \\ 
+  \hline
+  \multicolumn{2}{c}{ } \\
+  \hline
+  \end{tabularx}
+
+\end{multicols}
+
+\end{document}

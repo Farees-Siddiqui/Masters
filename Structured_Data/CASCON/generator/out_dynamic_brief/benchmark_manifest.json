@@ -1,0 +1,171 @@
+{
+  "schema_domain": "small_business",
+  "metadata": {
+    "stage": "5:rendered_documents",
+    "source": "llm_generated_latex",
+    "layout_hint": "1990s technical spec sheet with dense grid lines",
+    "layout_mode": "brief",
+    "layouts": {
+      "A dense grid of small labelled cells with a shaded inspection box for employee details, a line-item financial table for timesheet data, and a narrow margin column carrying labels beside a wide one carrying values.": 1,
+      "A dense grid of small labelled cells with a shaded inspection box for the main record, and a narrow margin column carrying labels beside a wide one carrying values.": 1
+    },
+    "distinct_layouts": 2,
+    "layouts_declared": 2,
+    "engine": "pdflatex",
+    "max_retries": 2,
+    "keep_tex": true,
+    "seed": 7,
+    "model": "llama3.1:8b",
+    "generated_at": "2026-08-20T23:41:35+00:00"
+  },
+  "summary": {
+    "documents": 2,
+    "compiled": 1,
+    "failed": 1,
+    "repaired": 1,
+    "compilations": 4,
+    "records_total": 4,
+    "records_covered": 4,
+    "joins": 2,
+    "orphaned_foreign_keys": 0,
+    "documents_value_complete": 1,
+    "values_missing": 0,
+    "examples_leaked": 0
+  },
+  "documents": [
+    {
+      "document_id": "doc-001-employee_001",
+      "layout_hint": "1990s technical spec sheet with dense grid lines",
+      "layout_prompt": "Layout: follow the brief below. It was written by the person requesting this document and is quoted to you exactly as they wrote it.\n\n    1990s technical spec sheet with dense grid lines\n\nRead it as a description of how the page should look and feel, and invent the LaTeX structure that realises it -- the sections, the rules, the columns, the typography. The brief says what the document should be like; it does not say where anything goes, and that is your decision.\n\nThe brief describes form only. Nothing in it is a fact about these records: no wording, name, number or date from it may appear on the page unless a record below supplies it.\n\nFor a sense of the range available -- these are devices, not documents, and not a menu to choose from. Mix them, ignore them, or build something that is not here:\n  - a body set in two or three columns\n  - a shaded inspection or verification box\n  - a line-item financial table that rules off between groups\n  - a run of prose -- a log entry, a narrative note, a summary paragraph\n  - a formal masthead with a reference block ruled off beneath it\n  - metric panels sitting side by side across the page\n  - correspondence, written to somebody, signed off at the end\n  - a stamped or boxed status flag set against the heading\n  - a dense grid of small labelled cells\n  - a signature and countersignature block\n  - a tinted header row over a plain body, or the reverse\n  - a narrow margin column carrying labels beside a wide one carrying values\n\nFor this document in particular, push hardest on the page geometry -- margins, page shape, how much white space there is. Whatever you settle on, the page has to stay legible and has to fit the paper: no column so narrow that a value breaks up inside it, no table wider than the page.",
+      "layout": "A dense grid of small labelled cells with a shaded inspection box for employee details, a line-item financial table for timesheet data, and a narrow margin column carrying labels beside a wide one carrying values.",
+      "root_record": "employee-001",
+      "root_entity": "Employee",
+      "record_ids": [
+        "employee-001",
+        "timesheet-001"
+      ],
+      "records": [
+        {
+          "id": "employee-001",
+          "entity_name": "Employee",
+          "attributes": {
+            "id": "employee-001",
+            "first_name": "Emily",
+            "last_name": "Taylor",
+            "email": "emily.taylor@smallbiz.com",
+            "job_title": "Manager",
+            "hire_date": "2018-02-15"
+          },
+          "foreign_keys": {}
+        },
+        {
+          "id": "timesheet-001",
+          "entity_name": "Timesheet",
+          "attributes": {
+            "id": "timesheet-001",
+            "week_start": "2023-02-06",
+            "total_hours": "32.5"
+          },
+          "foreign_keys": {
+            "employee_id": "employee-001"
+          }
+        }
+      ],
+      "joins": [
+        [
+          "timesheet-001",
+          "employee_id",
+          "employee-001"
+        ]
+      ],
+      "orphaned_foreign_keys": [],
+      "pdf": null,
+      "tex": "doc-001-employee_001.tex",
+      "layout_declared": "A dense grid of small labelled cells with a shaded inspection box for employee details, a line-item financial table for timesheet data, and a narrow margin column carrying labels beside a wide one carrying values.",
+      "fidelity": {
+        "values_expected": 9,
+        "values_missing_before_repair": 1,
+        "restored": true,
+        "values_missing": 0,
+        "examples_leaked": 0
+      },
+      "attempts": 3,
+      "repairs": [
+        {
+          "attempt": 1,
+          "errors": "! Misplaced \\noalign. l.47 }; !  ==> Fatal error occurred, no output PDF file produced!",
+          "changed": true
+        },
+        {
+          "attempt": 2,
+          "errors": "! Misplaced \\noalign. l.47 }; !  ==> Fatal error occurred, no output PDF file produced!",
+          "changed": true
+        }
+      ],
+      "status": "failed",
+      "failure": "! Misplaced \\noalign. l.47 }; !  ==> Fatal error occurred, no output PDF file produced!"
+    },
+    {
+      "document_id": "doc-002-employee_002",
+      "layout_hint": "1990s technical spec sheet with dense grid lines",
+      "layout_prompt": "Layout: follow the brief below. It was written by the person requesting this document and is quoted to you exactly as they wrote it.\n\n    1990s technical spec sheet with dense grid lines\n\nRead it as a description of how the page should look and feel, and invent the LaTeX structure that realises it -- the sections, the rules, the columns, the typography. The brief says what the document should be like; it does not say where anything goes, and that is your decision.\n\nThe brief describes form only. Nothing in it is a fact about these records: no wording, name, number or date from it may appear on the page unless a record below supplies it.\n\nFor a sense of the range available -- these are devices, not documents, and not a menu to choose from. Mix them, ignore them, or build something that is not here:\n  - a shaded inspection or verification box\n  - a line-item financial table that rules off between groups\n  - a run of prose -- a log entry, a narrative note, a summary paragraph\n  - a formal masthead with a reference block ruled off beneath it\n  - metric panels sitting side by side across the page\n  - correspondence, written to somebody, signed off at the end\n  - a stamped or boxed status flag set against the heading\n  - a dense grid of small labelled cells\n  - a signature and countersignature block\n  - a tinted header row over a plain body, or the reverse\n  - a narrow margin column carrying labels beside a wide one carrying values\n  - a body set in two or three columns\n\nFor this document in particular, push hardest on the number of columns and how the page divides horizontally. Whatever you settle on, the page has to stay legible and has to fit the paper: no column so narrow that a value breaks up inside it, no table wider than the page.",
+      "layout": "A dense grid of small labelled cells with a shaded inspection box for the main record, and a narrow margin column carrying labels beside a wide one carrying values.",
+      "root_record": "employee-002",
+      "root_entity": "Employee",
+      "record_ids": [
+        "employee-002",
+        "timesheet-002"
+      ],
+      "records": [
+        {
+          "id": "employee-002",
+          "entity_name": "Employee",
+          "attributes": {
+            "id": "employee-002",
+            "first_name": "Liam",
+            "last_name": "Brown",
+            "email": "liam.brown@smallbiz.com",
+            "job_title": "Developer",
+            "hire_date": "2020-09-22"
+          },
+          "foreign_keys": {}
+        },
+        {
+          "id": "timesheet-002",
+          "entity_name": "Timesheet",
+          "attributes": {
+            "id": "timesheet-002",
+            "week_start": "2023-01-09",
+            "total_hours": "41.2"
+          },
+          "foreign_keys": {
+            "employee_id": "employee-002"
+          }
+        }
+      ],
+      "joins": [
+        [
+          "timesheet-002",
+          "employee_id",
+          "employee-002"
+        ]
+      ],
+      "orphaned_foreign_keys": [],
+      "pdf": "doc-002-employee_002.pdf",
+      "tex": "doc-002-employee_002.tex",
+      "layout_declared": "A dense grid of small labelled cells with a shaded inspection box for the main record, and a narrow margin column carrying labels beside a wide one carrying values.",
+      "fidelity": {
+        "values_expected": 9,
+        "values_missing_before_repair": 0,
+        "restored": false,
+        "values_missing": 0,
+        "examples_leaked": 0
+      },
+      "attempts": 1,
+      "status": "compiled"
+    }
+  ],
+  "warnings": [
+    "doc-001-employee_001: compilation failed after 3 attempt(s); ! Misplaced \\noalign. l.47 }; !  ==> Fatal error occurred, no output PDF file produced!"
+  ]
+}
